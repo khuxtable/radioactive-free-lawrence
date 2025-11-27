@@ -1,0 +1,52 @@
+action inventory
+   {{ local optr
+      local count
+      itobj optr, inhand
+         say optr
+         add count, 1    # Increment count of listed objects
+      fin
+      ifeq count, 0                           # If nothing listed, ...
+         say "You are not carrying anything." # ... say empty-handed
+      fin
+      quit        # Command fully handled, so terminate the REPEAT loop }}
+action take inventory
+    {{ call inventory     # Execute code associated with the INVENTORY command }}
+action look
+   {{ ifeq status, 1
+         call describe.here  # The procedure does not QUIT...
+         quit                # ... so QUIT explicitly
+      fin
+      ifnear arg2
+         describe arg2   # Otherwise give long object description
+         quit
+      fin }}
+action describe
+   {{ describe arg2
+      quit }}
+action take
+   {{ ifhere ARG2
+         get ARG2
+         quip "You take #.", ARG2
+      fin }}
+action drop
+   {{ ifhave ARG2       # True only if the player has the thing
+         drop ARG2   # Move the thing from player's inventory to cloakroom
+         quip "You drop #.", ARG2
+      fin }}
+action vocabulary
+   {{ respond verbs, vocab.verbs
+      ifkey nouns
+         call show.nouns
+      fin
+      respond travel, vocab.travel
+      ifhtml
+      else
+         respond screen, vocab.screen
+      fin
+      ifeq status, 1
+         or
+      ifkey all
+         say vocab.general
+         set context, q.vocab.0
+         quip more?
+      fin }}

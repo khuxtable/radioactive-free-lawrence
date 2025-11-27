@@ -1,0 +1,7 @@
+/gen/**
+/target
+
+/src/acode-grammer.iml
+/src/wizard-grammar.iml
+/src/main/antlr4/org/kathrynhuxtable/acode/grammar/gen
+/src/main/antlr4/org/kathrynhuxtable/acode/grammar/ACodeLexer.tokens

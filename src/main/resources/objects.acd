@@ -1,0 +1,42 @@
+object axe
+    {{ a small axe }}
+object banana
+    {{ a slightly brown banana }}
+object book
+    {{ a book }}
+object box
+    {{ a locked box }}
+object chain
+    {{ a length of chain }}
+object coke
+    {{ a can of coke }}
+object dagger
+    {{ a dagger }}
+object glove
+    {{ a silk glove }}
+object grenade
+    {{ a grenade }}
+    {{ a grenade, which does not actually appear anywhere }}
+object gun
+    {{ a gun }}
+object hole
+    {{ a small hole }}
+object meter
+    {{ a life-force meter }}
+object meteroid         # For wizard players
+    {{ a life-force meteroid }}
+object rifle
+    {{ a rifle }}
+object sandwich
+    {{ a tasty looking sandwich }}
+object sword
+    {{ a sword }}
+object truncheon
+    {{ a truncheon }}
+object token
+    {{ a melted bus token }}
+object udk
+    {{ a faded UDK }}
+    {{ a faded copy of the university newspaper, the "University Daily Kansan" }}
+object zapgun
+    {{ a toy zapgun }}

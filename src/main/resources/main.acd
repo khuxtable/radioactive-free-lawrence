@@ -1,0 +1,90 @@
+name "Radio Free Lawrence"
+version "3.0"
+author "Kathryn Huxtable, Ron Burk, David Wiley"
+date "19 November 2025"
+style 12
+#
+include "verbs.acd"
+#
+flags variable
+    MOVED           # Optional STATUS variable flag, maintained by the kernel
+#
+variable first, second
+variable third
+array things.here 15
+#
+state alabama
+    5, texas
+    2 + 6, kansas
+    missouri
+state kentucky
+    tennessee
+    move, virginia
+#
+include "objects.acd"
+#
+include "places.acd"
+#
+include "at.acd"
+#
+include "actions.acd"
+#
+initial
+    {{ apport("coke", "In_Joes");
+       apport("sandwich", "In_Joes"); }}
+initial
+    {{ goto("Ninth_Mississippi"); }}
+repeat
+    {{
+        if(flag(status, moved) {   // Has the player moved?
+            call (describe.here);  // If so, describe their new location
+        }
+    }}
+repeat
+    {{
+        set(status, no.amatch);    // Suppress approximate matching of command words
+        input();                    // Get and parse player's command
+        if (status == 2 && arg2 < 0 || arg1 < 1) { // Can't find 2nd or 1st command word in the vocabulary
+            quip "Pardon?"          // Command parse failure -- abort the main loop
+        }
+    }}
+repeat
+    {{
+        if (key(quit)) {    // If the word QUIT occurs in the command
+            say ("As you wish.");
+            stop();         // Exit the game
+        }
+        call(here);         // Execute code, if any, associated with this location
+        respond("north", "east", "south", "west", "There is no such exit here.");
+        call(arg1);         // Handle player's command
+        call(bail.out);     // Command not handled - report an error
+    }}
+#
+proc DESCRIBE.HERE
+   {{ local optr       # Local pointer to objects
+      say here         # Show description of current location
+      itobj optr, here # Loop through objects at this location
+         say optr      # Show such objects
+      fin              # Loop terminator }}
+proc bail.out
+   {{ local qualifier            # Local variable initialised to zero
+      ifeq status, 1             # If a single word command given
+        ifflag arg1, object      # If that word is an object name
+          ifnear arg1
+          else
+            quip "There is no # here!", arg1
+          fin
+        else
+          set qualifier, 1       # The word is not an object name, assume verb
+        fin
+        quip "You need to say what you want to [do with the /]{arg1}.", qualifier
+      fin
+      quip "You can't do that!"  # Generic no can do }}
+#
+fragment YOU.DO
+    {{ You # }}
+text    cannot.tell.directions
+    {{ You can't tell directions here.
+       Try Up, Down, Left, Right, Forward, Back }}
+text    what.is.x
+    {{ What is '#'? }}

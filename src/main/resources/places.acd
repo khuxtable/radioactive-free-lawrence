@@ -1,0 +1,464 @@
+place Ninth_Mississippi
+    {{ You are standing at the corner of 9th and Mississippi.
+       To the north are singed trees and devastated buildings.
+       Southward, KU can be seen, a tattered flag waving over Fraser Hall.
+       To the east are the remains of downtown Lawrence. }}
+place Joes
+    {{ You are standing in front of a low squat building.
+       Above it a sign reads 'OES AKE'. The door is bolted but
+       a large window is broken out. }}
+place In_Joes
+    {{ You find a display rack containing the petrified remains of donuts. }}
+place Stadium
+    {{ You are standing at the corner of 11th and Mississippi.
+       The ruins of the Kansas Memorial Stadium with the Hershberger track
+       are directly to the west. To the north, smoke rises over the city.
+       To the south, Spencer Art Museum remains standing, and flags (albeit
+       tattered) still fly above Fraser Hall. }}
+place Campanile
+    {{ In front of you is a light brick building leaning at a precarious
+       angle. Occasionally the tower will emit a dull E-flat or C-sharp
+       as the wind blows past. Just beyond some impassible terrain to the
+       south stands a strange statue. KU Memorial Stadium, in all its splendor,
+       sits to the north. A large mud puddle bubbles gently to the north west.
+       A few intact buildings are just to the west. }}
+place Potters
+    {{ You are standing hip deep in Potter's mud puddle. The banks are
+       teaming with crispy frogs, brown cattails, and fried duck. To the east
+       you can see a leaning tower. The rest of the scenery is obscured by
+       hillside. }}
+place Carruth_Oleary
+    {{ You are in the basement of a ruined brick building. All around
+       torn, spindled, and mutilated pieces of paper. You can see the
+       campanile to the east and a path leads south. }}
+place Mississippi
+    {{ Spencer Museum is to the west, the remains of the Union to the east.
+       To the north, smoke rises above 9th street.
+       Campus is to the South, a large crater where Strong Hall once stood. }}
+place Steel_Door
+    {{ You are standing in front of a steel door on the side of the hill.
+       A square hole in the door emits an eerie light and faint noises
+       can be heard, but a snarling German Shepherd keeps you from the door. }}
+place Spencer
+    {{ You are standing in front of Spencer Museum.
+       The building remains remarkably intact. }}
+place In_Spencer
+    {{ You are inside the main entrance of Spencer Art Museum.
+       I can't remember the layout, so you'll have to leave. }}
+place Pterodactyl
+    {{ You are standing near a statue of what appears to be
+       a pterodactyl, but whoever sculpted it did not know
+       his/her taxonomy well. Immediately to the north is
+       a large crater filled with debris. This was Strong Hall.
+       To the south, Wescoe Hall remains, squat and sullen. }}
+place North_Wescoe
+    {{ You are standing on the concrete to the north of Wescoe Hall.
+       The building looks intact. From within you hear chants,
+       perhaps from a religious service. There is a stairway
+       leading down a floor under the building. }}
+place South_Wescoe
+    {{ You are standing to the south of Wescoe Hall.
+       The building looks intact. Within, the cafeteria
+       is deserted. The doors are barred and chained.
+       To the south you can see Malott hall, and
+       beyond that the Computing Center. }}
+place Wescoe_Cafeteria
+    {{ You are in the Wescoe Cafeteria. }}
+place Malott
+    {{ Most of Malott Hall still stands, a monument to limestone.
+       The air smells terrible here. Possibly there are poisonous
+       gasses escaping from their tanks. }}
+place pu_soap_film
+    {{ You are in a small pocket universe. You are surrounded
+       by what appears to be an enormous soap bubble. The walls
+       of the bubble appear to warp and distort in a fantastically
+       complex pattern. }}
+place PU_Warm_Fuzzy
+    {{ You are in a small pocket universe. You are in a region
+       of warm fuzzy stuff, which floats around caressing you.
+       It is difficult to see very far here. }}
+place PU_Shrooms
+    {{ You are in a small pocket universe. The area around you
+       is paisley with jagged orange stripes. To your left
+       the stripes merge into a vortex-like funnel, with many
+       craters. }}
+place PU_Space
+    {{ You are in a small pocket universe. It is very difficult
+       to determine distances here. Behind you, you can make
+       out a large tan blob. To your left, you can see some mist. }}
+place PU_Mist
+    {{ You are in a small pocket universe. The area around you is
+       foggy and you can only see a few feet in any direction.
+       Since there is nothing to see, this may not be a problem. }}
+place PU_Zen1
+    {{ You are in a small pocket universe. The area around you
+       may not exist, but this is difficult to determine since
+       the statement itself is subject to doubt and the question
+       may be misinterpreted, but you can't tell since you have
+       completely lost track of that train of thought. }}
+place PU_Zen2
+    {{ You are in a small pocket universe. The area around you
+       may not exist, but this is difficult to determine since
+       the statement itself is subject to doubt and the question
+       may be misinterpreted, but you can't tell since you have
+       completely lost track of that train of thought. }}
+place PU_Zen3
+    {{ You are in a small pocket universe. The area around you
+       may not exist, but this is difficult to determine since
+       the statement itself is subject to doubt and the question
+       may be misinterpreted, but you can't tell since you have
+       completely lost track of that train of thought. }}
+place PU_Zen4
+    {{ You are in a small pocket universe. The area around you
+       may not exist, but this is difficult to determine since
+       the statement itself is subject to doubt and the question
+       may be misinterpreted, but you can't tell since you have
+       completely lost track of that train of thought. }}
+place PU_LSD
+    {{ You are in a small pocket universe. You are floating in
+       a large orange vortex-like funnel, which appears to bend
+       to the left ahead of you. The funnel is pocked with numerous
+       craters, some of which are big enough to swallow a hole. }}
+place PU_MS
+    {{ You are in a small pocket universe. You are rushing down
+       a narrow funnel. There are forces tugging at you from all
+       directions. You begin feeling car-sick. }}
+place PU_Vomit
+    {{ You are in a small pocket universe. Floating around you are
+       large blobs of vomit. The smell is nauseating. }}
+place PU_Core
+    {{ You are in a small pocket universe. The walls between
+       this universe and your normal one are breaking down here.
+       You appear to be looking down into the core of a nuclear
+       fission reactor. But that's impossible, of course. }}
+place Visual_Arts
+    {{ You are staring at the ruins of the visual arts building.
+       Smashed canvases and statuary abound. None appears
+       to be of any value. }}
+place East_Wescoe
+    {{ You are standing to the east of Wescoe hall.
+       The building appears intact. To the south,
+       you can see ruined Flint Hall, and beyond
+       that the remains of the Computing Center. }}
+place Sunnyside
+    {{ You are on Sunnyside Drive in front of Robinson Gymn.
+       To the north sits Malott Hall, past the wreckage of
+       Summerfield Hall. To the south there is a large
+       bubbling expanse. Looking to the east you can see
+       what remains of the Computing Center,
+       and to the west is a mangled 'OP' sign. }}
+place Sunnyside_Naismith
+    {{ You are at the intersection of Sunnyside and Naismith. }}
+place Murphy
+    {{ You are at the corner of 15th and Naismith.
+       Here are the remains of Murphy Hall. To the north, you see
+       the ruins of the Visual Arts building. To the west,
+       sits the crumbled Learned Hall. }}
+place Learned
+    {{ You are standing in front of crumbled Learned Hall.
+       Paths lead north and south, but a large pit is to
+       the west. }}
+place Reactor
+    {{ You are standing in front of KU's Reactor Center.
+       A humming sound is coming from inside.
+       A large pit blocks your way to the east. }}
+place In_Reactor
+    {{ You are inside the Reactor Center
+       There is a large panel of switches and dials here. }}
+place Reactor_Pit1
+    {{ You are at the bottom of a large pit.
+       The walls slope inward above you and cannot be climbed
+       unless you have claws. Littered around you are many
+       broken bottles and tin cans. }}
+place Reactor_Pit2
+    {{ You are at the bottom of a large pit.
+       The walls slope inward above you and cannot be climbed
+       unless you have claws. Littered around you are many
+       broken bottles and tin cans. }}
+place Reactor_Pit3
+    {{ You are at the bottom of a large pit.
+       The walls slope inward above you and cannot be climbed
+       unless you have claws. Littered around you are many
+       broken bottles and tin cans. }}
+place Fissure
+    {{ You are in a fissure deep within the earth.
+       The gap is wide where you are standing, but narrows
+       swiftly to the north and south. There appear
+       to be passages out to the north and south, and a
+       crude set of stairs leads further down the fissure. }}
+place Under_Learned
+    {{ You find yourself under a small hole with dirty water pouring in
+       through a side passage. You could probably climb through the hole.
+       To the south there is a very narrow crevice.
+       Overhead you can see light. }}
+place Twisty_Corridor
+    {{ You are in a twisty corridor. }}
+place Underground_River
+    {{ You are standing next to an underground river.
+       The river flows from west to east and the passage
+       seems to continue in both directions.
+       The moss on the walls glows with a dim green light
+       permitting you to see. The walls look very slimy. }}
+place River_Bend
+    {{ You are at a bend in an underground river. The river
+       flows north and east. To the north, the tunnel quickly
+       narrows, and you could not pass. To the east, there is
+       some light. }}
+place Waterfall
+    {{ You are standing at the brink of a magnificent underground waterfall.
+       The river falls over five hundred feet into darkness. Crude, slippery
+       steps are cut into the side of the canyon, leading down. }}
+place Side_Passage
+    {{ Beneath the waterfall, there is a small opening into the rock.
+       It may be possible to reach if you are careful.
+       If you miss, you will fall into the gorge. }}
+place Sandy_Beach
+    {{ You are standing on a sandy beach of an underground river.
+       The beach is at the foot of a long waterfall. The river
+       goes downstream to the north. }}
+place Rivers_End
+    {{ You are at a vast underground lake. To the south, a river empties
+       into the lake. To the east and west, passages lead along the shore.
+       The entire scene is dimly lit by glowing moss, hanging down from
+       the roof of the cave. }}
+place Small_Opening
+    {{ You are in a small opening underneath the waterfall. There is
+       nothing of interest here. Why did you do that? }}
+place Jayhawk_Bookstore
+    {{ You are standing in front of the Jayhawk Boostore.
+       The glass front has been shattered and the store
+       appears to be completely gutted. }}
+place Fountain
+    {{ You are standing at the Chi Omega fountain.
+       The water is not running for obvious reasons,
+       but that's okay. }}
+place O_Zone
+    {{ You are standing in a bubbling parking lot. Burned out hulks of
+       cars can be seen strewn about like used toys. The smell of smoke
+       is near, that's the signpost up ahead. You're in the O ZONE! }}
+place Twenty_Third
+    {{ To the north is a fairly intact building. The smell of burnt pizza
+       is everywhere. This is the infamous West 23rd street. }}
+place Hut
+    {{ You are standing in what was the pizza hut. Pepperoni is splashed on
+       the walls and anchovies swim merrily in spilled coke. }}
+place Krogers
+    {{ What remained of this store has since been looted. Only the stains
+       of lima beans and liver remain. }}
+place Lot
+    {{ You have the pleasure of standing in the middle of an empty parking
+       lot. Not a brick is left of what once was here. Rotten food can
+       be smelled from every direction. }}
+place Naismith
+    {{ You are on Naismith Drive.
+       You are knee deep in radioactive slime. }}
+place LHS
+    {{ This is the ruin of Lawrence High School, home of the Chesty Lions,
+       which is a strange mascot. }}
+place Rustys
+    {{ This was formerly Rustys grocery store. The bombs probably did a lot
+       to improve its appearance. Certainly the service is better. To
+       the north can be seen the remains of a brick building. }}
+place ACC
+    {{ This seems to have been a computer building at one time. To the south
+       you can see a bubbling pool. Smoke drifts lazily over the hill to
+       your north. }}
+place Sunflower
+    {{ You are standing on a winding road halfway to the top of a hill.
+       To the south you can see the Computing Center. Note - the
+       ground here seems somewhat unstable. }}
+place North_Watson
+    {{ You are standing in front of Watson Library. }}
+place South_Watson
+    {{ You are standing behind Watson Library. }}
+place Reference
+    {{ You are standing in front of the reference desk. Fallen card
+       catalogs block your way. }}
+place Watson_Entrance
+    {{ You are inside the main entrance to Watson Library. The
+       entrance reminds you a bit of an airport, whatever that is.
+       To the east is the reference section, south are the entrances to
+       the stacks. }}
+place Stack_Entrance
+    {{ You are standing between the two stack entrances, one to the east
+       and one to the west. }}
+place Stacks
+    {{ You are in the Watson Library Stacks. The shelves have
+       a thick layer of dust where the books used to be. There do not
+       appear to be any books. }}
+place Stack_Warned
+    {{ You are even deeper in the stacks. You will just have to help
+       yourself this time. }}
+place Jayhawk_Sunflower
+    {{ You are standing at the intersection of Jayhawk and Sunflower,
+       on the northeast corner. To the north, you see Spencer
+       Art Museum, to the south, smoke rises over the ruins of
+       23rd Street. To the west, the buildings on Jayhawk Blvd.
+       are mostly destroyed, except for Wescoe across the street. }}
+place Lippincott
+    {{ You are standing in front of Lippincott Hall (old Green).
+       To the south, stands Watson Library. To the east, smoke
+       rises over downtown Lawrence. To the west, there is a
+       crater where Strong and Bailey Halls used to be. }}
+place Dyche
+    {{ This museum sustained several direct hits. All that remains of
+       this boring building lies in smouldering ruins. }}
+place Schol_Halls
+    {{ You are standing among the Scholarship Halls. These people
+       (and I use the term loosely) are definitely strange. Watch
+       out for the strange caped person who whistles loudly and
+       carries a sword. He will talk you to death. }}
+place Union
+    {{ Steamy plants infest the once proud Student Union. The whole place seems
+       covered in noxious weeds. }}
+place Crossfish
+    {{ You are at the intersection of 12th and Oread.
+       The Hawk's Crossing still stands, although it
+       appears that business has fallen off sharply. }}
+place Stadium_Apartments
+    {{ You are standing at the intersection of 11th and Indiana.
+       The stadium apartments are to the west, a Fraternity house
+       to the east. Up the hill to the east is the GSP-Corbin }}
+place GSP_Corbin
+    {{ You are standing at the entrance to the GSP-Corbin complex.
+       Many leather-jacketed bikers cluster about the entrance.
+       The structure seems fairly intact. }}
+place Scums
+    {{ This used to be an eating establishment of some kind.
+       Skeletons with hands clutched to their bellies lie
+       everywhere. A sign hanging askew says SCUMS deli. }}
+place Slums
+    {{ These are the slummiest slums around. Cockroaches lie lazily
+       in hammocks and staph germs wallow in puddles. }}
+place DG_Bank
+    {{ You are at the corner of Ninth and Kentucky.
+       The remains of the Douglas County Bank are here. }}
+place Entrance
+    {{ You are standing inside the entrance to the steam tunnels.
+       The only light comes from a bare bulb overhead. There are
+       exits in many directions. }}
+place Branch
+    {{ You are at a branch in the steamy tunnel. The tunnel continues
+       down and south from here. }}
+place Pit
+    {{ You are standing atop a slender pinacle in a huge circular room. Water
+       drips past you and splats on the floor some 20' below you. The room is
+       so musty, it literally exudes yuck! }}
+place Rubbish
+    {{ What is all this rubbish? It looks like leftovers from
+       a scholarship hall halloween dinner (and about as appetizing).
+       Well worn paths lead north, south, east, and west. }}
+place Dark
+    {{ This room is quite dark and it its very hard to make out details. }}
+place Darker
+    {{ This room is even darker than the dark room. This room is soooo dark,
+       glow worms have it posted as a hazarous area. }}
+place Darkest
+    {{ You thought you'd seen dark before. This has got to be the darkest
+       room yet. Look on the bright side. Maybe you're just going blind! }}
+place Puddle
+    {{ The better part of this room is taken up by a large puddle. It doesn't
+       look very good for drinking. This seems evident by ring of skeletons
+       around it. }}
+place Ladder
+    {{ This room is beneath a manhole. A rusty ladder leads up to a hole in
+       the street above. Light filters in through the hole. Tunnels lead away
+       in four directions. }}
+place Demon
+    {{ Light plays crazy tricks on the fog swirling through the room. The
+       partially illuminated vapor looks like demons playing in the air.
+       It is quite difficult to see any way out of the room. }}
+place Sauna
+    {{ You are halted a little ways down a north south passage (with no side
+       passages). A small, waist-high break in the steam pipe blocks your way.
+       It seems obvious you would burn your chest if you continue. }}
+place Bat_Room
+    {{ This seems to have been a crazy man's hide out at one time. Ultra-
+       sophisticated machinery drapes the walls. The strange thing is every-
+       thing has a bat monogrammed on it. The main passage runs east-west
+       small hole leading north. }}
+place Dead_End
+    {{ This end is quite dead. The only exit is the way you came. }}
+place Steps
+    {{ Standing at the bottom of a winding set of steps, you can see the
+       sky. The ground outside looks somewhat familiar. The tunnel you
+       are following continues west from here. }}
+place Dank
+    {{ You are walking along a dank north/south tunnel. Moss hangs from
+       the ceiling obscuring your way. A grimy crack splits the west wall. }}
+place Military_Science
+    {{ You are in the remains of the basement of the Military Science building.
+       The old granite building melted and slumped, but it is still possible
+       to move north, west, or south. There also seems to be a patch of light
+       overhead. }}
+place Sewer
+    {{ You are in a partially filled sewer. It is a bit difficult to see, but
+       there seems to a way out to the west. The main path leads back east
+       through the putrid water. }}
+place Cave
+    {{ A small, constant flow of water has caused cave-like stalactites to
+       form. The room is filled with sparkling quartz and silica. The passage
+       continues straight ahead with a dark tunnel leading right. }}
+place Button
+    {{ This brightly painted room marks a dead end in the tunnel. It seems to
+       be the basement of some former building. The most distinctive feature
+       is a strange cherry-colored button placed in the exact center of the
+       south wall. }}
+place Cave_In
+    {{ You are deeper in the cave. Rocks and pieces of the ceiling are jumbled
+       all over this room. All exits except west are blocked by debris. }}
+place Maze_L
+    {{ You are lost in a mazelike sewer system. }}
+place Maze_K
+    {{ You are lost in a mazelike sewer system. }}
+place Maze_F
+    {{ You are lost in a mazelike sewer system. }}
+place Maze_J
+    {{ You are lost in a mazelike sewer system. }}
+place Maze_B
+    {{ You are lost in a mazelike sewer system. }}
+place Maze_G
+    {{ You are lost in a mazelike sewer system. }}
+place Maze_I
+    {{ You are lost in a mazelike sewer system. }}
+place Maze_C
+    {{ You are lost in a mazelike sewer system. }}
+place Maze_H
+    {{ You are lost in a mazelike sewer system. }}
+place Maze_A
+    {{ You are lost in a mazelike sewer system. }}
+place Maze_E
+    {{ You are lost in a mazelike sewer system. }}
+place Maze_D
+    {{ You are lost in a mazelike sewer system. }}
+place Maze_O
+    {{ You are lost in a mazelike sewer system. }}
+place Maze_M
+    {{ You are lost in a mazelike sewer system. }}
+place Maze_N
+    {{ You are lost in a mazelike sewer system. }}
+place Wizard.Source
+    {{ You are in the directory .Wizard.Source. The only exit is up. }}
+place Wizard
+    {{ You are in the directory .Wizard.
+       There are exits marked 'Source' and 'Etc' here as well
+       as the path leading up. }}
+place Wizard.Etc
+    {{ You are in the directory .Wizard.Etc. The only exit is up.
+       There is a file here named 'Hints' }}
+place YELLOW_brick_road
+    {{ You appear to be at the start of a long yellow brick road.
+       The road curves off into the distance, so you cannot see where
+       the road leads. Nearby is a large house canted at a strange
+       angle. There seems to be the body of a witch under the house. }}
+place FOLLOW_the_yellow_brick_road
+    {{ The yellow brick road continues in front of you. }}
+place EMERALD_city1
+    {{ You are at the gates of a large emerald city.
+       There is a pair of ruby slippers here. }}
+place EMERALD_city2
+    {{ You are at the gates of a large emerald city.
+       There is a pair of ruby slippers here. }}
+place EMERALD_city3
+    {{ You are at the gates of a large emerald city.
+       There is a pair of ruby slippers here. }}

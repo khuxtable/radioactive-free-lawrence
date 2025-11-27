@@ -1,0 +1,453 @@
+at  Ninth_Mississippi
+    {{ move("south", "Stadium");
+       move("east", "joes"); }}
+at  Joes
+    {{ move("window", "In_Joes");
+       move("west", "Ninth_Mississippi");
+       move("east", "DG_Bank"); }}
+at  In_Joes
+    {{ move("out", "Joes"); }}
+at  Stadium
+    {{ move("north", "Ninth_Mississippi");
+       move("south", "Mississippi");
+       move("east", "Stadium_Apartments");
+       move("sw", "campanile"); }}
+at  Campanile
+    {{ move north, Stadium
+       move nw, Potters
+       move east, Spencer
+       move west, Carruth_Oleary
+       move down, Sewer }}
+at  Potters
+    {{ move swim, Campanile
+       move crawl, Campanile }}
+at  Carruth_Oleary
+    {{ move east, Campanile
+       move south, Fountain }}
+at  Mississippi
+    {{ move north, Stadium
+       move south, Steel_Door
+       move east, Union
+       move west, Spencer }}
+at    steel_door
+    {{ move south, jayhawk_sunflower
+       move north, mississippi
+       move pet, entrance }}
+at    spencer
+    {{ move south, jayhawk_sunflower
+       move west, campanile
+       move east, mississippi
+       move in, in_spencer
+       move enter, in_spencer }}
+at    in_spencer
+    {{ move exit, mississippi
+       move out, mississippi
+       move leave, mississippi }}
+at    pterodactyl
+    {{ move south, north_wescoe
+       move east, jayhawk_sunflower
+       move west, fountain }}
+at    north_wescoe
+    {{ move north, pterodactyl
+       move east, east_wescoe
+       move west, fountain
+       move down, south_wescoe }}
+at    south_wescoe
+    {{ move south, malott
+       move east, east_wescoe
+       move west, visual_arts
+       move up, north_wescoe
+       move down, acc }}
+at    wescoe_cafeteria
+    {{ move out, south_wescoe }}
+at    malott
+    {{ move north, south_wescoe
+       move south, sunnyside
+       move east, acc
+       move west, murphy
+       move up, south_wescoe
+       move down, acc }}
+at    pu_soap_film
+    {{ move up, pu_lsd
+       move down, pu_mist
+       move left, pu_shrooms
+       move right, pu_space
+       move forward, pu_vomit }}
+at    pu_warm_fuzzy
+    {{ move up, pu_soap_film
+       move down, pu_ms
+       move left, pu_shrooms
+       move right, pu_space
+       move forward, pu_mist }}
+at    pu_shrooms
+    {{ move up, pu_soap_film
+       move down, pu_ms
+       move left, pu_lsd
+       move right, pu_mist
+       move forward, pu_vomit }}
+at pu_space
+    {{ move up, pu_soap_film
+       move down, pu_ms
+       move left, pu_mist
+       move right, pu_lsd
+       move forward, pu_vomit }}
+at pu_mist
+    {{ move up, pu_soap_film
+       move down, pu_core
+       move left, pu_shrooms
+       move right, pu_space
+       move forward, pu_zen1 }}
+at    pu_zen1
+    {{ move fire, pu_zen2 }}
+at    pu_zen2
+    {{ move is, pu_zen3 }}
+at    pu_zen3
+    {{ move the, pu_zen4 }}
+at    pu_zen4
+    {{ move poppy, potters }}
+at    pu_lsd
+    {{ move forward, pu_ms
+       move down, pu_soap_film
+       move left, pu_shrooms
+       move right, pu_space
+       move up, pu_vomit }}
+at    pu_ms
+    {{ move up, pu_mist
+       move down, pu_lsd
+       move left, pu_space
+       move right, pu_shrooms
+       move forward, pu_vomit }}
+at    pu_vomit
+    {{ move up, pu_soap_film
+       move down, pu_lsd
+       move left, pu_shrooms
+       move right, pu_space
+       move forward, pu_mist }}
+at    pu_core
+    {{ move up, pu_core
+       move down, pu_core
+       move left, pu_core
+       move right, pu_core
+       move forward, pu_core }}
+at    visual_arts
+    {{ move north, fountain
+       move south, murphy
+       move east, south_wescoe
+       move west, learned }}
+at    east_wescoe
+    {{ move north, jayhawk_sunflower
+       move east, sunflower
+       move northwest, north_wescoe
+       move southwest, south_wescoe }}
+at    sunnyside
+    {{ move north, malott
+       move south, o_zone
+       move east, acc
+       move west, sunnyside_naismith }}
+at    sunnyside_naismith
+    {{ move north, murphy
+       move south, o_zone
+       move east, sunnyside }}
+at    murphy
+    {{ move north, visual_arts
+       move south, sunnyside_naismith
+       move east, malott
+       move west, learned
+       move up, south_wescoe }}
+at    learned
+    {{ move north, jayhawk_bookstore
+       move south, sunnyside_naismith
+       move east, visual_arts
+       move west, reactor_pit1
+       move up, jayhawk_bookstore
+       move jump, reactor }}
+at    reactor
+    {{ move east, reactor_pit1
+       move jump, learned
+       move in, in_reactor }}
+at    in_reactor
+    {{ move out, reactor }}
+at    reactor_pit1
+    {{ move north, reactor_pit2
+       move south, reactor_pit2
+       move east, reactor_pit2
+       move west, reactor_pit2
+       move up, reactor_pit2
+       move down, reactor_pit2 }}
+at    reactor_pit2
+    {{ move north, reactor_pit3
+       move south, reactor_pit3
+       move east, reactor_pit3
+       move west, reactor_pit3
+       move up, reactor_pit3
+       move down, reactor_pit3 }}
+at    reactor_pit3
+    {{ move north, fissure
+       move south, fissure
+       move east, fissure
+       move west, fissure
+       move up, reactor
+       move down, fissure }}
+at    fissure
+    {{ move north, under_learned
+       move south, twisty_corridor
+       move down, underground_river }}
+at    under_learned
+    {{ move south, fissure
+       move up, learned }}
+at    twisty_corridor
+    {{ move north, fissure
+       move up, sunnyside_naismith }}
+at    underground_river
+    {{ move east, waterfall
+       move west, river_bend }}
+at    river_bend
+    {{ move east, underground_river }}
+at    waterfall
+    {{ move west, underground_river
+       move down, sandy_beach }}
+at    side_passage
+    {{ move up, waterfall
+       move down, sandy_beach
+       move jump, small_opening }}
+at    sandy_beach
+    {{ move up, side_passage
+       move north, rivers_end }}
+at    rivers_end
+    {{ move south, sandy_beach }}
+at    jayhawk_bookstore
+    {{ move south, learned
+       move east, fountain
+       move down, learned }}
+at    fountain
+    {{ move north, carrutho_leary
+       move south, visual_arts
+       move east, pterodactyl
+       move west, jayhawk_bookstore }}
+at    o_zone
+    {{ move north, sunnyside
+       move south, naismith }}
+at    Twenty_Third
+    {{ move north, hut
+       move east, krogers }}
+at    hut
+    {{ move east, naismith
+       move south, 23rd }}
+at    krogers
+    {{ move north, naismith
+       move east, lot
+       move west, 23rd }}
+at    lot
+    {{ move east, rustys
+       move west, krogers }}
+at    naismith
+    {{ move north, sunnyside_naismith
+       move south, krogers
+       move east, lhs }}
+at    lhs
+    {{ move north, acc
+       move south, rustys
+       move west, naismith }}
+at    rustys
+    {{ move north, lhs
+       move west, lot }}
+at    acc
+    {{ move south, lhs
+       move east, sunflower
+       move west, sunnyside
+       move up, malott }}
+at    sunflower
+    {{ move south, acc
+       move east, south_watson
+       move west, jayhawk_sunflower }}
+at    north_watson
+    {{ move north, lippincott
+       move west, sunflower
+       move in, watson_entrance }}
+at    south_watson
+    {{ move west, sunflower
+       move in, stacks }}
+at    reference
+    {{ move back, watson_entrance
+       move climb, reference }}
+at    watson_entrance
+    {{ move east, reference
+       move south, stack_entrance
+       move out, north_watson }}
+at    stack_entrance
+    {{ move east, stacks
+       move west, stacks
+       move south, south_watson
+       move north, watson_entrance }}
+at    stacks
+    {{ move in, reference
+       move out, stack_warned }}
+at    stack_warned
+    {{ move help, stacks }}
+at    jayhawk_sunflower
+    {{ move north, steel_door
+       move south, acc
+       move east, lippincott
+       move west, pterodactyl }}
+at    lippincott
+    {{ move south, north_watson
+       move east, dyche
+       move west, jayhawk_sunflower }}
+at    dyche
+    {{ move north, union
+       move south, lippincott
+       move east, schol_halls
+       move west, steel_door }}
+at    schol_halls
+    {{ move north, slums
+       move west, dyche }}
+at    union
+    {{ move north, crossfish
+       move south, dyche
+       move east, slums
+       move west, mississippi
+       move down, slums }}
+at    crossfish
+    {{ move south, union
+       move east, slums
+       move west, stadium_apartments }}
+at    stadium_apartments
+    {{ move north, joes
+       move south, crossfish
+       move east, gsp_corbin
+       move west, stadium }}
+at    gsp_corbin
+    {{ move south, crossfish
+       move east, slums
+       move west, stadium_apartments }}
+at    steps
+    {{ move north, pterodactyl
+       move east,  bat_room
+       move south, dank
+       move up, pterodactyl
+       move climb, pterodactyl }}
+at    dank
+    {{ move north,  bat_room
+       move south, military_science
+       move west, maze_b }}
+at    military_science
+    {{ move north, dank
+       move west, sewer
+       move south, sunnyside
+       move up, malott }}
+at    sewer
+    {{ move east, military_science
+       move west, under_learned }}
+at    cave
+    {{ move crawl, sauna
+       move south, button
+       move east, cave_in }}
+at    button
+    {{ move north, cave }}
+at    cave_in
+    {{ move west, cave }}
+at    maze_l
+    {{ move north, maze_k
+       move south, maze_f
+       move east, maze_l
+       move west, maze_l
+       move up, maze_b
+       move down, maze_f }}
+at    maze_k
+    {{ move north, maze_l
+       move south, maze_k
+       move east, maze_f
+       move west, maze_k
+       move up, maze_j
+       move down, maze_k }}
+at    maze_f
+    {{ move north, maze_l
+       move south, maze_f
+       move east, maze_g
+       move west, maze_k
+       move up, maze_f
+       move down, maze_k }}
+at    maze_j
+    {{ move north, maze_b
+       move south, maze_l
+       move east, maze_k
+       move west, maze_j
+       move up, maze_b
+       move down, maze_l }}
+at    maze_b
+    {{ move north, maze_i
+       move south, maze_b
+       move east, maze_j
+       move west, maze_g
+       move up, maze_f
+       move down, maze_g }}
+at    maze_g
+    {{ move north, maze_l
+       move south, maze_i
+       move east, maze_j
+       move west, maze_a
+       move up, maze_i
+       move down, maze_b }}
+at    maze_i
+    {{ move north, maze_i
+       move south, maze_i
+       move east, maze_b
+       move west, maze_a
+       move up, maze_c
+       move down, maze_c }}
+at    maze_c
+    {{ move north, maze_g
+       move south, maze_h
+       move east, maze_b
+       move west, maze_l
+       move up, maze_h
+       move down, maze_i }}
+at    maze_h
+    {{ move north, maze_a
+       move south, maze_i
+       move east, maze
+       move west, maze_c
+       move up, maze_g
+       move down, maze_b }}
+at    maze_a
+    {{ move north, maze_h
+       move south, maze_d
+       move east, maze_j
+       move west, maze_a
+       move up, maze_a
+       move down, maze_c }}
+at    maze_e
+    {{ move north, maze
+       move south, maze_d
+       move east, maze_a
+       move west, maze_h
+       move up, maze_l
+       move down, maze_o }}
+at    maze_d
+    {{ move north, maze_m
+       move south, maze_l
+       move east, maze_h
+       move west, maze_d
+       move up, maze_o
+       move down, maze_n }}
+at    maze_o
+    {{ move north, maze_d
+       move south, maze_m
+       move east, maze_o
+       move west, maze_i
+       move up, maze
+       move down, maze_m }}
+at    maze_m
+    {{ move north, maze_a
+       move south, maze_a
+       move east, maze_m
+       move west, maze_n
+       move up, maze_m
+       move down, maze_n }}
+at    maze_n
+    {{ move north, maze_m
+       move south, maze_d
+       move east, sewer
+       move west, sewer
+       move up, maze_o
+       move down, maze_n }}
