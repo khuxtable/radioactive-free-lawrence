@@ -24,7 +24,7 @@ public class GameGenerator {
 		createDefaultElements();
 
 		GameVisitor visitor = new GameVisitor(gameData.gameNode, gameData.errorReporter);
-		visitor.readFile("main.acd", false);
+		visitor.readFile("main.gdesc", false);
 
 		assignRefnos();
 		processStateValues();

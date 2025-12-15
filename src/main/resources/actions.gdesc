@@ -43,7 +43,7 @@ action take {
     }
 }
 action drop {
-    if (ishave(arg2)) {      // True only if the player has the thing
+    if (isHave(arg2)) {      // True only if the player has the thing
         say("You drop the #.", ARG2);
         drop(arg2);          // Move the thing from player's inventory to here
         break repeat;

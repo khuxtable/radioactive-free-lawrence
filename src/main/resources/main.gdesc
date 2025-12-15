@@ -3,7 +3,7 @@ version "3.0";
 author "Kathryn Huxtable, Ron Burk, David Wiley";
 date "20 June 1982";
 
-include "verbs.acd";
+include "verbs.gdesc";
 
 flags variable
     moved;          // Optional STATUS variable flag, maintained by the kernel
@@ -14,11 +14,11 @@ flags place
 flags object
     seen;           // object flag, maintained by the kernel
 
-include "objects.acd";
+include "objects.gdesc";
 
-include "places.acd";
+include "places.gdesc";
 
-include "actions.acd";
+include "actions.gdesc";
 
 initial {
     apport(coke, In_Joes);
