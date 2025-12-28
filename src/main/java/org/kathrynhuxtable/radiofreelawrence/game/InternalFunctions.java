@@ -1,12 +1,12 @@
 package org.kathrynhuxtable.radiofreelawrence.game;
 
 import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import lombok.RequiredArgsConstructor;
 
+import org.kathrynhuxtable.gdesc.parser.GameInfo;
+import org.kathrynhuxtable.gdesc.parser.InternalFunction;
 import org.kathrynhuxtable.radiofreelawrence.game.exception.BreakException;
 import org.kathrynhuxtable.radiofreelawrence.game.exception.GameRuntimeException;
 import org.kathrynhuxtable.radiofreelawrence.game.exception.LoopControlException.ControlType;
@@ -22,40 +22,58 @@ public class InternalFunctions {
 	private Map<String, Method> internalFunctions;
 
 	public Method getInternalFunction(String name) {
+		return getInternalFunctions().get(name);
+	}
+
+	private Map<String, Method> getInternalFunctions() {
 		if (internalFunctions == null) {
 			internalFunctions = new HashMap<>();
 			for (Method method : InternalFunctions.class.getDeclaredMethods()) {
-				if (method.isAnnotationPresent(GameName.class)) {
-					GameName annotation = method.getAnnotation(GameName.class);
+				if (method.isAnnotationPresent(InternalFunction.class)) {
+					InternalFunction annotation = method.getAnnotation(InternalFunction.class);
 					internalFunctions.put(annotation.name(), method);
 				}
 			}
 		}
-		return internalFunctions.get(name);
+		return internalFunctions;
+	}
+
+	public void validateGrammar() {
+		Set<String> internalFunctions = getInternalFunctions().keySet();
+		Set<String> grammarInternalFunctions = new GameInfo().getInternalFunctionNames();
+		if (!internalFunctions.containsAll(grammarInternalFunctions)) {
+			Set<String> missingInternalFunctions = new HashSet<>(grammarInternalFunctions);
+			missingInternalFunctions.removeAll(internalFunctions);
+			throw new GameRuntimeException("Internal functions does not contain all grammar functions: " + missingInternalFunctions);
+		} else if (!grammarInternalFunctions.containsAll(internalFunctions)) {
+			Set<String> missingGrammarInternalFunctions = new HashSet<>(internalFunctions);
+			missingGrammarInternalFunctions.removeAll(grammarInternalFunctions);
+			throw new GameRuntimeException("Grammar functions does not contain all internal functions: " + missingGrammarInternalFunctions);
+		}
 	}
 
 	// Internal functions here.
 
-	@GameName(name = "input")
+	@InternalFunction(name = "input")
 	public int input(ExprNode... parameters) {
 		gameData.clearFlag(gameData.getIdentifierRefno("status"), gameData.getIntIdentifierValue("moved"));
 		gameData.getInput().input();
 		return 0;
 	}
 
-	@GameName(name = "inrange")
+	@InternalFunction(name = "inrange")
 	public int inrange(ExprNode... parameters) {
 		int value = parameters[0].evaluate(gameData);
 		return (value >= parameters[1].evaluate(gameData) && value <= parameters[2].evaluate(gameData)) ? 1 : 0;
 	}
 
-	@GameName(name = "chance")
-	public int chance(ExprNode... parameters) {
+	@InternalFunction(name = "chance")
+	public int ischance(ExprNode... parameters) {
 		return Math.random() * 100 < parameters[0].evaluate(gameData) ? 1 : 0;
 	}
 
-	@GameName(name = "ishave")
-	public int have(ExprNode... parameters) {
+	@InternalFunction(name = "ishave")
+	public int ishave(ExprNode... parameters) {
 		int refno = parameters[0].evaluate(gameData);
 		// The inhand location (inventory) is always refno floc.
 		if (refno >= gameData.fobj && refno < gameData.lobj) {
@@ -66,8 +84,8 @@ public class InternalFunctions {
 		return 0;
 	}
 
-	@GameName(name = "ishere")
-	public int here(ExprNode... parameters) {
+	@InternalFunction(name = "ishere")
+	public int ishere(ExprNode... parameters) {
 		int refno = parameters[0].evaluate(gameData);
 		if (refno >= gameData.fobj && refno < gameData.lobj) {
 			if (gameData.locations[refno - gameData.fobj] == gameData.getIntIdentifierValue("here")) {
@@ -77,18 +95,18 @@ public class InternalFunctions {
 		return 0;
 	}
 
-	@GameName(name = "isnear")
-	public int near(ExprNode... parameters) {
-		return have(parameters) != 0 || here(parameters) != 0 ? 1 : 0;
+	@InternalFunction(name = "isnear")
+	public int isnear(ExprNode... parameters) {
+		return ishave(parameters) != 0 || ishere(parameters) != 0 ? 1 : 0;
 	}
 
-	@GameName(name = "isflag")
+	@InternalFunction(name = "isflag")
 	public int isflag(ExprNode... parameters) {
 		long flag = parameters[1].evaluate(gameData);
 		return gameData.testFlag(parameters[0], flag) ? 1 : 0;
 	}
 
-	@GameName(name = "setflag")
+	@InternalFunction(name = "setflag")
 	public int setflag(ExprNode... parameters) {
 		int refno = parameters[0].evaluate(gameData);
 		long flag = parameters[1].evaluate(gameData);
@@ -96,7 +114,7 @@ public class InternalFunctions {
 		return 0;
 	}
 
-	@GameName(name = "clearflag")
+	@InternalFunction(name = "clearflag")
 	public int clearflag(ExprNode... parameters) {
 		int refno = parameters[0].evaluate(gameData);
 		long flag = parameters[1].evaluate(gameData);
@@ -104,7 +122,7 @@ public class InternalFunctions {
 		return 0;
 	}
 
-	@GameName(name = "isat")
+	@InternalFunction(name = "isat")
 	public int isat(ExprNode... parameters) {
 		int here = gameData.getIntIdentifierValue("here");
 		for (ExprNode node : parameters) {
@@ -116,7 +134,7 @@ public class InternalFunctions {
 		return 0;
 	}
 
-	@GameName(name = "atplace")
+	@InternalFunction(name = "atplace")
 	public int atplace(ExprNode... parameters) {
 		int obj = gameData.getIntIdentifierValue("here");
 		int loc = gameData.locations[obj - gameData.fobj];
@@ -129,7 +147,7 @@ public class InternalFunctions {
 		return 0;
 	}
 
-	@GameName(name = "varis")
+	@InternalFunction(name = "varis")
 	public int varis(ExprNode... parameters) {
 		int refno = parameters[0].evaluate(gameData);
 		if (refno < gameData.fvar || refno >= gameData.lvar) {
@@ -145,7 +163,7 @@ public class InternalFunctions {
 		return 0;
 	}
 
-	@GameName(name = "key")
+	@InternalFunction(name = "key")
 	public int iskey(ExprNode... parameters) {
 		int verb = gameData.getIntIdentifierValue("arg1");
 		for (ExprNode parameter : parameters) {
@@ -157,7 +175,7 @@ public class InternalFunctions {
 		return 1;
 	}
 
-	@GameName(name = "anyof")
+	@InternalFunction(name = "anyof")
 	public int anyof(ExprNode... parameters) {
 		int verb = gameData.getIntIdentifierValue("arg1");
 		for (ExprNode parameter : parameters) {
@@ -169,19 +187,19 @@ public class InternalFunctions {
 		return 0;
 	}
 
-	@GameName(name = "query")
-	public int query(ExprNode... parameters) {
+	@InternalFunction(name = "getquery")
+	public int getquery(ExprNode... parameters) {
 		// FIXME Implement this
 		return 0;
 	}
 
-	@GameName(name = "typed")
-	public int typed(ExprNode... parameters) {
+	@InternalFunction(name = "usertyped")
+	public int usertyped(ExprNode... parameters) {
 		// FIXME Implement this
 		return 0;
 	}
 
-	@GameName(name = "needcmd")
+	@InternalFunction(name = "needcmd")
 	public int needcmd(ExprNode... parameters) {
 		// FIXME Implement this
 		return 0;
@@ -190,13 +208,13 @@ public class InternalFunctions {
 	/*
 	 * Abort the do-all loop if one executing and flush the command line buffer.
 	 */
-	@GameName(name = "flush")
-	public int flush(ExprNode... parameters) {
+	@InternalFunction(name = "flushinput")
+	public int flushinput(ExprNode... parameters) {
 		// FIXME Implement this
 		return 0;
 	}
 
-	@GameName(name = "apport")
+	@InternalFunction(name = "apport")
 	public int apport(ExprNode... parameters) {
 		int object = parameters[0] instanceof TextElementNode ?
 				gameData.getIntIdentifierValue(((TextElementNode) parameters[0]).getText().toLowerCase()) :
@@ -208,8 +226,8 @@ public class InternalFunctions {
 		return 0;
 	}
 
-	@GameName(name = "get")
-	public int get(ExprNode... parameters) {
+	@InternalFunction(name = "iget")
+	public int iget(ExprNode... parameters) {
 		int object = parameters[0] instanceof TextElementNode ?
 				gameData.getIntIdentifierValue(((TextElementNode) parameters[0]).getText().toLowerCase()) :
 				parameters[0].evaluate(gameData);
@@ -219,8 +237,8 @@ public class InternalFunctions {
 		return 0;
 	}
 
-	@GameName(name = "drop")
-	public int drop(ExprNode... parameters) {
+	@InternalFunction(name = "idrop")
+	public int idrop(ExprNode... parameters) {
 		int object = parameters[0] instanceof TextElementNode ?
 				gameData.getIntIdentifierValue(((TextElementNode) parameters[0]).getText().toLowerCase()) :
 				parameters[0].evaluate(gameData);
@@ -230,7 +248,7 @@ public class InternalFunctions {
 		return 0;
 	}
 
-	@GameName(name = "goto")
+	@InternalFunction(name = "goto")
 	public int goto_(ExprNode... parameters) {
 		int place = parameters[0] instanceof TextElementNode ?
 				gameData.getIntIdentifierValue(((TextElementNode) parameters[0]).getText().toLowerCase()) :
@@ -241,8 +259,8 @@ public class InternalFunctions {
 		return 0;
 	}
 
-	@GameName(name = "move")
-	public int move(ExprNode... parameters) {
+	@InternalFunction(name = "move_")
+	public int move_(ExprNode... parameters) {
 		int place = parameters[parameters.length - 1] instanceof TextElementNode ?
 				gameData.getIntIdentifierValue(((TextElementNode) parameters[parameters.length - 1]).getText().toLowerCase()) :
 				parameters[parameters.length - 1].evaluate(gameData);
@@ -257,14 +275,14 @@ public class InternalFunctions {
 		throw new BreakException(ControlType.REPEAT);
 	}
 
-	@GameName(name = "smove")
+	@InternalFunction(name = "smove")
 	public int smove(ExprNode... parameters) {
 		// FIXME Implement this
 		return 0;
 	}
 
-	@GameName(name = "say")
-	public int say(ExprNode... parameters) {
+	@InternalFunction(name = "say_")
+	public int say_(ExprNode... parameters) {
 		try {
 			if (parameters.length == 0) return 0;
 			String text = "";
@@ -287,7 +305,7 @@ public class InternalFunctions {
 		return 0;
 	}
 
-	@GameName(name = "append")
+	@InternalFunction(name = "append")
 	public int append(ExprNode... text) {
 		// FIXME Implement this
 		// Not sure how to implement this, since we typically generate the newline after the text.
@@ -295,13 +313,13 @@ public class InternalFunctions {
 		return 0;
 	}
 
-	@GameName(name = "quip")
+	@InternalFunction(name = "quip")
 	public int quip(ExprNode... text) {
-		say(text);
+		say_(text);
 		throw new BreakException(ControlType.REPEAT);
 	}
 
-	@GameName(name = "respond")
+	@InternalFunction(name = "respond")
 	public int respond(ExprNode... parameters) {
 		if (anyof(parameters) != 0) {
 			quip(Arrays.copyOfRange(parameters, parameters.length - 1, parameters.length));
@@ -309,8 +327,8 @@ public class InternalFunctions {
 		return 0;
 	}
 
-	@GameName(name = "describe")
-	public int describe(ExprNode... parameters) {
+	@InternalFunction(name = "describe_")
+	public int describe_(ExprNode... parameters) {
 		if (parameters.length == 0) return 0;
 		int var = parameters[0] instanceof IdentifierNode ?
 				gameData.getIntIdentifierValue(((IdentifierNode) parameters[0]).getName()) :
@@ -322,19 +340,19 @@ public class InternalFunctions {
 		return 0;
 	}
 
-	@GameName(name = "vocab")
+	@InternalFunction(name = "vocab")
 	public int vocab(ExprNode... text) {
 		// FIXME Implement this
 		return 0;
 	}
 
-	@GameName(name = "tie")
+	@InternalFunction(name = "tie")
 	public int tie(ExprNode... parameters) {
 		// FIXME Implement this
 		return 0;
 	}
 
-	@GameName(name = "stop")
+	@InternalFunction(name = "stop")
 	public int stop(ExprNode... parameters) {
 		System.exit(0);
 		return 0;

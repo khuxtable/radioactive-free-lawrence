@@ -10,14 +10,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.tree.TerminalNode;
 
+import org.kathrynhuxtable.gdesc.parser.GameLexer;
+import org.kathrynhuxtable.gdesc.parser.GameParser;
+import org.kathrynhuxtable.gdesc.parser.GameParser.*;
+import org.kathrynhuxtable.gdesc.parser.GameParserBaseVisitor;
 import org.kathrynhuxtable.radiofreelawrence.game.GameData.IdentifierType;
 import org.kathrynhuxtable.radiofreelawrence.game.exception.LoopControlException.ControlType;
-import org.kathrynhuxtable.radiofreelawrence.game.grammar.GameParser.*;
 import org.kathrynhuxtable.radiofreelawrence.game.grammar.tree.*;
 import org.kathrynhuxtable.radiofreelawrence.game.grammar.tree.ActionNode.ActionCode;
 import org.kathrynhuxtable.radiofreelawrence.game.grammar.tree.AssignmentNode.AssignmentOperator;
@@ -70,9 +75,9 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 
 	@Override
 	public BaseNode visitIncludePragma(IncludePragmaContext ctx) {
-		TextElementNode textLiteralNode = (TextElementNode) visit(ctx.textLiteral());
+		TextElementNode textLiteralNode = getTextLiteralNode(ctx.STRING_LITERAL());
 		String resource = textLiteralNode.getText();
-		boolean optional = ctx.boolLiteral() != null && "true".equalsIgnoreCase(ctx.boolLiteral().getText());
+		boolean optional = ctx.BOOL_LITERAL() != null && "true".equalsIgnoreCase(ctx.BOOL_LITERAL().getText());
 		try {
 			// Parse the include file, adding its values to our result.
 			GameVisitor nested = new GameVisitor(root, errorReporter);
@@ -86,29 +91,25 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 
 	@Override
 	public BaseNode visitNamePragma(NamePragmaContext ctx) {
-		TextElementNode textLiteralNode = (TextElementNode) visit(ctx.textLiteral());
-		root.setName(textLiteralNode.getText());
+		root.setName(TextUtils.cleanStringLiteral(ctx.STRING_LITERAL().getText()));
 		return root;
 	}
 
 	@Override
 	public BaseNode visitVersionPragma(VersionPragmaContext ctx) {
-		TextElementNode textLiteralNode = (TextElementNode) visit(ctx.textLiteral());
-		root.setVersion(textLiteralNode.getText());
+		root.setVersion(TextUtils.cleanStringLiteral(ctx.STRING_LITERAL().getText()));
 		return root;
 	}
 
 	@Override
 	public BaseNode visitAuthorPragma(AuthorPragmaContext ctx) {
-		TextElementNode textLiteralNode = (TextElementNode) visit(ctx.textLiteral());
-		root.setAuthor(textLiteralNode.getText());
+		root.setAuthor(TextUtils.cleanStringLiteral(ctx.STRING_LITERAL().getText()));
 		return root;
 	}
 
 	@Override
 	public BaseNode visitDatePragma(DatePragmaContext ctx) {
-		TextElementNode textLiteralNode = (TextElementNode) visit(ctx.textLiteral());
-		root.setDate(textLiteralNode.getText());
+		root.setDate(TextUtils.cleanStringLiteral(ctx.STRING_LITERAL().getText()));
 		return root;
 	}
 
@@ -135,7 +136,7 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 	@Override
 	public VerbNode visitVerbDirective(GameParser.VerbDirectiveContext ctx) {
 		VerbNode node = VerbNode.builder()
-				.verbs(ctx.identifier().stream()
+				.verbs(ctx.IDENTIFIER().stream()
 						.map(v -> v.getText().toLowerCase())
 						.collect(Collectors.toList()))
 				.noise(false)
@@ -156,7 +157,7 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 	@Override
 	public VerbNode visitNoiseDirective(GameParser.NoiseDirectiveContext ctx) {
 		VerbNode node = VerbNode.builder()
-				.verbs(ctx.identifier().stream()
+				.verbs(ctx.IDENTIFIER().stream()
 						.map(n -> n.getText().toLowerCase())
 						.collect(Collectors.toList()))
 				.noise(false)
@@ -171,7 +172,7 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 				.map(c -> ((TextElementNode) visit(c)).getText())
 				.collect(Collectors.toList());
 		TextNode node = TextNode.builder()
-				.name(ctx.identifier() == null ? null : ctx.identifier().getText().toLowerCase())
+				.name(ctx.IDENTIFIER() == null ? null : ctx.IDENTIFIER().getText().toLowerCase())
 				.texts(texts)
 				.method(ctx.method() == null ? null : TextMethod.valueOf(ctx.method().getText().toUpperCase()))
 				.fragment(false)
@@ -192,7 +193,7 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 				.map(c -> ((TextElementNode) visit(c)).getText())
 				.collect(Collectors.toList());
 		TextNode node = TextNode.builder()
-				.name(ctx.identifier() == null ? null : ctx.identifier().getText().toLowerCase())
+				.name(ctx.IDENTIFIER() == null ? null : ctx.IDENTIFIER().getText().toLowerCase())
 				.texts(texts)
 				.method(ctx.method() == null ? null : TextMethod.valueOf(ctx.method().getText().toUpperCase()))
 				.fragment(true)
@@ -222,7 +223,7 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 	public ProcNode visitProcDirective(ProcDirectiveContext ctx) {
 		ProcNode node = ProcNode.builder()
 				.name(ctx.name.getText().toLowerCase())
-				.args(ctx.identifier().subList(1, ctx.identifier().size()).stream()
+				.args(ctx.IDENTIFIER().subList(1, ctx.IDENTIFIER().size()).stream()
 						.map(i -> i.getText().toLowerCase())
 						.collect(Collectors.toList()))
 				.code((BlockNode) visit(ctx.block()))
@@ -283,13 +284,13 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 
 	@Override
 	public StateClauseNode visitStateClause(StateClauseContext ctx) {
-		return new StateClauseNode(ctx.identifier().getText().toLowerCase(), ctx.expression() == null ? null : (ExprNode) visit(ctx.expression()));
+		return new StateClauseNode(ctx.IDENTIFIER().getText().toLowerCase(), ctx.expression() == null ? null : (ExprNode) visit(ctx.expression()));
 	}
 
 	@Override
 	public BaseNode visitVariableDirective(VariableDirectiveContext ctx) {
 		List<VariableNode> varList = root.getVariables();
-		for (IdentifierContext idCtx : ctx.identifier()) {
+		for (TerminalNode idCtx : ctx.IDENTIFIER()) {
 			String varName = idCtx.getText().toLowerCase();
 			VariableNode node = VariableNode.builder().variable(varName).build();
 			if (root.getIdentifiers().containsKey(varName)) {
@@ -304,8 +305,8 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 	@Override
 	public ArrayNode visitArrayDirective(GameParser.ArrayDirectiveContext ctx) {
 		ArrayNode node = ArrayNode.builder()
-				.name(ctx.identifier().getText().toLowerCase())
-				.size(Integer.parseInt(ctx.numLiteral().getText()))
+				.name(ctx.IDENTIFIER().getText().toLowerCase())
+				.size(Integer.parseInt(ctx.NUM_LITERAL().getText()))
 				.build();
 		if (node.getName() != null) {
 			if (root.getIdentifiers().containsKey(node.getName())) {
@@ -322,7 +323,7 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 		String briefDescription = ((TextElementNode) visit(ctx.textElement(0))).getText();
 		String longDescription = ctx.textElement(1) == null ? null : ((TextElementNode) visit(ctx.textElement(1))).getText();
 		PlaceNode node = PlaceNode.builder()
-				.names(ctx.identifier().stream()
+				.names(ctx.IDENTIFIER().stream()
 						.map(i -> i.getText().toLowerCase())
 						.collect(Collectors.toList()))
 				.inVocabulary("+".equals(ctx.getChild(1).toString()))
@@ -353,7 +354,7 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 		String briefDescription = ctx.textElement(1) == null ? null : ((TextElementNode) visit(ctx.textElement(1))).getText();
 		String longDescription = ctx.textElement(2) == null ? null : ((TextElementNode) visit(ctx.textElement(2))).getText();
 		ObjectNode node = ObjectNode.builder()
-				.names(ctx.identifier().stream()
+				.names(ctx.IDENTIFIER().stream()
 						.map(i -> i.getText().toLowerCase())
 						.collect(Collectors.toList()))
 				.inVocabulary(!"-".equals(ctx.getChild(1).toString()))
@@ -403,14 +404,14 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 	@Override
 	public BaseNode visitLabeledStatement(LabeledStatementContext ctx) {
 		StatementNode node = (StatementNode) visit(ctx.statement());
-		node.setLabel(((IdentifierNode) visit(ctx.identifier())).getName());
+		node.setLabel(getIdentifierNode(ctx.IDENTIFIER()).getName());
 		return node;
 	}
 
 	@Override
 	public BaseNode visitLabeledStatementNoShortIf(LabeledStatementNoShortIfContext ctx) {
 		StatementNode node = (StatementNode) visit(ctx.statementNoShortIf());
-		node.setLabel(((IdentifierNode) visit(ctx.identifier())).getName());
+		node.setLabel(getIdentifierNode(ctx.IDENTIFIER()).getName());
 		return node;
 	}
 
@@ -522,7 +523,7 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 	@Override
 	public BaseNode visitEnhancedForStatement(EnhancedForStatementContext ctx) {
 		return EnhancedForStatementNode.builder()
-				.identifier((IdentifierNode) visit(ctx.identifier()))
+				.identifier(getIdentifierNode(ctx.IDENTIFIER()))
 				.expression((ExprNode) visit(ctx.expression()))
 				.statement((StatementNode) visit(ctx.statement()))
 				.build();
@@ -531,7 +532,7 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 	@Override
 	public BaseNode visitEnhancedForStatementNoShortIf(EnhancedForStatementNoShortIfContext ctx) {
 		return EnhancedForStatementNode.builder()
-				.identifier((IdentifierNode) visit(ctx.identifier()))
+				.identifier(getIdentifierNode(ctx.IDENTIFIER()))
 				.expression((ExprNode) visit(ctx.expression()))
 				.statement((StatementNode) visit(ctx.statementNoShortIf()))
 				.build();
@@ -540,7 +541,7 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 	@Override
 	public BaseNode visitBreakStatement(BreakStatementContext ctx) {
 		ControlType controlType = ctx.PROC() != null ? ControlType.PROC : ctx.REPEAT() != null ? ControlType.REPEAT : ControlType.CODE;
-		String identifier = ctx.identifier() == null ? null : ((IdentifierNode) visit(ctx.identifier())).getName();
+		String identifier = ctx.IDENTIFIER() == null ? null : getIdentifierNode(ctx.IDENTIFIER()).getName();
 		return BreakStatementNode.builder()
 				.identifier(identifier)
 				.controlType(controlType)
@@ -550,7 +551,7 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 	@Override
 	public BaseNode visitContinueStatement(ContinueStatementContext ctx) {
 		ControlType controlType = ctx.PROC() != null ? ControlType.PROC : ctx.REPEAT() != null ? ControlType.REPEAT : ControlType.CODE;
-		String identifier = ctx.identifier() == null ? null : ((IdentifierNode) visit(ctx.identifier())).getName();
+		String identifier = ctx.IDENTIFIER() == null ? null : getIdentifierNode(ctx.IDENTIFIER()).getName();
 		return ContinueStatementNode.builder()
 				.identifier(identifier)
 				.controlType(controlType)
@@ -582,7 +583,7 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 	@Override
 	public BaseNode visitVariableDeclarator(VariableDeclaratorContext ctx) {
 		return VariableDeclaratorNode.builder()
-				.identifier((IdentifierNode) visit(ctx.identifier()))
+				.identifier(getIdentifierNode(ctx.IDENTIFIER()))
 				.expression(ctx.expression() == null ? null : (ExprNode) visit(ctx.expression()))
 				.build();
 	}
@@ -595,19 +596,28 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 	@Override
 	public BaseNode visitArrayAccess(ArrayAccessContext ctx) {
 		return ArrayAccessNode.builder()
-				.arrayName(ctx.identifier().getText().toLowerCase())
+				.arrayName(ctx.IDENTIFIER().getText().toLowerCase())
 				.index((ExprNode) visit(ctx.expression()))
 				.build();
 	}
 
 	@Override
 	public BaseNode visitFunctionInvocation(FunctionInvocationContext ctx) {
-		return FunctionInvocationNode.builder()
-				.identifier((IdentifierNode) visit(ctx.identifier()))
-				.parameters(ctx.expression().stream()
-						.map(p -> (ExprNode) visit(p))
-						.collect(Collectors.toList()))
-				.build();
+		if (ctx.IDENTIFIER() != null) {
+			return FunctionInvocationNode.builder()
+					.identifier(getIdentifierNode(ctx.IDENTIFIER()))
+					.parameters(ctx.expression().stream()
+							.map(p -> (ExprNode) visit(p))
+							.collect(Collectors.toList()))
+					.build();
+		} else {
+			return FunctionInvocationNode.builder()
+					.internalFunction(ctx.internalFunction().getText().toLowerCase())
+					.parameters(ctx.expression().stream()
+							.map(p -> (ExprNode) visit(p))
+							.collect(Collectors.toList()))
+					.build();
+		}
 	}
 
 	@Override
@@ -811,23 +821,27 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 		} catch (IllegalArgumentException e) {
 			identifierType = null;
 		}
-		return new InstanceofNode((IdentifierNode) visit(ctx.identifier()), identifierType);
+		return new InstanceofNode(getIdentifierNode(ctx.IDENTIFIER()), identifierType);
 	}
 
 	@Override
 	public BaseNode visitRefExpression(RefExpressionContext ctx) {
-		return new RefNode((IdentifierNode) visit(ctx.identifier()));
+		return new RefNode(getIdentifierNode(ctx.IDENTIFIER()));
 	}
 
 	@Override
-	public BaseNode visitIdentifier(IdentifierContext ctx) {
-		return new IdentifierNode(ctx.getText().toLowerCase());
+	public BaseNode visitTextElement(TextElementContext ctx) {
+		if (ctx.STRING_LITERAL() != null) {
+			return getTextLiteralNode(ctx.STRING_LITERAL());
+		} else {
+			return getTextBlockNode(ctx.TEXT_BLOCK());
+		}
 	}
 
 	@Override
 	public BaseNode visitLiteral(LiteralContext ctx) {
 		if (ctx.STRING_LITERAL() != null) {
-			return new TextElementNode(TextUtils.cleanStringLiteral(ctx.STRING_LITERAL().getText()));
+			return getTextLiteralNode(ctx.STRING_LITERAL());
 		} else if (ctx.CHAR_LITERAL() != null) {
 			return NumberLiteralNode.builder()
 					.number(TextUtils.cleanCharLiteral(ctx.CHAR_LITERAL().getText()))
@@ -847,17 +861,20 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 		}
 	}
 
-	@Override
-	public TextElementNode visitTextLiteral(GameParser.TextLiteralContext ctx) {
-		return TextElementNode.builder()
-				.text(TextUtils.cleanStringLiteral(ctx.getText()))
-				.build();
+	public IdentifierNode getIdentifierNode(TerminalNode identifier) {
+		return new IdentifierNode(identifier.getText().toLowerCase());
 	}
 
 	@Override
-	public TextElementNode visitTextBlock(TextBlockContext ctx) {
-		return TextElementNode.builder()
-				.text(TextUtils.cleanTextBlock(ctx.getText()))
-				.build();
+	public BaseNode visitIdentifierReference(IdentifierReferenceContext ctx) {
+		return new IdentifierNode(ctx.getText().toLowerCase());
+	}
+
+	private static @NonNull TextElementNode getTextLiteralNode(TerminalNode ctx) {
+		return new TextElementNode(TextUtils.cleanStringLiteral(ctx.getText()));
+	}
+
+	private static @NonNull TextElementNode getTextBlockNode(TerminalNode ctx) {
+		return new TextElementNode(TextUtils.cleanTextBlock(ctx.getText()));
 	}
 }

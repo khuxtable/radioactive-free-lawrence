@@ -21,6 +21,7 @@ public class GameGenerator {
 	private final GameData gameData;
 
 	public void generate() throws Exception {
+		validateGrammarConsistency();
 		createDefaultElements();
 
 		GameVisitor visitor = new GameVisitor(gameData.gameNode, gameData.errorReporter);
@@ -47,6 +48,10 @@ public class GameGenerator {
 		System.out.println("   Version " + gameData.gameNode.getVersion());
 		System.out.println("Created by " + gameData.gameNode.getAuthor());
 		System.out.println("        on " + gameData.gameNode.getDate());
+	}
+
+	private void validateGrammarConsistency() throws Exception {
+		gameData.internalFunctions.validateGrammar();
 	}
 
 	private void createDefaultElements() {

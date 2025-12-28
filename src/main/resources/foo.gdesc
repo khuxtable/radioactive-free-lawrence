@@ -14,22 +14,22 @@ state mytest = testMeNow(32);
 
 
 proc testMeNow myArg {
-    say (ninth_mississippi);
-    say("The arg is $", myArg);
-    say ("this is {you_do}, so there!", axe);
-    say ("[There are no/This is one/There are $] thing[s//s] here", 15);
+    say_ (ninth_mississippi);
+    say_("The arg is $", myArg);
+    say_ ("this is {you_do}, so there!", axe);
+    say_ ("[There are no/This is one/There are $] thing[s//s] here", 15);
     var beans = 1;
     for (var iter = 0, j = 5; iter < 4; iter++, j++) {
-        say ("iter is $", iter);
-        say ("j is $", j);
-        say ("bar");
+        say_ ("iter is $", iter);
+        say_ ("j is $", j);
+        say_ ("bar");
         beans += 1;
         if (beans == 3) {
             break;
         }
-        say("baz");
+        say_("baz");
     }
-    say("beans is $", beans);
+    say_("beans is $", beans);
     if (iter == 4) {
         return 14;
     } else {

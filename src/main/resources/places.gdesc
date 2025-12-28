@@ -6,8 +6,8 @@ place ninth_mississippi
     Southward, KU can be seen, a tattered flag waving over Fraser Hall.
     To the east are the remains of downtown Lawrence."""
     {
-    	move(south, stadium);
-    	move(east, joes);
+    	move_(south, stadium);
+    	move_(east, joes);
     }
 place joes
     "You are outside Joe's Bakery."
@@ -16,9 +16,9 @@ place joes
     Above it a sign reads 'OES AKE'. The door is bolted but
     a large window is broken out."""
     {
-    	move(window, in_joes);
-    	move(west, ninth_mississippi);
-    	move(east, dg_bank);
+    	move_(window, in_joes);
+    	move_(west, ninth_mississippi);
+    	move_(east, dg_bank);
     }
 place in_joes
     "You are inside Joe's."
@@ -26,7 +26,7 @@ place in_joes
     You are inside Joe's.
     You find a display rack containing the petrified remains of donuts."""
     {
-    	move(out, joes);
+    	move_(out, joes);
     }
 place stadium
     "You are standing at the corner of 11th and Mississippi."
@@ -37,10 +37,10 @@ place stadium
     To the south, Spencer Art Museum remains standing, and flags (albeit
     tattered) still fly above Fraser Hall."""
     {
-    	move(north, ninth_mississippi);
-    	move(south, mississippi);
-    	move(east, stadium_apartments);
-    	move(sw, campanile);
+    	move_(north, ninth_mississippi);
+    	move_(south, mississippi);
+    	move_(east, stadium_apartments);
+    	move_(sw, campanile);
     }
 place campanile
     "You are at the campanile."
@@ -52,11 +52,11 @@ place campanile
     sits to the north. A large mud puddle bubbles gently to the north west.
     A few intact buildings are just to the west."""
     {
-    	move(north, stadium);
-    	move(nw, potters);
-    	move(east, spencer);
-    	move(west, carruth_oleary);
-    	move(down, sewer);
+    	move_(north, stadium);
+    	move_(nw, potters);
+    	move_(east, spencer);
+    	move_(west, carruth_oleary);
+    	move_(down, sewer);
     }
 place potters
     """
@@ -65,8 +65,8 @@ place potters
     you can see a leaning tower. The rest of the scenery is obscured by
     hillside."""
     {
-        move(swim, campanile);
-        move(crawl, campanile);
+        move_(swim, campanile);
+        move_(crawl, campanile);
     }
 place carruth_oleary
     """
@@ -74,8 +74,8 @@ place carruth_oleary
     torn, spindled, and mutilated pieces of paper. You can see the
     campanile to the east and a path leads south."""
     {
-    	move(east, campanile);
-    	move(south, fountain);
+    	move_(east, campanile);
+    	move_(south, fountain);
     }
 place mississippi
     """
@@ -83,10 +83,10 @@ place mississippi
     To the north, smoke rises above 9th street.
     Campus is to the South, a large crater where Strong Hall once stood."""
     {
-    	move(north, stadium);
-    	move(south, steel_door);
-    	move(east, union);
-    	move(west, spencer);
+    	move_(north, stadium);
+    	move_(south, steel_door);
+    	move_(east, union);
+    	move_(west, spencer);
     }
 place steel_door
     """
@@ -94,29 +94,29 @@ place steel_door
     A square hole in the door emits an eerie light and faint noises
     can be heard, but a snarling German Shepherd keeps you from the door."""
     {
-    	move(south, jayhawk_sunflower);
-    	move(north, mississippi);
-    	move(pet, entrance);
+    	move_(south, jayhawk_sunflower);
+    	move_(north, mississippi);
+    	move_(pet, entrance);
     }
 place spencer
     """
     You are standing in front of Spencer Museum.
     The building remains remarkably intact."""
     {
-    	move(south, jayhawk_sunflower);
-    	move(west, campanile);
-    	move(east, mississippi);
-    	move(in, in_spencer);
-    	move(enter, in_spencer);
+    	move_(south, jayhawk_sunflower);
+    	move_(west, campanile);
+    	move_(east, mississippi);
+    	move_(in, in_spencer);
+    	move_(enter, in_spencer);
     }
 place in_spencer
     """
     You are inside the main entrance of Spencer Art Museum.
     I can't remember the layout, so you'll have to leave."""
     {
-    	move(exit, mississippi);
-    	move(out, mississippi);
-    	move(leave, mississippi);
+    	move_(exit, mississippi);
+    	move_(out, mississippi);
+    	move_(leave, mississippi);
     }
 place pterodactyl
     """
@@ -126,9 +126,9 @@ place pterodactyl
     a large crater filled with debris. This was Strong Hall.
     To the south, Wescoe Hall remains, squat and sullen."""
     {
-    	move(south, north_wescoe);
-    	move(east, jayhawk_sunflower);
-    	move(west, fountain);
+    	move_(south, north_wescoe);
+    	move_(east, jayhawk_sunflower);
+    	move_(west, fountain);
     }
 place north_wescoe
     """
@@ -137,10 +137,10 @@ place north_wescoe
     perhaps from a religious service. There is a stairway
     leading down a floor under the building."""
     {
-    	move(north, pterodactyl);
-    	move(east, east_wescoe);
-    	move(west, fountain);
-    	move(down, south_wescoe);
+    	move_(north, pterodactyl);
+    	move_(east, east_wescoe);
+    	move_(west, fountain);
+    	move_(down, south_wescoe);
     }
 place south_wescoe
     """
@@ -150,17 +150,17 @@ place south_wescoe
     To the south you can see Malott hall, and
     beyond that the Computing Center."""
     {
-    	move(south, malott);
-    	move(east, east_wescoe);
-    	move(west, visual_arts);
-    	move(up, north_wescoe);
-    	move(down, acc);
+    	move_(south, malott);
+    	move_(east, east_wescoe);
+    	move_(west, visual_arts);
+    	move_(up, north_wescoe);
+    	move_(down, acc);
     }
 place wescoe_cafeteria
     """
     You are in the Wescoe Cafeteria."""
     {
-    	move(out, south_wescoe);
+    	move_(out, south_wescoe);
     }
 place malott
     """
@@ -168,12 +168,12 @@ place malott
     The air smells terrible here. Possibly there are poisonous
     gasses escaping from their tanks."""
     {
-        move(north, south_wescoe);
-        move(south, sunnyside);
-        move(east, acc);
-        move(west, murphy);
-        move(up, south_wescoe);
-        move(down, acc);
+        move_(north, south_wescoe);
+        move_(south, sunnyside);
+        move_(east, acc);
+        move_(west, murphy);
+        move_(up, south_wescoe);
+        move_(down, acc);
     }
 place pu_soap_film
     """
@@ -182,11 +182,11 @@ place pu_soap_film
     of the bubble appear to warp and distort in a fantastically
     complex pattern."""
     {
-    	move(up, pu_lsd);
-    	move(down, pu_mist);
-    	move(left, pu_shrooms);
-    	move(right, pu_space);
-    	move(forward, pu_vomit);
+    	move_(up, pu_lsd);
+    	move_(down, pu_mist);
+    	move_(left, pu_shrooms);
+    	move_(right, pu_space);
+    	move_(forward, pu_vomit);
     }
 place pu_warm_fuzzy
     """
@@ -194,11 +194,11 @@ place pu_warm_fuzzy
     of warm fuzzy stuff, which floats around caressing you.
     It is difficult to see very far here."""
     {
-    	move(up, pu_soap_film);
-    	move(down, pu_ms);
-    	move(left, pu_shrooms);
-    	move(right, pu_space);
-    	move(forward, pu_mist);
+    	move_(up, pu_soap_film);
+    	move_(down, pu_ms);
+    	move_(left, pu_shrooms);
+    	move_(right, pu_space);
+    	move_(forward, pu_mist);
     }
 place pu_shrooms
     """
@@ -207,11 +207,11 @@ place pu_shrooms
     the stripes merge into a vortex-like funnel, with many
     craters."""
     {
-    	move(up, pu_soap_film);
-    	move(down, pu_ms);
-    	move(left, pu_lsd);
-    	move(right, pu_mist);
-    	move(forward, pu_vomit);
+    	move_(up, pu_soap_film);
+    	move_(down, pu_ms);
+    	move_(left, pu_lsd);
+    	move_(right, pu_mist);
+    	move_(forward, pu_vomit);
     }
 place pu_space
     """
@@ -219,11 +219,11 @@ place pu_space
     to determine distances here. Behind you, you can make
     out a large tan blob. To your left, you can see some mist."""
     {
-    	move(up, pu_soap_film);
-    	move(down, pu_ms);
-    	move(left, pu_mist);
-    	move(right, pu_lsd);
-    	move(forward, pu_vomit);
+    	move_(up, pu_soap_film);
+    	move_(down, pu_ms);
+    	move_(left, pu_mist);
+    	move_(right, pu_lsd);
+    	move_(forward, pu_vomit);
     }
 place pu_mist
     """
@@ -231,11 +231,11 @@ place pu_mist
     foggy and you can only see a few feet in any direction.
     Since there is nothing to see, this may not be a problem."""
     {
-    	move(up, pu_soap_film);
-    	move(down, pu_core);
-    	move(left, pu_shrooms);
-    	move(right, pu_space);
-    	move(forward, pu_zen1);
+    	move_(up, pu_soap_film);
+    	move_(down, pu_core);
+    	move_(left, pu_shrooms);
+    	move_(right, pu_space);
+    	move_(forward, pu_zen1);
     }
 place pu_zen1
     """
@@ -245,7 +245,7 @@ place pu_zen1
     may be misinterpreted, but you can't tell since you have
     completely lost track of that train of thought."""
     {
-    	move(fire, pu_zen2);
+    	move_(fire, pu_zen2);
     }
 place pu_zen2
     """
@@ -255,7 +255,7 @@ place pu_zen2
     may be misinterpreted, but you can't tell since you have
     completely lost track of that train of thought."""
     {
-    	move(is, pu_zen3);
+    	move_(is, pu_zen3);
     }
 place pu_zen3
     """
@@ -265,7 +265,7 @@ place pu_zen3
     may be misinterpreted, but you can't tell since you have
     completely lost track of that train of thought."""
     {
-    	move(the, pu_zen4);
+    	move_(the, pu_zen4);
     }
 place pu_zen4
     """
@@ -275,7 +275,7 @@ place pu_zen4
     may be misinterpreted, but you can't tell since you have
     completely lost track of that train of thought."""
     {
-    	move(poppy, potters);
+    	move_(poppy, potters);
     }
 place pu_lsd
     """
@@ -284,11 +284,11 @@ place pu_lsd
     to the left ahead of you. The funnel is pocked with numerous
     craters, some of which are big enough to swallow a hole."""
     {
-    	move(forward, pu_ms);
-    	move(down, pu_soap_film);
-    	move(left, pu_shrooms);
-    	move(right, pu_space);
-    	move(up, pu_vomit);
+    	move_(forward, pu_ms);
+    	move_(down, pu_soap_film);
+    	move_(left, pu_shrooms);
+    	move_(right, pu_space);
+    	move_(up, pu_vomit);
     }
 place pu_ms
     """
@@ -296,22 +296,22 @@ place pu_ms
     a narrow funnel. There are forces tugging at you from all
     directions. You begin feeling car-sick."""
     {
-    	move(up, pu_mist);
-    	move(down, pu_lsd);
-    	move(left, pu_space);
-    	move(right, pu_shrooms);
-    	move(forward, pu_vomit);
+    	move_(up, pu_mist);
+    	move_(down, pu_lsd);
+    	move_(left, pu_space);
+    	move_(right, pu_shrooms);
+    	move_(forward, pu_vomit);
     }
 place pu_vomit
     """
     You are in a small pocket universe. Floating around you are
     large blobs of vomit. The smell is nauseating."""
     {
-    	move(up, pu_soap_film);
-    	move(down, pu_lsd);
-    	move(left, pu_shrooms);
-    	move(right, pu_space);
-    	move(forward, pu_mist);
+    	move_(up, pu_soap_film);
+    	move_(down, pu_lsd);
+    	move_(left, pu_shrooms);
+    	move_(right, pu_space);
+    	move_(forward, pu_mist);
     }
 place pu_core
     """
@@ -320,7 +320,7 @@ place pu_core
     You appear to be looking down into the core of a nuclear
     fission reactor. But that's impossible, of course."""
     {
-    	move(up, pu_core);
+    	move_(up, pu_core);
     	move(down, pu_core);
     	move(left, pu_core);
     	move(right, pu_core);

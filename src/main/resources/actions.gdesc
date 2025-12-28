@@ -1,11 +1,11 @@
 action inventory {
     var count;
     for (var optr : inhand) {
-        say (optr);
+        say_ (optr);
         count++;    // Increment count of listed objects
     }
     if (count == 0) {                             // If nothing listed, ...
-        say ("You are not carrying anything.");   // ... say empty-handed
+        say_ ("You are not carrying anything.");   // ... say_ empty-handed
     }
     break repeat;              // Command fully handled, so terminate the REPEAT loop
 }
@@ -14,14 +14,14 @@ action take inventory {
 }
 action look {
     if (status == 1) {
-        describe(here, 1);        // The procedure does not QUIT...
+        describe_(here, 1);        // The procedure does not QUIT...
         var youSee = true;
         for (var optr : here) {
             if (youSee) {
-                say("");
+                say_("");
                 youSee = false;
             }
-            describe(optr);
+            describe_(optr);
         }
         break repeat;          // ... so QUIT explicitly
     }
@@ -31,12 +31,12 @@ action look {
     }
 }
 action describe {
-    describe(arg2);
+    describe_(arg2);
     break repeat;
 }
 action take {
     if (ishere(arg2)) {
-        get(arg2);
+        iget(arg2);
         quip("You take the #.", arg2);
     } else {
         quip("I see no # here.", arg2);
@@ -44,8 +44,8 @@ action take {
 }
 action drop {
     if (isHave(arg2)) {      // True only if the player has the thing
-        say("You drop the #.", ARG2);
-        drop(arg2);          // Move the thing from player's inventory to here
+        say_("You drop the #.", ARG2);
+        idrop(arg2);          // Move the thing from player's inventory to here
         break repeat;
     } else {
        quip("You have no #", ARG2);
@@ -59,7 +59,7 @@ action vocabulary {
     respond(travel, vocab_travel);
     respond(screen, vocab_screen);
     if (status == 1 || key(all)) {
-        say(vocab_general);
+        say_(vocab_general);
         set(context, q_vocab_0);
         quip("more?");
     }

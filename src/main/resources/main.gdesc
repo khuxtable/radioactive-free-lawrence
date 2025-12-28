@@ -36,27 +36,27 @@ repeat {
 */
 repeat {
     if (isflag(status, moved)) {
-        describe(here);
+        describe_(here);
         var youSee = true;
         for (var optr : here) {
             if (youSee) {
-                say("");
+                say_("");
                 youSee = false;
             }
-            describe(optr);
+            describe_(optr);
         }
     }
     input();                    // Get and parse player's command
-    //say("arg1 is $", arg1);
-    //say("arg2 is $", arg2);
-    //say("status is $", status);
+    //say_("arg1 is $", arg1);
+    //say_("arg2 is $", arg2);
+    //say_("status is $", status);
     if (status < 0) { // Can't find 2nd or 1st command word in the vocabulary
         quip ("Pardon?");       // Command parse failure -- abort the main loop
     }
 }
 repeat {
     if (key(quit)) {    // If the word QUIT occurs in the command
-        say ("As you wish.");
+        say_ ("As you wish.");
         stop();         // Exit the game
     }
     here();             // Execute code, if any, associated with this location

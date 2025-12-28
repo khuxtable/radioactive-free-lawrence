@@ -15,11 +15,13 @@ import org.kathrynhuxtable.radiofreelawrence.game.GameData;
 @AllArgsConstructor
 public class FunctionInvocationNode implements ExprNode {
 	private IdentifierNode identifier;
+	private String internalFunction;
 	private List<ExprNode> parameters;
 	private boolean internal;
 
 	@Override
 	public int evaluate(GameData gameData) {
-		return gameData.callFunction(identifier.getName(), internal, parameters);
+		String functionName = internalFunction != null ? internalFunction : identifier.getName();
+		return gameData.callFunction(functionName, internal, parameters);
 	}
 }
