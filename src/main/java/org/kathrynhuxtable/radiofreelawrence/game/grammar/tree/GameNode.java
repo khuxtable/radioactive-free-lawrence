@@ -11,7 +11,7 @@ public class GameNode implements BaseNode {
 	private String date;
 	private String author;
 
-	Map<String, BaseNode> verbs =  new LinkedHashMap<>();
+	Map<String, VocabularyNode> verbs =  new LinkedHashMap<>();
 	Map<String, BaseNode> identifiers =  new LinkedHashMap<>();
 	List<String> noise = new ArrayList<>();
 	List<VariableNode> variables =  new ArrayList<>();

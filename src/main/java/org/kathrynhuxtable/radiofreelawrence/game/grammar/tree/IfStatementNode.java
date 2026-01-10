@@ -1,5 +1,7 @@
 package org.kathrynhuxtable.radiofreelawrence.game.grammar.tree;
 
+import java.util.List;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,17 +15,21 @@ import org.kathrynhuxtable.radiofreelawrence.game.exception.GameRuntimeException
 @AllArgsConstructor
 @NoArgsConstructor
 public class IfStatementNode implements StatementNode {
-	private ExprNode expression;
-	private StatementNode thenStatement;
-	private StatementNode elseStatement;
+	private List<ExprNode> expressions;
+	private List<StatementNode> thenStatements;
 	private String label;
 
 	@Override
 	public void execute(GameData gameData) throws GameRuntimeException {
-		if (expression.evaluate(gameData) != 0) {
-			thenStatement.execute(gameData);
-		} else if (elseStatement != null) {
-			elseStatement.execute(gameData);
+		for (int i = 0; i < expressions.size(); i++) {
+			if (expressions.get(i).evaluate(gameData) != 0) {
+				thenStatements.get(i).execute(gameData);
+				return;
+			}
+		}
+		// Handle final else block
+		if (thenStatements.size() > expressions.size()) {
+			thenStatements.get(expressions.size()).execute(gameData);
 		}
 	}
 }

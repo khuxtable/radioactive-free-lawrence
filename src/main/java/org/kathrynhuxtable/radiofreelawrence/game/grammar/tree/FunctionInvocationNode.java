@@ -16,6 +16,7 @@ import org.kathrynhuxtable.radiofreelawrence.game.GameData;
 public class FunctionInvocationNode implements ExprNode {
 	private IdentifierNode identifier;
 	private String internalFunction;
+	private String verbFunction;
 	private List<ExprNode> parameters;
 	private boolean internal;
 

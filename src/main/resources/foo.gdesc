@@ -1,7 +1,7 @@
-variable first second;
+variable first, second;
 variable third;
 
-array thingsHere[15];
+variable thingsHere[15];
 
 state alabama,
     texas = 5,
@@ -9,7 +9,7 @@ state alabama,
     missouri;
 state kentucky,
     tennessee,
-    virginia = move;
+    virginia = "move";
 state mytest = testMeNow(32);
 
 

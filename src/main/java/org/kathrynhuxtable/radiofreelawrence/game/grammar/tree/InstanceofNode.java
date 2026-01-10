@@ -15,6 +15,15 @@ public class InstanceofNode implements ExprNode {
 
 	@Override
 	public int evaluate(GameData gameData) {
-		return identifierType == gameData.getIdentifierType(identifier.getName()) ? 1 : 0;
+		IdentifierType idType = gameData.getIdentifierType(identifier.getName());
+		if (idType == IdentifierType.VARIABLE) {
+			try {
+				int refno = gameData.getIntIdentifierValue(identifier.getName());
+				idType = gameData.getRefnoType(refno);
+			} catch (NumberFormatException e) {
+				// Fall through
+			}
+		}
+		return identifierType == idType ? 1 : 0;
 	}
 }

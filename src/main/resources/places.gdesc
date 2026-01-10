@@ -5,29 +5,29 @@ place ninth_mississippi
     To the north are singed trees and devastated buildings.
     Southward, KU can be seen, a tattered flag waving over Fraser Hall.
     To the east are the remains of downtown Lawrence."""
-    {
-    	move_(south, stadium);
-    	move_(east, joes);
-    }
+        {
+            move("south", stadium);
+            move("east", joes);
+        }
 place joes
     "You are outside Joe's Bakery."
     """
     You are standing in front of a low squat building.
     Above it a sign reads 'OES AKE'. The door is bolted but
     a large window is broken out."""
-    {
-    	move_(window, in_joes);
-    	move_(west, ninth_mississippi);
-    	move_(east, dg_bank);
-    }
+        {
+            move("window", in_joes);
+            move("west", ninth_mississippi);
+            move("east", dg_bank);
+        }
 place in_joes
     "You are inside Joe's."
     """
     You are inside Joe's.
     You find a display rack containing the petrified remains of donuts."""
-    {
-    	move_(out, joes);
-    }
+        {
+            move("exit", joes);
+        }
 place stadium
     "You are standing at the corner of 11th and Mississippi."
     """
@@ -36,12 +36,12 @@ place stadium
     are directly to the west. To the north, smoke rises over the city.
     To the south, Spencer Art Museum remains standing, and flags (albeit
     tattered) still fly above Fraser Hall."""
-    {
-    	move_(north, ninth_mississippi);
-    	move_(south, mississippi);
-    	move_(east, stadium_apartments);
-    	move_(sw, campanile);
-    }
+        {
+            move("north", ninth_mississippi);
+            move("south", mississippi);
+            move("east", stadium_apartments);
+            move("sw", campanile);
+        }
 place campanile
     "You are at the campanile."
     """
@@ -51,73 +51,71 @@ place campanile
     south stands a strange statue. KU Memorial Stadium, in all its splendor,
     sits to the north. A large mud puddle bubbles gently to the north west.
     A few intact buildings are just to the west."""
-    {
-    	move_(north, stadium);
-    	move_(nw, potters);
-    	move_(east, spencer);
-    	move_(west, carruth_oleary);
-    	move_(down, sewer);
-    }
+        {
+            move("north", stadium);
+            move("northwest", potters);
+            move("east", spencer);
+            move("west", carruth_oleary);
+            move("down", sewer);
+        }
 place potters
     """
     You are standing hip deep in Potter's mud puddle. The banks are
     teaming with crispy frogs, brown cattails, and fried duck. To the east
     you can see a leaning tower. The rest of the scenery is obscured by
     hillside."""
-    {
-        move_(swim, campanile);
-        move_(crawl, campanile);
-    }
+        {
+            move("swim", campanile);
+            move("crawl", campanile);
+        }
 place carruth_oleary
     """
     You are in the basement of a ruined brick building. All around
     torn, spindled, and mutilated pieces of paper. You can see the
     campanile to the east and a path leads south."""
-    {
-    	move_(east, campanile);
-    	move_(south, fountain);
-    }
+        {
+            move("east", campanile);
+            move("south", fountain);
+        }
 place mississippi
     """
     Spencer Museum is to the west, the remains of the Union to the east.
     To the north, smoke rises above 9th street.
     Campus is to the South, a large crater where Strong Hall once stood."""
-    {
-    	move_(north, stadium);
-    	move_(south, steel_door);
-    	move_(east, union);
-    	move_(west, spencer);
-    }
+        {
+            move("north", stadium);
+            move("south", steel_door);
+            move("east", union);
+            move("west", spencer);
+        }
 place steel_door
     """
     You are standing in front of a steel door on the side of the hill.
     A square hole in the door emits an eerie light and faint noises
     can be heard, but a snarling German Shepherd keeps you from the door."""
-    {
-    	move_(south, jayhawk_sunflower);
-    	move_(north, mississippi);
-    	move_(pet, entrance);
-    }
+        {
+            move("south", jayhawk_sunflower);
+            move("north", mississippi);
+            move("pet", entrance);
+        }
 place spencer
     """
     You are standing in front of Spencer Museum.
     The building remains remarkably intact."""
-    {
-    	move_(south, jayhawk_sunflower);
-    	move_(west, campanile);
-    	move_(east, mississippi);
-    	move_(in, in_spencer);
-    	move_(enter, in_spencer);
-    }
+        {
+            move("south", jayhawk_sunflower);
+            move("west", campanile);
+            move("east", mississippi);
+            move("in", in_spencer);
+            move("enter", in_spencer);
+        }
 place in_spencer
     """
     You are inside the main entrance of Spencer Art Museum.
     I can't remember the layout, so you'll have to leave."""
-    {
-    	move_(exit, mississippi);
-    	move_(out, mississippi);
-    	move_(leave, mississippi);
-    }
+        {
+            move("exit", mississippi);
+        }
 place pterodactyl
     """
     You are standing near a statue of what appears to be
@@ -125,23 +123,23 @@ place pterodactyl
     his/her taxonomy well. Immediately to the north is
     a large crater filled with debris. This was Strong Hall.
     To the south, Wescoe Hall remains, squat and sullen."""
-    {
-    	move_(south, north_wescoe);
-    	move_(east, jayhawk_sunflower);
-    	move_(west, fountain);
-    }
+        {
+            move("south", north_wescoe);
+            move("east", jayhawk_sunflower);
+            move("west", fountain);
+        }
 place north_wescoe
     """
     You are standing on the concrete to the north of Wescoe Hall.
     The building looks intact. From within you hear chants,
     perhaps from a religious service. There is a stairway
     leading down a floor under the building."""
-    {
-    	move_(north, pterodactyl);
-    	move_(east, east_wescoe);
-    	move_(west, fountain);
-    	move_(down, south_wescoe);
-    }
+        {
+            move("north", pterodactyl);
+            move("east", east_wescoe);
+            move("west", fountain);
+            move("down", south_wescoe);
+        }
 place south_wescoe
     """
     You are standing to the south of Wescoe Hall.
@@ -149,94 +147,94 @@ place south_wescoe
     is deserted. The doors are barred and chained.
     To the south you can see Malott hall, and
     beyond that the Computing Center."""
-    {
-    	move_(south, malott);
-    	move_(east, east_wescoe);
-    	move_(west, visual_arts);
-    	move_(up, north_wescoe);
-    	move_(down, acc);
-    }
+        {
+            move("south", malott);
+            move("east", east_wescoe);
+            move("west", visual_arts);
+            move("up", north_wescoe);
+            move("down", acc);
+        }
 place wescoe_cafeteria
     """
     You are in the Wescoe Cafeteria."""
-    {
-    	move_(out, south_wescoe);
-    }
+        {
+            move("exit", south_wescoe);
+        }
 place malott
     """
     Most of Malott Hall still stands, a monument to limestone.
     The air smells terrible here. Possibly there are poisonous
     gasses escaping from their tanks."""
-    {
-        move_(north, south_wescoe);
-        move_(south, sunnyside);
-        move_(east, acc);
-        move_(west, murphy);
-        move_(up, south_wescoe);
-        move_(down, acc);
-    }
+        {
+            move("north", south_wescoe);
+            move("south", sunnyside);
+            move("east", acc);
+            move("west", murphy);
+            move("up", south_wescoe);
+            move("down", acc);
+        }
 place pu_soap_film
     """
     You are in a small pocket universe. You are surrounded
     by what appears to be an enormous soap bubble. The walls
     of the bubble appear to warp and distort in a fantastically
     complex pattern."""
-    {
-    	move_(up, pu_lsd);
-    	move_(down, pu_mist);
-    	move_(left, pu_shrooms);
-    	move_(right, pu_space);
-    	move_(forward, pu_vomit);
-    }
+        {
+            move("up", pu_lsd);
+            move("down", pu_mist);
+            move("left", pu_shrooms);
+            move("right", pu_space);
+            move("forward", pu_vomit);
+        }
 place pu_warm_fuzzy
     """
     You are in a small pocket universe. You are in a region
     of warm fuzzy stuff, which floats around caressing you.
     It is difficult to see very far here."""
-    {
-    	move_(up, pu_soap_film);
-    	move_(down, pu_ms);
-    	move_(left, pu_shrooms);
-    	move_(right, pu_space);
-    	move_(forward, pu_mist);
-    }
+        {
+            move("up", pu_soap_film);
+            move("down", pu_ms);
+            move("left", pu_shrooms);
+            move("right", pu_space);
+            move("forward", pu_mist);
+        }
 place pu_shrooms
     """
     You are in a small pocket universe. The area around you
     is paisley with jagged orange stripes. To your left
     the stripes merge into a vortex-like funnel, with many
     craters."""
-    {
-    	move_(up, pu_soap_film);
-    	move_(down, pu_ms);
-    	move_(left, pu_lsd);
-    	move_(right, pu_mist);
-    	move_(forward, pu_vomit);
-    }
+        {
+            move("up", pu_soap_film);
+            move("down", pu_ms);
+            move("left", pu_lsd);
+            move("right", pu_mist);
+            move("forward", pu_vomit);
+        }
 place pu_space
     """
     You are in a small pocket universe. It is very difficult
     to determine distances here. Behind you, you can make
     out a large tan blob. To your left, you can see some mist."""
-    {
-    	move_(up, pu_soap_film);
-    	move_(down, pu_ms);
-    	move_(left, pu_mist);
-    	move_(right, pu_lsd);
-    	move_(forward, pu_vomit);
-    }
+        {
+            move("up", pu_soap_film);
+            move("down", pu_ms);
+            move("left", pu_mist);
+            move("right", pu_lsd);
+            move("forward", pu_vomit);
+        }
 place pu_mist
     """
     You are in a small pocket universe. The area around you is
     foggy and you can only see a few feet in any direction.
     Since there is nothing to see, this may not be a problem."""
-    {
-    	move_(up, pu_soap_film);
-    	move_(down, pu_core);
-    	move_(left, pu_shrooms);
-    	move_(right, pu_space);
-    	move_(forward, pu_zen1);
-    }
+        {
+            move("up", pu_soap_film);
+            move("down", pu_core);
+            move("left", pu_shrooms);
+            move("right", pu_space);
+            move("forward", pu_zen1);
+        }
 place pu_zen1
     """
     You are in a small pocket universe. The area around you
@@ -244,9 +242,9 @@ place pu_zen1
     the statement itself is subject to doubt and the question
     may be misinterpreted, but you can't tell since you have
     completely lost track of that train of thought."""
-    {
-    	move_(fire, pu_zen2);
-    }
+        {
+            move("fire", pu_zen2);
+        }
 place pu_zen2
     """
     You are in a small pocket universe. The area around you
@@ -254,9 +252,9 @@ place pu_zen2
     the statement itself is subject to doubt and the question
     may be misinterpreted, but you can't tell since you have
     completely lost track of that train of thought."""
-    {
-    	move_(is, pu_zen3);
-    }
+        {
+            move("is", pu_zen3);
+        }
 place pu_zen3
     """
     You are in a small pocket universe. The area around you
@@ -264,9 +262,9 @@ place pu_zen3
     the statement itself is subject to doubt and the question
     may be misinterpreted, but you can't tell since you have
     completely lost track of that train of thought."""
-    {
-    	move_(the, pu_zen4);
-    }
+        {
+            move("the", pu_zen4);
+        }
 place pu_zen4
     """
     You are in a small pocket universe. The area around you
@@ -274,81 +272,81 @@ place pu_zen4
     the statement itself is subject to doubt and the question
     may be misinterpreted, but you can't tell since you have
     completely lost track of that train of thought."""
-    {
-    	move_(poppy, potters);
-    }
+        {
+            move("poppy", potters);
+        }
 place pu_lsd
     """
     You are in a small pocket universe. You are floating in
     a large orange vortex-like funnel, which appears to bend
     to the left ahead of you. The funnel is pocked with numerous
     craters, some of which are big enough to swallow a hole."""
-    {
-    	move_(forward, pu_ms);
-    	move_(down, pu_soap_film);
-    	move_(left, pu_shrooms);
-    	move_(right, pu_space);
-    	move_(up, pu_vomit);
-    }
+        {
+            move("forward", pu_ms);
+            move("down", pu_soap_film);
+            move("left", pu_shrooms);
+            move("right", pu_space);
+            move("up", pu_vomit);
+        }
 place pu_ms
     """
     You are in a small pocket universe. You are rushing down
     a narrow funnel. There are forces tugging at you from all
     directions. You begin feeling car-sick."""
-    {
-    	move_(up, pu_mist);
-    	move_(down, pu_lsd);
-    	move_(left, pu_space);
-    	move_(right, pu_shrooms);
-    	move_(forward, pu_vomit);
-    }
+        {
+            move("up", pu_mist);
+            move("down", pu_lsd);
+            move("left", pu_space);
+            move("right", pu_shrooms);
+            move("forward", pu_vomit);
+        }
 place pu_vomit
     """
     You are in a small pocket universe. Floating around you are
     large blobs of vomit. The smell is nauseating."""
-    {
-    	move_(up, pu_soap_film);
-    	move_(down, pu_lsd);
-    	move_(left, pu_shrooms);
-    	move_(right, pu_space);
-    	move_(forward, pu_mist);
-    }
+        {
+            move("up", pu_soap_film);
+            move("down", pu_lsd);
+            move("left", pu_shrooms);
+            move("right", pu_space);
+            move("forward", pu_mist);
+        }
 place pu_core
     """
     You are in a small pocket universe. The walls between
     this universe and your normal one are breaking down here.
     You appear to be looking down into the core of a nuclear
     fission reactor. But that's impossible, of course."""
-    {
-    	move_(up, pu_core);
-    	move(down, pu_core);
-    	move(left, pu_core);
-    	move(right, pu_core);
-    	move(forward, pu_core);
-    }
+        {
+            move("up", pu_core);
+            move("down", pu_core);
+            move("left", pu_core);
+            move("right", pu_core);
+            move("forward", pu_core);
+        }
 place visual_arts
     """
     You are staring at the ruins of the visual arts building.
     Smashed canvases and statuary abound. None appears
     to be of any value."""
-    {
-    	move(north, fountain);
-    	move(south, murphy);
-    	move(east, south_wescoe);
-    	move(west, learned);
-    }
+        {
+            move("north", fountain);
+            move("south", murphy);
+            move("east", south_wescoe);
+            move("west", learned);
+        }
 place east_wescoe
     """
     You are standing to the east of Wescoe hall.
     The building appears intact. To the south,
     you can see ruined Flint Hall, and beyond
     that the remains of the Computing Center."""
-    {
-    	move(north, jayhawk_sunflower);
-    	move(east, sunflower);
-    	move(northwest, north_wescoe);
-    	move(southwest, south_wescoe);
-    }
+        {
+            move("north", jayhawk_sunflower);
+            move("east", sunflower);
+            move("northwest", north_wescoe);
+            move("southwest", south_wescoe);
+        }
 place sunnyside
     """
     You are on Sunnyside Drive in front of Robinson Gymn.
@@ -357,105 +355,105 @@ place sunnyside
     bubbling expanse. Looking to the east you can see
     what remains of the Computing Center,
     and to the west is a mangled 'OP' sign."""
-    {
-    	move(north, malott);
-    	move(south, o_zone);
-    	move(east, acc);
-    	move(west, sunnyside_naismith);
-    }
+        {
+            move("north", malott);
+            move("south", o_zone);
+            move("east", acc);
+            move("west", sunnyside_naismith);
+        }
 place sunnyside_naismith
     """
     You are at the intersection of Sunnyside and Naismith."""
-    {
-    	move(north, murphy);
-    	move(south, o_zone);
-    	move(east, sunnyside);
-    }
+        {
+            move("north", murphy);
+            move("south", o_zone);
+            move("east", sunnyside);
+        }
 place murphy
     """
     You are at the corner of 15th and Naismith.
     Here are the remains of Murphy Hall. To the north, you see
     the ruins of the Visual Arts building. To the west,
     sits the crumbled Learned Hall."""
-    {
-    	move(north, visual_arts);
-    	move(south, sunnyside_naismith);
-    	move(east, malott);
-    	move(west, learned);
-    	move(up, south_wescoe);
-    }
+        {
+            move("north", visual_arts);
+            move("south", sunnyside_naismith);
+            move("east", malott);
+            move("west", learned);
+            move("up", south_wescoe);
+        }
 place learned
     """
     You are standing in front of crumbled Learned Hall.
     Paths lead north and south, but a large pit is to
     the west."""
-    {
-    	move(north, jayhawk_bookstore);
-    	move(south, sunnyside_naismith);
-    	move(east, visual_arts);
-    	move(west, reactor_pit1);
-    	move(up, jayhawk_bookstore);
-    	move(jump, reactor);
-    }
+        {
+            move("north", jayhawk_bookstore);
+            move("south", sunnyside_naismith);
+            move("east", visual_arts);
+            move("west", reactor_pit1);
+            move("up", jayhawk_bookstore);
+            move("jump", reactor);
+        }
 place reactor
     """
     You are standing in front of KU's Reactor Center.
     A humming sound is coming from inside.
     A large pit blocks your way to the east."""
-    {
-    	move(east, reactor_pit1);
-    	move(jump, learned);
-    	move(in, in_reactor);
-    }
+        {
+            move("east", reactor_pit1);
+            move("jump", learned);
+            move("in", in_reactor);
+        }
 place in_reactor
     """
     You are inside the Reactor Center
     There is a large panel of switches and dials here."""
-    {
-    	move(out, reactor);
-    }
+        {
+            move("out", reactor);
+        }
 place reactor_pit1
     """
     You are at the bottom of a large pit.
     The walls slope inward above you and cannot be climbed
     unless you have claws. Littered around you are many
     broken bottles and tin cans."""
-    {
-    	move(north, reactor_pit2);
-    	move(south, reactor_pit2);
-    	move(east, reactor_pit2);
-    	move(west, reactor_pit2);
-    	move(up, reactor_pit2);
-    	move(down, reactor_pit2);
-    }
+        {
+            move("north", reactor_pit2);
+            move("south", reactor_pit2);
+            move("east", reactor_pit2);
+            move("west", reactor_pit2);
+            move("up", reactor_pit2);
+            move("down", reactor_pit2);
+        }
 place reactor_pit2
     """
     You are at the bottom of a large pit.
     The walls slope inward above you and cannot be climbed
     unless you have claws. Littered around you are many
     broken bottles and tin cans."""
-    {
-    	move(north, reactor_pit3);
-    	move(south, reactor_pit3);
-    	move(east, reactor_pit3);
-    	move(west, reactor_pit3);
-    	move(up, reactor_pit3);
-    	move(down, reactor_pit3);
-    }
+        {
+            move("north", reactor_pit3);
+            move("south", reactor_pit3);
+            move("east", reactor_pit3);
+            move("west", reactor_pit3);
+            move("up", reactor_pit3);
+            move("down", reactor_pit3);
+        }
 place reactor_pit3
     """
     You are at the bottom of a large pit.
     The walls slope inward above you and cannot be climbed
     unless you have claws. Littered around you are many
     broken bottles and tin cans."""
-    {
-    	move(north, fissure);
-    	move(south, fissure);
-    	move(east, fissure);
-    	move(west, fissure);
-    	move(up, reactor);
-    	move(down, fissure);
-    }
+        {
+            move("north", fissure);
+            move("south", fissure);
+            move("east", fissure);
+            move("west", fissure);
+            move("up", reactor);
+            move("down", fissure);
+        }
 place fissure
     """
     You are in a fissure deep within the earth.
@@ -463,28 +461,28 @@ place fissure
     swiftly to the north and south. There appear
     to be passages out to the north and south, and a
     crude set of stairs leads further down the fissure."""
-    {
-    	move(north, under_learned);
-    	move(south, twisty_corridor);
-    	move(down, underground_river);
-    }
+        {
+            move("north", under_learned);
+            move("south", twisty_corridor);
+            move("down", underground_river);
+        }
 place under_learned
     """
     You find yourself under a small hole with dirty water pouring in
     through a side passage. You could probably climb through the hole.
     To the south there is a very narrow crevice.
     Overhead you can see light."""
-    {
-    	move(south, fissure);
-    	move(up, learned);
-    }
+        {
+            move("south", fissure);
+            move("up", learned);
+        }
 place twisty_corridor
     """
     You are in a twisty corridor."""
-    {
-    	move(north, fissure);
-    	move(up, sunnyside_naismith);
-    }
+        {
+            move("north", fissure);
+            move("up", sunnyside_naismith);
+        }
 place underground_river
     """
     You are standing next to an underground river.
@@ -492,235 +490,235 @@ place underground_river
     seems to continue in both directions.
     The moss on the walls glows with a dim green light
     permitting you to see. The walls look very slimy."""
-    {
-    	move(east, waterfall);
-    	move(west, river_bend);
-    }
+        {
+            move("east", waterfall);
+            move("west", river_bend);
+        }
 place river_bend
     """
     You are at a bend in an underground river. The river
     flows north and east. To the north, the tunnel quickly
     narrows, and you could not pass. To the east, there is
     some light."""
-    {
-    	move(east, underground_river);
-    }
+        {
+            move("east", underground_river);
+        }
 place waterfall
     """
     You are standing at the brink of a magnificent underground waterfall.
     The river falls over five hundred feet into darkness. Crude, slippery
     steps are cut into the side of the canyon, leading down."""
-    {
-    	move(west, underground_river);
-    	move(down, sandy_beach);
-    }
+        {
+            move("west", underground_river);
+            move("down", sandy_beach);
+        }
 place side_passage
     """
     Beneath the waterfall, there is a small opening into the rock.
     It may be possible to reach if you are careful.
     If you miss, you will fall into the gorge."""
-    {
-    	move(up, waterfall);
-    	move(down, sandy_beach);
-    	move(jump, small_opening);
-    }
+        {
+            move("up", waterfall);
+            move("down", sandy_beach);
+            move("jump", small_opening);
+        }
 place sandy_beach
     """
     You are standing on a sandy beach of an underground river.
     The beach is at the foot of a long waterfall. The river
     goes downstream to the north."""
-    {
-    	move(up, side_passage);
-    	move(north, rivers_end);
-    }
+        {
+            move("up", side_passage);
+            move("north", rivers_end);
+        }
 place rivers_end
     """
     You are at a vast underground lake. To the south, a river empties
     into the lake. To the east and west, passages lead along the shore.
     The entire scene is dimly lit by glowing moss, hanging down from
     the roof of the cave."""
-    {
-    	move(south, sandy_beach);
-    }
+        {
+            move("south", sandy_beach);
+        }
 place small_opening
     """
     You are in a small opening underneath the waterfall. There is
     nothing of interest here. Why did you do that?"""
-    {
-        move(jump, side_passage); // Should die here.
-    }
+        {
+            move("jump", side_passage); // Should die here.
+        }
 place jayhawk_bookstore
     """
     You are standing in front of the Jayhawk Boostore.
     The glass front has been shattered and the store
     appears to be completely gutted."""
-    {
-    	move(south, learned);
-    	move(east, fountain);
-    	move(down, learned);
-    }
+        {
+            move("south", learned);
+            move("east", fountain);
+            move("down", learned);
+        }
 place fountain
     """
     You are standing at the Chi Omega fountain.
     The water is not running for obvious reasons,
     but that's okay."""
-    {
-    	move(north, carrutho_leary);
-    	move(south, visual_arts);
-    	move(east, pterodactyl);
-    	move(west, jayhawk_bookstore);
-    }
+        {
+            move("north", carrutho_leary);
+            move("south", visual_arts);
+            move("east", pterodactyl);
+            move("west", jayhawk_bookstore);
+        }
 place o_zone
     """
     You are standing in a bubbling parking lot. Burned out hulks of
     cars can be seen strewn about like used toys. The smell of smoke
     is near, that's the signpost up ahead. You're in the O ZONE!"""
-    {
-    	move(north, sunnyside);
-    	move(south, naismith);
-    }
+        {
+            move("north", sunnyside);
+            move("south", naismith);
+        }
 place twenty_third
     """
     To the north is a fairly intact building. The smell of burnt pizza
     is everywhere. This is the infamous West 23rd street."""
-    {
-    	move(north, hut);
-    	move(east, krogers);
-    }
+        {
+            move("north", hut);
+            move("east", krogers);
+        }
 place hut
     """
     You are standing in what was the pizza hut. Pepperoni is splashed on
     the walls and anchovies swim merrily in spilled coke."""
-    {
-    	move(east, naismith);
-    	move(south, twenty_third);
-    }
+        {
+            move("east", naismith);
+            move("south", twenty_third);
+        }
 place krogers
     """
     What remained of this store has since been looted. Only the stains
     of lima beans and liver remain."""
-    {
-    	move(north, naismith);
-    	move(east, lot);
-    	move(west, twenty_third);
-    }
+        {
+            move("north", naismith);
+            move("east", lot);
+            move("west", twenty_third);
+        }
 place lot
     """
     You have the pleasure of standing in the middle of an empty parking
     lot. Not a brick is left of what once was here. Rotten food can
     be smelled from every direction."""
-    {
-    	move(east, rustys);
-    	move(west, krogers);
-    }
+        {
+            move("east", rustys);
+            move("west", krogers);
+        }
 place naismith
     """
     You are on Naismith Drive.
     You are knee deep in radioactive slime."""
-    {
-    	move(north, sunnyside_naismith);
-    	move(south, krogers);
-    	move(east, lhs);
-    }
+        {
+            move("north", sunnyside_naismith);
+            move("south", krogers);
+            move("east", lhs);
+        }
 place lhs
     """
     This is the ruin of Lawrence High School, home of the Chesty Lions,
     which is a strange mascot."""
-    {
-    	move(north, acc);
-    	move(south, rustys);
-    	move(west, naismith);
-    }
+        {
+            move("north", acc);
+            move("south", rustys);
+            move("west", naismith);
+        }
 place rustys
     """
     This was formerly Rustys grocery store. The bombs probably did a lot
     to improve its appearance. Certainly the service is better. To
     the north can be seen the remains of a brick building."""
-    {
-    	move(north, lhs);
-    	move(west, lot);
-    }
+        {
+            move("north", lhs);
+            move("west", lot);
+        }
 place acc
     """
     This seems to have been a computer building at one time. To the south
     you can see a bubbling pool. Smoke drifts lazily over the hill to
     your north."""
-    {
-    	move(south, lhs);
-    	move(east, sunflower);
-    	move(west, sunnyside);
-    	move(up, malott);
-    }
+        {
+            move("south", lhs);
+            move("east", sunflower);
+            move("west", sunnyside);
+            move("up", malott);
+        }
 place sunflower
     """
     You are standing on a winding road halfway to the top of a hill.
     To the south you can see the Computing Center. Note - the
     ground here seems somewhat unstable."""
-    {
-    	move(south, acc);
-    	move(east, south_watson);
-    	move(west, jayhawk_sunflower);
-    }
+        {
+            move("south", acc);
+            move("east", south_watson);
+            move("west", jayhawk_sunflower);
+        }
 place north_watson
     """
     You are standing in front of Watson Library."""
-    {
-    	move(north, lippincott);
-    	move(west, sunflower);
-    	move(in, watson_entrance);
-    }
+        {
+            move("north", lippincott);
+            move("west", sunflower);
+            move("in", watson_entrance);
+        }
 place south_watson
     """
     You are standing behind Watson Library."""
-    {
-    	move(west, sunflower);
-    	move(in, stacks);
-    }
+        {
+            move("west", sunflower);
+            move("in", stacks);
+        }
 place reference
     """
     You are standing in front of the reference desk. Fallen card
     catalogs block your way."""
-    {
-    	move(back, watson_entrance);
-    	move(climb, reference);
-    }
+        {
+            move("back", watson_entrance);
+            move("climb", reference);
+        }
 place watson_entrance
     """
     You are inside the main entrance to Watson Library. The
     entrance reminds you a bit of an airport, whatever that is.
     To the east is the reference section, south are the entrances to
     the stacks."""
-    {
-    	move(east, reference);
-    	move(south, stack_entrance);
-    	move(out, north_watson);
-    }
+        {
+            move("east", reference);
+            move("south", stack_entrance);
+            move("out", north_watson);
+        }
 place stack_entrance
     """
     You are standing between the two stack entrances, one to the east
     and one to the west."""
-    {
-    	move(east, stacks);
-    	move(west, stacks);
-    	move(south, south_watson);
-    	move(north, watson_entrance);
-    }
+        {
+            move("east", stacks);
+            move("west", stacks);
+            move("south", south_watson);
+            move("north", watson_entrance);
+        }
 place stacks
     """
     You are in the Watson Library Stacks. The shelves have
     a thick layer of dust where the books used to be. There do not
     appear to be any books."""
-    {
-    	move(in, reference);
-    	move(out, stack_warned);
-    }
+        {
+            move("in", reference);
+            move("out", stack_warned);
+        }
 place stack_warned
     """
     You are even deeper in the stacks. You will just have to help
     yourself this time."""
-    {
-    	move(help, stacks);
-    }
+        {
+            move("help", stacks);
+        }
 place jayhawk_sunflower
     """
     You are standing at the intersection of Jayhawk and Sunflower,
@@ -728,444 +726,444 @@ place jayhawk_sunflower
     Art Museum, to the south, smoke rises over the ruins of
     23rd Street. To the west, the buildings on Jayhawk Blvd.
     are mostly destroyed, except for Wescoe across the street."""
-    {
-    	move(north, steel_door);
-    	move(south, acc);
-    	move(east, lippincott);
-    	move(west, pterodactyl);
-    }
+        {
+            move("north", steel_door);
+            move("south", acc);
+            move("east", lippincott);
+            move("west", pterodactyl);
+        }
 place lippincott
     """
     You are standing in front of Lippincott Hall (old Green).
     To the south, stands Watson Library. To the east, smoke
     rises over downtown Lawrence. To the west, there is a
     crater where Strong and Bailey Halls used to be."""
-    {
-    	move(south, north_watson);
-    	move(east, dyche);
-    	move(west, jayhawk_sunflower);
-    }
+        {
+            move("south", north_watson);
+            move("east", dyche);
+            move("west", jayhawk_sunflower);
+        }
 place dyche
     """
     This museum sustained several direct hits. All that remains of
     this boring building lies in smouldering ruins."""
-    {
-    	move(north, union);
-    	move(south, lippincott);
-    	move(east, schol_halls);
-    	move(west, steel_door);
-    }
+        {
+            move("north", union);
+            move("south", lippincott);
+            move("east", schol_halls);
+            move("west", steel_door);
+        }
 place schol_halls
     """
     You are standing among the Scholarship Halls. These people
     (and I use the term loosely) are definitely strange. Watch
     out for the strange caped person who whistles loudly and
     carries a sword. He will talk you to death."""
-    {
-    	move(north, slums);
-    	move(west, dyche);
-    }
+        {
+            move("north", slums);
+            move("west", dyche);
+        }
 place union
     """
     Steamy plants infest the once proud Student Union. The whole place seems
     covered in noxious weeds."""
-    {
-    	move(north, crossfish);
-    	move(south, dyche);
-    	move(east, slums);
-    	move(west, mississippi);
-    	move(down, slums);
-    }
+        {
+            move("north", crossfish);
+            move("south", dyche);
+            move("east", slums);
+            move("west", mississippi);
+            move("down", slums);
+        }
 place crossfish
     """
     You are at the intersection of 12th and Oread.
     The Hawk's Crossing still stands, although it
     appears that business has fallen off sharply."""
-    {
-    	move(south, union);
-    	move(east, slums);
-    	move(west, stadium_apartments);
-    }
+        {
+            move("south", union);
+            move("east", slums);
+            move("west", stadium_apartments);
+        }
 place stadium_apartments
     """
     You are standing at the intersection of 11th and Indiana.
     The stadium apartments are to the west, a Fraternity house
     to the east. Up the hill to the east is the GSP-Corbin"""
-    {
-    	move(north, joes);
-    	move(south, crossfish);
-    	move(east, gsp_corbin);
-    	move(west, stadium);
-    }
+        {
+            move("north", joes);
+            move("south", crossfish);
+            move("east", gsp_corbin);
+            move("west", stadium);
+        }
 place gsp_corbin
     """
     You are standing at the entrance to the GSP-Corbin complex.
     Many leather-jacketed bikers cluster about the entrance.
     The structure seems fairly intact."""
-    {
-    	move(south, crossfish);
-    	move(east, slums);
-    	move(west, stadium_apartments);
-    }
+        {
+            move("south", crossfish);
+            move("east", slums);
+            move("west", stadium_apartments);
+        }
 place scums
     """
     This used to be an eating establishment of some kind.
     Skeletons with hands clutched to their bellies lie
     everywhere. A sign hanging askew says SCUMS deli."""
-    {}
+        {}
 place slums
     """
     These are the slummiest slums around. Cockroaches lie lazily
     in hammocks and staph germs wallow in puddles."""
-    {}
+        {}
 place dg_bank
     """
     You are at the corner of Ninth and Kentucky.
     The remains of the Douglas County Bank are here."""
-    {}
+        {}
 place entrance
     """
     You are standing inside the entrance to the steam tunnels.
     The only light comes from a bare bulb overhead. There are
     exits in many directions."""
-    {}
+        {}
 place branch
     """
     You are at a branch in the steamy tunnel. The tunnel continues
     down and south from here."""
-    {}
+        {}
 place pit
     """
     You are standing atop a slender pinacle in a huge circular room. Water
     drips past you and splats on the floor some 20' below you. The room is
     so musty, it literally exudes yuck!"""
-    {}
+        {}
 place rubbish
     """
     What is all this rubbish? It looks like leftovers from
     a scholarship hall halloween dinner (and about as appetizing).
     Well worn paths lead north, south, east, and west."""
-    {}
+        {}
 place dark
     """
     This room is quite dark and it its very hard to make out details."""
-    {}
+        {}
 place darker
     """
     This room is even darker than the dark room. This room is soooo dark,
     glow worms have it posted as a hazarous area."""
-    {}
+        {}
 place darkest
     """
     You thought you'd seen dark before. This has got to be the darkest
     room yet. Look on the bright side. Maybe you're just going blind!"""
-    {}
+        {}
 place puddle
     """
     The better part of this room is taken up by a large puddle. It doesn't
     look very good for drinking. This seems evident by ring of skeletons
     around it."""
-    {}
+        {}
 place ladder
     """
     This room is beneath a manhole. A rusty ladder leads up to a hole in
     the street above. Light filters in through the hole. Tunnels lead away
     in four directions."""
-    {}
+        {}
 place demon
     """
     Light plays crazy tricks on the fog swirling through the room. The
     partially illuminated vapor looks like demons playing in the air.
     It is quite difficult to see any way out of the room."""
-    {}
+        {}
 place sauna
     """
     You are halted a little ways down a north south passage (with no side
     passages). A small, waist-high break in the steam pipe blocks your way.
     It seems obvious you would burn your chest if you continue."""
-    {}
+        {}
 place bat_room
     """
     This seems to have been a crazy man's hide out at one time. Ultra-
     sophisticated machinery drapes the walls. The strange thing is every-
     thing has a bat monogrammed on it. The main passage runs east-west
     small hole leading north."""
-    {}
+        {}
 place dead_end
     """
     This end is quite dead. The only exit is the way you came."""
-    {}
+        {}
 place steps
     """
     Standing at the bottom of a winding set of steps, you can see the
     sky. The ground outside looks somewhat familiar. The tunnel you
     are following continues west from here."""
-    {
-    	move(north, pterodactyl);
-    	move(east, bat_room);
-    	move(south, dank);
-    	move(up, pterodactyl);
-    	move(climb, pterodactyl);
-    }
+        {
+            move("north", pterodactyl);
+            move("east", bat_room);
+            move("south", dank);
+            move("up", pterodactyl);
+            move("climb", pterodactyl);
+        }
 place dank
     """
     You are walking along a dank north/south tunnel. Moss hangs from
     the ceiling obscuring your way. A grimy crack splits the west wall."""
-    {
-    	move(north, bat_room);
-    	move(south, military_science);
-    	move(west, maze_b);
-    }
+        {
+            move("north", bat_room);
+            move("south", military_science);
+            move("west", maze_b);
+        }
 place military_science
     """
     You are in the remains of the basement of the Military Science building.
     The old granite building melted and slumped, but it is still possible
     to move north, west, or south. There also seems to be a patch of light
     overhead."""
-    {
-    	move(north, dank);
-    	move(west, sewer);
-    	move(south, sunnyside);
-    	move(up, malott);
-    }
+        {
+            move("north", dank);
+            move("west", sewer);
+            move("south", sunnyside);
+            move("up", malott);
+        }
 place sewer
     """
     You are in a partially filled sewer. It is a bit difficult to see, but
     there seems to a way out to the west. The main path leads back east
     through the putrid water."""
-    {
-    	move(east, military_science);
-    	move(west, under_learned);
-    }
+        {
+            move("east", military_science);
+            move("west", under_learned);
+        }
 place cave
     """
     A small, constant flow of water has caused cave-like stalactites to
     form. The room is filled with sparkling quartz and silica. The passage
     continues straight ahead with a dark tunnel leading right."""
-    {
-    	move(crawl, sauna);
-    	move(south, button);
-    	move(east, cave_in);
-    }
+        {
+            move("crawl", sauna);
+            move("south", button);
+            move("east", cave_in);
+        }
 place button
     """
     This brightly painted room marks a dead end in the tunnel. It seems to
     be the basement of some former building. The most distinctive feature
     is a strange cherry-colored button placed in the exact center of the
     south wall."""
-    {
-    	move(north, cave);
-    }
+        {
+            move("north", cave);
+        }
 place cave_in
     """
     You are deeper in the cave. Rocks and pieces of the ceiling are jumbled
     all over this room. All exits except west are blocked by debris."""
-    {
-    	move(west, cave);
-    }
+        {
+            move("west", cave);
+        }
 place maze_l
     """
     You are lost in a mazelike sewer system."""
-    {
-    	move(north, maze_k);
-    	move(south, maze_f);
-    	move(east, maze_l);
-    	move(west, maze_l);
-    	move(up, maze_b);
-    	move(down, maze_f);
-    }
+        {
+            move("north", maze_k);
+            move("south", maze_f);
+            move("east", maze_l);
+            move("west", maze_l);
+            move("up", maze_b);
+            move("down", maze_f);
+        }
 place maze_k
     """
     You are lost in a mazelike sewer system."""
-    {
-    	move(north, maze_l);
-    	move(south, maze_k);
-    	move(east, maze_f);
-    	move(west, maze_k);
-    	move(up, maze_j);
-    	move(down, maze_k);
-    }
+        {
+            move("north", maze_l);
+            move("south", maze_k);
+            move("east", maze_f);
+            move("west", maze_k);
+            move("up", maze_j);
+            move("down", maze_k);
+        }
 place maze_f
     """
     You are lost in a mazelike sewer system."""
-    {
-    	move(north, maze_l);
-    	move(south, maze_f);
-    	move(east, maze_g);
-    	move(west, maze_k);
-    	move(up, maze_f);
-    	move(down, maze_k);
-    }
+        {
+            move("north", maze_l);
+            move("south", maze_f);
+            move("east", maze_g);
+            move("west", maze_k);
+            move("up", maze_f);
+            move("down", maze_k);
+        }
 place maze_j
     """
     You are lost in a mazelike sewer system."""
-    {
-    	move(north, maze_b);
-    	move(south, maze_l);
-    	move(east, maze_k);
-    	move(west, maze_j);
-    	move(up, maze_b);
-    	move(down, maze_l);
-    }
+        {
+            move("north", maze_b);
+            move("south", maze_l);
+            move("east", maze_k);
+            move("west", maze_j);
+            move("up", maze_b);
+            move("down", maze_l);
+        }
 place maze_b
     """
     You are lost in a mazelike sewer system."""
-    {
-    	move(north, maze_i);
-    	move(south, maze_b);
-    	move(east, maze_j);
-    	move(west, maze_g);
-    	move(up, maze_f);
-    	move(down, maze_g);
-    }
+        {
+            move("north", maze_i);
+            move("south", maze_b);
+            move("east", maze_j);
+            move("west", maze_g);
+            move("up", maze_f);
+            move("down", maze_g);
+        }
 place maze_g
     """
     You are lost in a mazelike sewer system."""
-    {
-    	move(north, maze_l);
-    	move(south, maze_i);
-    	move(east, maze_j);
-    	move(west, maze_a);
-    	move(up, maze_i);
-    	move(down, maze_b);
-    }
+        {
+            move("north", maze_l);
+            move("south", maze_i);
+            move("east", maze_j);
+            move("west", maze_a);
+            move("up", maze_i);
+            move("down", maze_b);
+        }
 place maze_i
     """
     You are lost in a mazelike sewer system."""
-    {
-    	move(north, maze_i);
-    	move(south, maze_i);
-    	move(east, maze_b);
-    	move(west, maze_a);
-    	move(up, maze_c);
-    	move(down, maze_c);
-    }
+        {
+            move("north", maze_i);
+            move("south", maze_i);
+            move("east", maze_b);
+            move("west", maze_a);
+            move("up", maze_c);
+            move("down", maze_c);
+        }
 place maze_c
     """
     You are lost in a mazelike sewer system."""
-    {
-    	move(north, maze_g);
-    	move(south, maze_h);
-    	move(east, maze_b);
-    	move(west, maze_l);
-    	move(up, maze_h);
-    	move(down, maze_i);
-    }
+        {
+            move("north", maze_g);
+            move("south", maze_h);
+            move("east", maze_b);
+            move("west", maze_l);
+            move("up", maze_h);
+            move("down", maze_i);
+        }
 place maze_h
     """
     You are lost in a mazelike sewer system."""
-    {
-    	move(north, maze_a);
-    	move(south, maze_i);
-    	move(east, maze);
-    	move(west, maze_c);
-    	move(up, maze_g);
-    	move(down, maze_b);
-    }
+        {
+            move("north", maze_a);
+            move("south", maze_i);
+            move("east", maze);
+            move("west", maze_c);
+            move("up", maze_g);
+            move("down", maze_b);
+        }
 place maze_a
     """
     You are lost in a mazelike sewer system."""
-    {
-    	move(north, maze_h);
-    	move(south, maze_d);
-    	move(east, maze_j);
-    	move(west, maze_a);
-    	move(up, maze_a);
-    	move(down, maze_c);
-    }
+        {
+            move("north", maze_h);
+            move("south", maze_d);
+            move("east", maze_j);
+            move("west", maze_a);
+            move("up", maze_a);
+            move("down", maze_c);
+        }
 place maze_e
     """
     You are lost in a mazelike sewer system."""
-    {
-    	move(north, maze);
-    	move(south, maze_d);
-    	move(east, maze_a);
-    	move(west, maze_h);
-    	move(up, maze_l);
-    	move(down, maze_o);
-    }
+        {
+            move("north", maze);
+            move("south", maze_d);
+            move("east", maze_a);
+            move("west", maze_h);
+            move("up", maze_l);
+            move("down", maze_o);
+        }
 place maze_d
     """
     You are lost in a mazelike sewer system."""
-    {
-    	move(north, maze_m);
-    	move(south, maze_l);
-    	move(east, maze_h);
-    	move(west, maze_d);
-    	move(up, maze_o);
-    	move(down, maze_n);
-    }
+        {
+            move("north", maze_m);
+            move("south", maze_l);
+            move("east", maze_h);
+            move("west", maze_d);
+            move("up", maze_o);
+            move("down", maze_n);
+        }
 place maze_o
     """
     You are lost in a mazelike sewer system."""
-    {
-    	move(north, maze_d);
-    	move(south, maze_m);
-    	move(east, maze_o);
-    	move(west, maze_i);
-    	move(up, maze);
-    	move(down, maze_m);
-    }
+        {
+            move("north", maze_d);
+            move("south", maze_m);
+            move("east", maze_o);
+            move("west", maze_i);
+            move("up", maze);
+            move("down", maze_m);
+        }
 place maze_m
     """
     You are lost in a mazelike sewer system."""
-    {
-    	move(north, maze_a);
-    	move(south, maze_a);
-    	move(east, maze_m);
-    	move(west, maze_n);
-    	move(up, maze_m);
-    	move(down, maze_n);
-    }
+        {
+            move("north", maze_a);
+            move("south", maze_a);
+            move("east", maze_m);
+            move("west", maze_n);
+            move("up", maze_m);
+            move("down", maze_n);
+        }
 place maze_n
     """
     You are lost in a mazelike sewer system."""
-    {
-    	move(north, maze_m);
-    	move(south, maze_d);
-    	move(east, sewer);
-    	move(west, sewer);
-    	move(up, maze_o);
-    	move(down, maze_n);
-    }
+        {
+            move("north", maze_m);
+            move("south", maze_d);
+            move("east", sewer);
+            move("west", sewer);
+            move("up", maze_o);
+            move("down", maze_n);
+        }
 place wizard_source
     """
     You are in the directory .Wizard.Source. The only exit is up."""
-    {}
+        {}
 place wizard
     """
     You are in the directory .Wizard.
     There are exits marked 'Source' and 'Etc' here as well
     as the path leading up."""
-    {}
+        {}
 place wizard_etc
     """
     You are in the directory .Wizard.Etc. The only exit is up.
     There is a file here named 'Hints'"""
-    {}
+        {}
 place yellow_brick_road
     """
     You appear to be at the start of a long yellow brick road.
     The road curves off into the distance, so you cannot see where
     the road leads. Nearby is a large house canted at a strange
     angle. There seems to be the body of a witch under the house."""
-    {}
+        {}
 place follow_the_yellow_brick_road
     """
     The yellow brick road continues in front of you."""
-    {}
+        {}
 place emerald_city1
     """
     You are at the gates of a large emerald city.
     There is a pair of ruby slippers here."""
-    {}
+        {}
 place emerald_city2
     """
     You are at the gates of a large emerald city.
     There is a pair of ruby slippers here."""
-    {}
+        {}
 place emerald_city3
     """
     You are at the gates of a large emerald city.
     There is a pair of ruby slippers here."""
-    {}
+        {}

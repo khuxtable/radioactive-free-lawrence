@@ -10,9 +10,7 @@ import org.kathrynhuxtable.gdesc.parser.InternalFunction;
 import org.kathrynhuxtable.radiofreelawrence.game.exception.BreakException;
 import org.kathrynhuxtable.radiofreelawrence.game.exception.GameRuntimeException;
 import org.kathrynhuxtable.radiofreelawrence.game.exception.LoopControlException.ControlType;
-import org.kathrynhuxtable.radiofreelawrence.game.grammar.tree.ExprNode;
-import org.kathrynhuxtable.radiofreelawrence.game.grammar.tree.IdentifierNode;
-import org.kathrynhuxtable.radiofreelawrence.game.grammar.tree.TextElementNode;
+import org.kathrynhuxtable.radiofreelawrence.game.grammar.tree.*;
 
 @RequiredArgsConstructor
 public class InternalFunctions {
@@ -61,7 +59,7 @@ public class InternalFunctions {
 		return 0;
 	}
 
-	@InternalFunction(name = "inrange")
+	@InternalFunction(name = "in")
 	public int inrange(ExprNode... parameters) {
 		int value = parameters[0].evaluate(gameData);
 		return (value >= parameters[1].evaluate(gameData) && value <= parameters[2].evaluate(gameData)) ? 1 : 0;
@@ -72,7 +70,7 @@ public class InternalFunctions {
 		return Math.random() * 100 < parameters[0].evaluate(gameData) ? 1 : 0;
 	}
 
-	@InternalFunction(name = "ishave")
+	@InternalFunction(name = "have")
 	public int ishave(ExprNode... parameters) {
 		int refno = parameters[0].evaluate(gameData);
 		// The inhand location (inventory) is always refno floc.
@@ -165,11 +163,21 @@ public class InternalFunctions {
 
 	@InternalFunction(name = "key")
 	public int iskey(ExprNode... parameters) {
-		int verb = gameData.getIntIdentifierValue("arg1");
+		int refno = gameData.getIntIdentifierValue("arg1");
+		if (refno == 0) {
+			return 0;
+		}
 		for (ExprNode parameter : parameters) {
-			int value = parameter.evaluate(gameData);
-			if (value != verb) {
-				return 0;
+			if (parameter instanceof TextElementNode textElementNode) {
+				VocabularyNode node = (VocabularyNode) gameData.getRefnoNode(refno);
+				if (!textElementNode.getText().equals(node.getName())) {
+					return 0;
+				}
+			} else {
+				int value = parameter.evaluate(gameData);
+				if (value != refno) {
+					return 0;
+				}
 			}
 		}
 		return 1;
@@ -187,7 +195,7 @@ public class InternalFunctions {
 		return 0;
 	}
 
-	@InternalFunction(name = "getquery")
+	@InternalFunction(name = "query")
 	public int getquery(ExprNode... parameters) {
 		// FIXME Implement this
 		return 0;
@@ -208,7 +216,7 @@ public class InternalFunctions {
 	/*
 	 * Abort the do-all loop if one executing and flush the command line buffer.
 	 */
-	@InternalFunction(name = "flushinput")
+	@InternalFunction(name = "flush")
 	public int flushinput(ExprNode... parameters) {
 		// FIXME Implement this
 		return 0;
@@ -216,17 +224,17 @@ public class InternalFunctions {
 
 	@InternalFunction(name = "apport")
 	public int apport(ExprNode... parameters) {
-		int object = parameters[0] instanceof TextElementNode ?
-				gameData.getIntIdentifierValue(((TextElementNode) parameters[0]).getText().toLowerCase()) :
+		int object = parameters[0] instanceof IdentifierNode identifierNode ?
+				gameData.getIntIdentifierValue(identifierNode.getName().toLowerCase()) :
 				parameters[0].evaluate(gameData);
-		int place = parameters[1] instanceof TextElementNode ?
-				gameData.getIntIdentifierValue(((TextElementNode) parameters[1]).getText().toLowerCase()) :
+		int place = parameters[1] instanceof IdentifierNode identifierNode ?
+				gameData.getIntIdentifierValue(identifierNode.getName().toLowerCase()) :
 				parameters[1].evaluate(gameData);
 		gameData.locations[object - gameData.fobj] = place;
 		return 0;
 	}
 
-	@InternalFunction(name = "iget")
+	@InternalFunction(name = "get")
 	public int iget(ExprNode... parameters) {
 		int object = parameters[0] instanceof TextElementNode ?
 				gameData.getIntIdentifierValue(((TextElementNode) parameters[0]).getText().toLowerCase()) :
@@ -237,7 +245,7 @@ public class InternalFunctions {
 		return 0;
 	}
 
-	@InternalFunction(name = "idrop")
+	@InternalFunction(name = "drop")
 	public int idrop(ExprNode... parameters) {
 		int object = parameters[0] instanceof TextElementNode ?
 				gameData.getIntIdentifierValue(((TextElementNode) parameters[0]).getText().toLowerCase()) :
@@ -259,7 +267,7 @@ public class InternalFunctions {
 		return 0;
 	}
 
-	@InternalFunction(name = "move_")
+	@InternalFunction(name = "move")
 	public int move_(ExprNode... parameters) {
 		int place = parameters[parameters.length - 1] instanceof TextElementNode ?
 				gameData.getIntIdentifierValue(((TextElementNode) parameters[parameters.length - 1]).getText().toLowerCase()) :
@@ -272,6 +280,13 @@ public class InternalFunctions {
 		gameData.setIntIdentifierValue("there", gameData.getIntIdentifierValue("here"));
 		gameData.setIntIdentifierValue("here", place);
 		gameData.setFlag(gameData.getIdentifierRefno("status"), gameData.getIntIdentifierValue("moved"));
+
+		for (int obj = gameData.fobj; obj < gameData.lobj; obj++) {
+			if (gameData.locations[obj - gameData.fobj] == place) {
+				gameData.setFlag(obj, gameData.getIntIdentifierValue("seen"));
+			}
+		}
+
 		throw new BreakException(ControlType.REPEAT);
 	}
 
@@ -281,7 +296,7 @@ public class InternalFunctions {
 		return 0;
 	}
 
-	@InternalFunction(name = "say_")
+	@InternalFunction(name = "say")
 	public int say_(ExprNode... parameters) {
 		try {
 			if (parameters.length == 0) return 0;
@@ -327,7 +342,7 @@ public class InternalFunctions {
 		return 0;
 	}
 
-	@InternalFunction(name = "describe_")
+	@InternalFunction(name = "describe")
 	public int describe_(ExprNode... parameters) {
 		if (parameters.length == 0) return 0;
 		int var = parameters[0] instanceof IdentifierNode ?

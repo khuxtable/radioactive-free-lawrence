@@ -1,6 +1,5 @@
 package org.kathrynhuxtable.radiofreelawrence.game.grammar;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -65,8 +64,8 @@ public class GameGenerator {
 		createVariable("here");
 		createVariable("there");
 
-		createPlace("inhand", false, "inventory", "Inventory");
-		createPlace("ylem", false, "ylem", "Ylem");
+		createPlace("inhand", "inventory", "Inventory");
+		createPlace("ylem", "ylem", "Ylem");
 	}
 
 	private void createState(String name, int value) {
@@ -81,20 +80,15 @@ public class GameGenerator {
 		gameData.gameNode.getIdentifiers().put(name, node);
 	}
 
-	private void createPlace(String name, boolean inVocabulary, String briefDescription, String longDescription) {
+	private void createPlace(String name, String briefDescription, String longDescription) {
 		PlaceNode node = PlaceNode.builder()
-				.names(Collections.singletonList(name))
-				.inVocabulary(inVocabulary)
+				.name(name)
 				.briefDescription(briefDescription)
 				.longDescription(longDescription)
 				.build();
-		if (node.isInVocabulary()) {
-			// Add first word to vocabulary.
-			gameData.gameNode.getVerbs().put(node.getNames().get(0), node);
-		}
-		for (String var : node.getNames()) {
-			gameData.gameNode.getIdentifiers().put(var, node);
-		}
+		// Add name to vocabulary.
+		gameData.gameNode.getVerbs().put(node.getName(), node);
+		gameData.gameNode.getIdentifiers().put(node.getName(), node);
 		gameData.gameNode.getPlaces().add(node);
 	}
 
@@ -140,8 +134,8 @@ public class GameGenerator {
 		int verbSize = (int) gameData.gameNode.getVerbs().values().stream()
 				.filter(v -> v instanceof VerbNode)
 				.count();
-		gameData.verbs = new BaseNode[verbSize];
-		for (BaseNode vocabulary : gameData.gameNode.getVerbs().values()) {
+		gameData.verbs = new VocabularyNode[verbSize];
+		for (VocabularyNode vocabulary : gameData.gameNode.getVerbs().values()) {
 			if (vocabulary instanceof VerbNode) {
 				gameData.verbs[gameData.refno - gameData.fverb] = vocabulary;
 				((VerbNode) vocabulary).setRefno(gameData.refno++);

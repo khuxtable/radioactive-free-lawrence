@@ -1,7 +1,8 @@
-name "Radio Free Lawrence";
-version "3.0";
-author "Kathryn Huxtable, Ron Burk, David Wiley";
-date "20 June 1982";
+info
+    name: "Radio Free Lawrence",
+    version: "3.0",
+    author: "Kathryn Huxtable, Ron Burk, David Wiley",
+    date: "20 June 1982";
 
 include "verbs.gdesc";
 
@@ -27,48 +28,41 @@ initial {
 initial {
     goto(Ninth_Mississippi);
 }
-/*
-repeat {
-    if (flag(status, moved)) {   // Has the player moved?
-        call (describeHere);  // If so, describe their new location
-    }
-}
-*/
 repeat {
     if (isflag(status, moved)) {
-        describe_(here);
+        describe(here);
         var youSee = true;
         for (var optr : here) {
             if (youSee) {
-                say_("");
+                say("");
                 youSee = false;
             }
-            describe_(optr);
+            describe(optr);
         }
     }
     input();                    // Get and parse player's command
-    //say_("arg1 is $", arg1);
-    //say_("arg2 is $", arg2);
-    //say_("status is $", status);
-    if (status < 0) { // Can't find 2nd or 1st command word in the vocabulary
-        quip ("Pardon?");       // Command parse failure -- abort the main loop
+    //say("arg1 is $", arg1);
+    //say("arg2 is $", arg2);
+    //say("status is $", status);
+    if (status < 0) {           // Can't find 2nd or 1st command word in the vocabulary
+        quip("Pardon?");        // Command parse failure -- abort the main loop
     }
 }
 repeat {
     if (key(quit)) {    // If the word QUIT occurs in the command
-        say_ ("As you wish.");
+        say("As you wish.");
         stop();         // Exit the game
     }
     here();             // Execute code, if any, associated with this location
     //respond(down, up, out, "There is no such exit here.");
-    arg1();           // Handle player's command
-    bail.out();     // Command not handled - report an error
+    arg1();             // Handle player's command
+    bail.out();         // Command not handled - report an error
 }
 
-proc bail.out stuff nonsense {
+proc bail.out {
     var qualifier;                  // Local variable initialised to zero
     if (status == 1) {
-        if (arg1 instanceof verb) {  // If that word is an object name
+        if (arg1 instanceof object) { // If that word is an object name
             if (!isnear(arg1)) {
                 quip("There is no # here!", arg1);
             } else {

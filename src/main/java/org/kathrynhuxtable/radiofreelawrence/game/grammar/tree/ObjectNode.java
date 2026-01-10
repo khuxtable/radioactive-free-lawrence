@@ -8,9 +8,10 @@ import lombok.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ObjectNode implements BaseNode, HasRefno {
+public class ObjectNode implements BaseNode, HasRefno, VocabularyNode {
+	String name;
 	@Singular
-	List<String> names;
+	List<String> verbs;
 	boolean inVocabulary;
 
 	String inventoryDescription;

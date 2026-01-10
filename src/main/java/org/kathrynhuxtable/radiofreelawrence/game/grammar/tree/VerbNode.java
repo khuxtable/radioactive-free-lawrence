@@ -8,7 +8,8 @@ import lombok.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class VerbNode implements BaseNode, HasRefno {
+public class VerbNode implements BaseNode, HasRefno, VocabularyNode {
+	String name;
 	@Singular
 	List<String> verbs;
 	boolean noise;
