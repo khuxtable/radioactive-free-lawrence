@@ -74,13 +74,3 @@ proc bail.out {
     }
     quip("You can't do that!");     // Generic no can do
 }
-
-fragment you_do
-    "You #";
-text cannot_tell_directions
-    """
-    You can't tell directions here.
-    Try Up, Down, Left, Right, Forward, Back
-    """;
-text what_is_x
-    "What is '#'?";

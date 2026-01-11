@@ -23,6 +23,6 @@ public class FunctionInvocationNode implements ExprNode {
 	@Override
 	public int evaluate(GameData gameData) {
 		String functionName = internalFunction != null ? internalFunction : identifier.getName();
-		return gameData.callFunction(functionName, internal, parameters);
+		return gameData.callFunction(functionName, parameters);
 	}
 }
