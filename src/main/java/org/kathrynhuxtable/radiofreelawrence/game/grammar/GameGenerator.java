@@ -1,7 +1,6 @@
 package org.kathrynhuxtable.radiofreelawrence.game.grammar;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -69,13 +68,20 @@ public class GameGenerator {
 	}
 
 	private void createState(String name, int value) {
-		StateClauseNode node = new StateClauseNode(name, NumberLiteralNode.builder().number(value).build());
+		StateClauseNode node = new StateClauseNode(name, NumberLiteralNode.builder()
+				.number(value)
+				.sourceLocation(new SourceLocation(null, 0, 0))
+				.build(),
+				new SourceLocation(null, 0, 0));
 		gameData.gameNode.getStates().put(name, node);
 		gameData.gameNode.getIdentifiers().put(name, node);
 	}
 
 	private void createVariable(String name) {
-		VariableNode node = VariableNode.builder().variable(name).build();
+		VariableNode node = VariableNode.builder()
+				.variable(name)
+				.sourceLocation(new SourceLocation(null, 0, 0))
+				.build();
 		gameData.gameNode.getVariables().add(node);
 		gameData.gameNode.getIdentifiers().put(name, node);
 	}
@@ -85,6 +91,7 @@ public class GameGenerator {
 				.name(name)
 				.briefDescription(briefDescription)
 				.longDescription(longDescription)
+				.sourceLocation(new SourceLocation(null, 0, 0))
 				.build();
 		// Add name to vocabulary.
 		gameData.gameNode.getVerbs().put(node.getName(), node);
@@ -123,10 +130,20 @@ public class GameGenerator {
 		gameData.lvar = gameData.refno;
 
 		gameData.ftext = gameData.refno;
-		gameData.texts = new TextNode[gameData.gameNode.getTexts().size()];
+		gameData.texts = new TextNode[gameData.gameNode.getTexts().size() + gameData.gameNode.getTextElements().size()];
 		for (TextNode text : gameData.gameNode.getTexts()) {
 			gameData.texts[gameData.refno - gameData.ftext] = text;
 			text.setRefno(gameData.refno++);
+		}
+		// Create anonymous text nodes for text literals in blocks
+		for (TextElementNode textElement : gameData.gameNode.getTextElements()) {
+			gameData.texts[gameData.refno - gameData.ftext] =
+					TextNode.builder()
+							.refno(gameData.refno)
+							.texts(Collections.singletonList(textElement.getText()))
+							.sourceLocation(new SourceLocation(null, 0, 0))
+							.build();
+			textElement.setRefno(gameData.refno++);
 		}
 		gameData.ltext = gameData.refno;
 

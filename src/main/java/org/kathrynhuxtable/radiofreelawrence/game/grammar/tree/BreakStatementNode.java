@@ -9,6 +9,7 @@ import org.kathrynhuxtable.radiofreelawrence.game.GameData;
 import org.kathrynhuxtable.radiofreelawrence.game.exception.BreakException;
 import org.kathrynhuxtable.radiofreelawrence.game.exception.GameRuntimeException;
 import org.kathrynhuxtable.radiofreelawrence.game.exception.LoopControlException.ControlType;
+import org.kathrynhuxtable.radiofreelawrence.game.grammar.SourceLocation;
 
 @Data
 @Builder
@@ -18,6 +19,7 @@ public class BreakStatementNode implements StatementNode {
 	private String identifier;
 	private ControlType controlType;
 	private String label;
+	private SourceLocation sourceLocation;
 
 	@Override
 	public void execute(GameData gameData) throws GameRuntimeException {

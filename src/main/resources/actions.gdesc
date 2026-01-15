@@ -1,3 +1,20 @@
+// When eating or drinking something
+proc consume disappears count minPower maxPower message emptyDescription {
+    //            "disappears": false,
+    //            "count": 1,
+    //            "minPower": 2,
+    //            "maxPower": 50,
+    //            "message": "Things go better with coke; but only a little better.",
+    //            "emptyDesc": [
+    //            "an empty coke can"
+    //        ]
+    say(message);
+    break repeat;
+}
+proc useweapon affects rchance damage drain {
+    say("nfw");
+}
+
 action "inventory" {
     var count;
     for (var optr : inhand) {
@@ -42,6 +59,9 @@ action "take" {
         quip("I see no # here.", arg2);
     }
 }
+action "steal" {
+
+}
 action "drop" {
     if (have(arg2)) {      // True only if the player has the thing
         say("You drop the #.", arg2);
@@ -64,9 +84,67 @@ action "vocabulary" {
         quip("more?");
     }
 }
-action "drink" "coke" {
-    if (have(coke)) {
-        quip("Things go better with coke, but only a little better.");
-        // Need to increase power and reduce uses. Only 1 use.
+//action "drink" "coke" {
+//    if (have(coke)) {
+//        quip("Things go better with coke, but only a little better.");
+//        // TODO Need to increase power and reduce uses. Only 1 use.
+////        "action": "Consume",
+////        "disappears": false,
+////        "count": 1,
+////        "minPower": 2,
+////        "maxPower": 50,
+////        "message": "Things go better with coke; but only a little better.",
+////        "emptyLabel": "COKEcan",
+////        "emptyDesc": [
+////          "an empty coke can"
+////        ]
+//    }
+//}
+action "throw" "coke" {
+//    "action": "UseWeapon",
+//    "affects": 1,
+//    "chance": 50,
+//    "damage": 25,
+//    "drain": 0
+}
+action "swing" "axe" {
+
+}
+action "throw" "axe" {
+
+}
+action "eat" "banana" {
+
+}
+action "eat" "sandwich" {
+
+}
+action "open" "book" {
+    if (have(book)) {
+        quip("The pages are fused together.");
     }
+}
+action "read" "book" {
+    if (have(book)) {
+        quip("The book is closed. The cover reads 'How to Survive a Nuclear War.'");
+    }
+}
+action "throw" "box" {
+//    "action": "AlterPower",
+//    "flag": 0,
+//    "chance": 100,
+//    "minPower": 2000,
+//    "maxPower": 2000,
+//    "success": "Congratulations! You have found the treasure.\nYou are hereby awarded with 200% life force.",
+//    "failure": "The interior is filled with meters and other strange appurtenances,\nbut nothing seems to happen."
+}
+action "open" "box" {
+
+}
+action "belt" "chain" {
+//    "action": "UseWeapon",
+//    "affects": 3,
+//    "chance": 50,
+//    "damage": 75,
+//    "drain": 0
 }

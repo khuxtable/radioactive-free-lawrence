@@ -12,6 +12,7 @@ import org.kathrynhuxtable.radiofreelawrence.game.GameData;
 import org.kathrynhuxtable.radiofreelawrence.game.exception.BreakException;
 import org.kathrynhuxtable.radiofreelawrence.game.exception.ContinueException;
 import org.kathrynhuxtable.radiofreelawrence.game.exception.GameRuntimeException;
+import org.kathrynhuxtable.radiofreelawrence.game.grammar.SourceLocation;
 
 @Data
 @Builder
@@ -22,6 +23,7 @@ public class EnhancedForStatementNode implements StatementNode {
 	private ExprNode expression;
 	private StatementNode statement;
 	private String label;
+	private SourceLocation sourceLocation;
 
 	@Override
 	public void execute(GameData gameData) throws GameRuntimeException {

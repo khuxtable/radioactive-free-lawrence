@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import org.kathrynhuxtable.radiofreelawrence.game.GameData;
+import org.kathrynhuxtable.radiofreelawrence.game.grammar.SourceLocation;
 
 @Data
 @Builder
@@ -14,6 +15,7 @@ import org.kathrynhuxtable.radiofreelawrence.game.GameData;
 public class ArrayAccessNode implements ExprNode {
 	private String arrayName;
 	private ExprNode index;
+	private SourceLocation sourceLocation;
 
 	@Override
 	public int evaluate(GameData gameData) {

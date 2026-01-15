@@ -1,17 +1,23 @@
 package org.kathrynhuxtable.radiofreelawrence.game.grammar.tree;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import org.kathrynhuxtable.radiofreelawrence.game.GameData;
 import org.kathrynhuxtable.radiofreelawrence.game.GameData.IdentifierType;
+import org.kathrynhuxtable.radiofreelawrence.game.grammar.SourceLocation;
 
 @Data
+@Builder
+@NoArgsConstructor
 @AllArgsConstructor
 public class InstanceofNode implements ExprNode {
 
 	private IdentifierNode identifier;
 	private IdentifierType identifierType;
+	private SourceLocation sourceLocation;
 
 	@Override
 	public int evaluate(GameData gameData) {

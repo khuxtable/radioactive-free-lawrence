@@ -23,7 +23,7 @@ import org.kathrynhuxtable.radiofreelawrence.game.grammar.tree.ActionNode.Action
 @Component
 public class GameData {
 
-	public enum IdentifierType { OBJECT, PLACE, VARIABLE, TEXT, VERB }
+	public enum IdentifierType {OBJECT, PLACE, VARIABLE, TEXT, VERB}
 
 	// Static data
 
@@ -71,7 +71,7 @@ public class GameData {
 			return IdentifierType.OBJECT;
 		} else if (refno >= floc && refno < lloc) {
 			return IdentifierType.PLACE;
-		} else if  (refno >= fvar && refno < lvar) {
+		} else if (refno >= fvar && refno < lvar) {
 			return IdentifierType.VARIABLE;
 		} else if (refno >= ftext && refno < ltext) {
 			return IdentifierType.TEXT;
@@ -85,16 +85,16 @@ public class GameData {
 	public BaseNode getRefnoNode(int refno) {
 		if (refno < fobj) {
 			throw new GameRuntimeException("refno " + refno + " is not valid");
-		} else if (refno <= lobj) {
+		} else if (refno < lobj) {
 			return objects[refno - fobj];
-		} else if (refno <= lloc) {
+		} else if (refno < lloc) {
 			return places[refno - floc];
-		} else if (refno <= lverb) {
-			return (BaseNode) verbs[refno - fverb];
-		} else if (refno <= lvar) {
+		} else if (refno < lvar) {
 			throw new GameRuntimeException("refno " + refno + " is not valid -- variable nodes not allowed here");
-		} else if (refno <= ltext) {
+		} else if (refno < ltext) {
 			return texts[refno - ftext];
+		} else if (refno < lverb) {
+			return (BaseNode) verbs[refno - fverb];
 		} else {
 			throw new GameRuntimeException("refno " + refno + " is not valid");
 		}
@@ -140,7 +140,7 @@ public class GameData {
 		// FIXME Need to handle the cyclic, random, etc. options.
 		if (refno < fobj) {
 			throw new GameRuntimeException("refno " + refno + " is not valid");
-		} else if (refno <= lobj) {
+		} else if (refno < lobj) {
 			ObjectNode objectNode = objects[refno - fobj];
 			if (type < 0) {
 				return objectNode.getName();
@@ -153,7 +153,7 @@ public class GameData {
 			} else {
 				return (!seen || type > 0) && objectNode.getLongDescription() != null ? objectNode.getLongDescription() : objectNode.getBriefDescription();
 			}
-		} else if (refno <= lloc) {
+		} else if (refno < lloc) {
 			PlaceNode placeNode = places[refno - floc];
 			if (type < 0) {
 				return placeNode.getName();
@@ -162,15 +162,15 @@ public class GameData {
 			boolean beenHere = testflag(refno, beenHereFlag);
 			setFlag(refno, beenHereFlag);
 			return (!beenHere || type > 0) && placeNode.getLongDescription() != null ? placeNode.getLongDescription() : placeNode.getBriefDescription();
-		} else if (refno <= lverb) {
-			VocabularyNode verb = verbs[refno - fverb];
-			return verb.getName();
-		} else if (refno <= lvar) {
+		} else if (refno < lvar) {
 			int var = variables[refno - fvar];
 			return Integer.toString(var);
-		} else if (refno <= ltext) {
+		} else if (refno < ltext) {
 			TextNode text = texts[refno - ftext];
 			return text.getTexts().get(0);
+		} else if (refno < lverb) {
+			VocabularyNode verb = verbs[refno - fverb];
+			return verb.getName();
 		} else {
 			throw new GameRuntimeException("refno " + refno + " is not valid");
 		}
@@ -344,7 +344,7 @@ public class GameData {
 
 	private boolean testflag(int refno, long state) {
 		long value;
-		if (refno >= fvar && refno <= lvar) {
+		if (refno >= fvar && refno < lvar) {
 			value = variableFlags[refno - fvar];
 		} else if (refno >= floc && refno < lloc) {
 			value = placeFlags[refno - floc];
@@ -358,7 +358,7 @@ public class GameData {
 	}
 
 	public void setFlag(int refno, long state) {
-		if (refno >= fvar && refno <= lvar) {
+		if (refno >= fvar && refno < lvar) {
 			variableFlags[refno - fvar] |= 1L << state;
 		} else if (refno >= floc && refno < lloc) {
 			placeFlags[refno - floc] |= 1L << state;
@@ -368,7 +368,7 @@ public class GameData {
 	}
 
 	public void clearFlag(int refno, long state) {
-		if (refno >= fvar && refno <= lvar) {
+		if (refno >= fvar && refno < lvar) {
 			variableFlags[refno - fvar] &= ~(1L << state);
 		} else if (refno >= floc && refno < lloc) {
 			placeFlags[refno - floc] &= ~(1L << state);
@@ -435,28 +435,37 @@ public class GameData {
 				throw new GameRuntimeException("Error calling internal function " + method.getName(), e);
 			}
 		} else {
-			BaseNode idNode = gameNode.getIdentifiers().get(name.toLowerCase());
-			if (idNode instanceof VariableNode variableNode) {
-				int refno = variables[variableNode.getRefno() - fvar];
-				if (refno < floc) {
-					// No valid function reference
-					return 0;
-				} else if (refno <= lloc) {
-					idNode = places[refno - floc];
-				} else if (refno <= lverb) {
-					idNode = (BaseNode) verbs[refno - fverb];
-				} else {
-					// No valid function reference
-					return 0;
+			BaseNode idNode;
+			Integer local = localVariables.getLocalVariableValue(name.toLowerCase());
+			if (local != null && local >= fobj && local < lobj) {
+				idNode = objects[local - fobj];
+			} else {
+				idNode = gameNode.getIdentifiers().get(name.toLowerCase());
+				if (idNode instanceof VariableNode variableNode) {
+					int refno = variables[variableNode.getRefno() - fvar];
+					if (refno < floc) {
+						// No valid function reference
+						return 0;
+					} else if (refno <= lloc) {
+						idNode = places[refno - floc];
+					} else if (refno <= lverb) {
+						idNode = (BaseNode) verbs[refno - fverb];
+					} else {
+						// No valid function reference
+						return 0;
+					}
 				}
 			}
 			if (idNode instanceof ProcNode procNode) {
 				return callProc(procNode, parameters);
-			} else if (idNode instanceof PlaceNode) {
-				callAt((PlaceNode) idNode);
+			} else if (idNode instanceof PlaceNode placeNode) {
+				callPlace(placeNode);
 				return 0;
-			} else if (idNode instanceof VerbNode) {
-				callAction((VerbNode) idNode);
+			} else if (idNode instanceof ObjectNode objectNode) {
+				callObject(objectNode);
+				return 0;
+			} else if (idNode instanceof VerbNode verbNode) {
+				callAction(verbNode);
 				return 0;
 			} else {
 				throw new GameRuntimeException("variable " + name + " does not contain a valid function reference");
@@ -464,7 +473,7 @@ public class GameData {
 		}
 	}
 
-	private void callAt(PlaceNode idNode) {
+	private void callPlace(PlaceNode idNode) {
 		if (idNode != null && idNode.getCode() != null) {
 			try {
 				idNode.getCode().execute(this);
@@ -479,7 +488,22 @@ public class GameData {
 		}
 	}
 
-	private void callAction(VerbNode idNode) {
+	private void callObject(ObjectNode idNode) {
+		if (idNode != null && idNode.getCode() != null) {
+			try {
+				idNode.getCode().execute(this);
+			} catch (BreakException | ContinueException e) {
+				if (e.getControlType() == ControlType.REPEAT) {
+					throw e;
+				}
+				// Implicit continue
+			} catch (ReturnException e) {
+				// Fall through
+			}
+		}
+	}
+
+	public void callAction(VerbNode idNode) {
 		// FIXME handle synonyms
 		ActionNode node = gameNode.getActions().get(idNode.getVerbs().get(0));
 		if (node != null) {
@@ -511,7 +535,11 @@ public class GameData {
 		List<String> args = procNode.getArgs();
 		for (int i = 0; i < args.size(); i++) {
 			if (i < parameters.size()) {
-				localVariables.addVariable(args.get(i), parameters.get(i).evaluate(this));
+				if (parameters.get(i) instanceof TextElementNode textElementNode) {
+					localVariables.addVariable(args.get(i), textElementNode.getRefno());
+				} else {
+					localVariables.addVariable(args.get(i), parameters.get(i).evaluate(this));
+				}
 			}
 		}
 

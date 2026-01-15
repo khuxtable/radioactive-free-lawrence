@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 
 import org.kathrynhuxtable.radiofreelawrence.game.GameData;
 import org.kathrynhuxtable.radiofreelawrence.game.exception.GameRuntimeException;
+import org.kathrynhuxtable.radiofreelawrence.game.grammar.SourceLocation;
 
 @Data
 @Builder
@@ -18,6 +19,7 @@ public class IfStatementNode implements StatementNode {
 	private List<ExprNode> expressions;
 	private List<StatementNode> thenStatements;
 	private String label;
+	private SourceLocation sourceLocation;
 
 	@Override
 	public void execute(GameData gameData) throws GameRuntimeException {

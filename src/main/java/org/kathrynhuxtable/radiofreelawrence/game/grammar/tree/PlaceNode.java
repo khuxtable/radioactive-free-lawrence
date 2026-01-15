@@ -4,18 +4,21 @@ import java.util.List;
 
 import lombok.*;
 
+import org.kathrynhuxtable.radiofreelawrence.game.grammar.SourceLocation;
+
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class PlaceNode implements BaseNode, HasRefno, VocabularyNode {
-	String name;
+	private String name;
 	@Singular
-	List<String> verbs;
+	private List<String> verbs;
 
-	String briefDescription;
-	String longDescription;
-	BlockNode code;
+	private String briefDescription;
+	private String longDescription;
+	private BlockNode code;
 
-	int refno;
+	private int refno;
+	private SourceLocation sourceLocation;
 }

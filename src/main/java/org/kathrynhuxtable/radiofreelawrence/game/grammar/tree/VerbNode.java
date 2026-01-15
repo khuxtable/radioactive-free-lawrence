@@ -4,15 +4,18 @@ import java.util.List;
 
 import lombok.*;
 
+import org.kathrynhuxtable.radiofreelawrence.game.grammar.SourceLocation;
+
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class VerbNode implements BaseNode, HasRefno, VocabularyNode {
-	String name;
+	private String name;
 	@Singular
-	List<String> verbs;
-	boolean noise;
+	private List<String> verbs;
+	private boolean noise;
 
-	int refno;
+	private int refno;
+	private SourceLocation sourceLocation;
 }

@@ -256,6 +256,24 @@ public class InternalFunctions {
 		return 0;
 	}
 
+	// isverb("verb", proc, parameters...)
+	@InternalFunction(name = "isverb")
+	public int isverb(ExprNode... parameters) {
+		if (parameters.length > 1) {
+			if (iskey(parameters[0]) == 0) {
+				return 0;
+			}
+		}
+
+		if (!(parameters[1] instanceof IdentifierNode identifierNode)) {
+			throw new GameRuntimeException("second parameter to isverb must be proc identifier");
+		}
+
+		gameData.callFunction(identifierNode.getName(), Arrays.asList(Arrays.copyOfRange(parameters, 2, parameters.length)));
+
+		throw new BreakException(ControlType.REPEAT);
+	}
+
 	@InternalFunction(name = "goto")
 	public int goto_(ExprNode... parameters) {
 		int place = parameters[0] instanceof TextElementNode ?
@@ -314,7 +332,7 @@ public class InternalFunctions {
 
 			System.out.println(gameData.expandText(text, qualifier));
 		} catch (Exception e) {
-			throw new GameRuntimeException("exception in 'say'", e);
+			throw new GameRuntimeException(parameters[0].getSourceLocation() + ": exception in 'say'", e);
 		}
 
 		return 0;

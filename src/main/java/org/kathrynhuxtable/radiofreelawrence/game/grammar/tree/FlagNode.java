@@ -1,9 +1,13 @@
 package org.kathrynhuxtable.radiofreelawrence.game.grammar.tree;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import org.kathrynhuxtable.radiofreelawrence.game.grammar.SourceLocation;
 
 @Data
 @Builder
@@ -13,6 +17,7 @@ public class FlagNode implements BaseNode {
 
 	public enum FlagType { VARIABLE, OBJECT, PLACE }
 
-	List<String> flags = new ArrayList<>();
-	FlagType type;
+	private List<String> flags;
+	private FlagType type;
+	private SourceLocation sourceLocation;
 }

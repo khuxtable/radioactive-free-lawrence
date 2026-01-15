@@ -5,12 +5,15 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import org.kathrynhuxtable.radiofreelawrence.game.grammar.SourceLocation;
+
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class VariableNode implements BaseNode, HasRefno {
-	String variable;
+	private String variable;
 
-	int refno;
+	private int refno;
+	private SourceLocation sourceLocation;
 }

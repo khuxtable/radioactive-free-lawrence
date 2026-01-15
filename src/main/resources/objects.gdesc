@@ -13,7 +13,11 @@ object chain
     "a length of chain";
 object coke
     "coke can"
-    "There is a can of coke here.";
+    "There is a can of coke here."
+        {
+            isverb(drink, consume, false, 1, 2, 50, "Things go better with coke, but only a little better.", "an empty coke can");
+            isverb(throw, useweapon, 1, 50, 25, 0);
+        }
 object dagger
     "dagger"
     "There is a dagger here.";

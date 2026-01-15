@@ -1,7 +1,6 @@
 package org.kathrynhuxtable.radiofreelawrence.game.grammar;
 
 import org.antlr.v4.runtime.BaseErrorListener;
-import org.antlr.v4.runtime.IntStream;
 import org.antlr.v4.runtime.RecognitionException;
 import org.antlr.v4.runtime.Recognizer;
 
@@ -16,10 +15,7 @@ public class DescriptiveErrorListener extends BaseErrorListener {
 	                        String msg,
 	                        RecognitionException e) {
 		String sourceName = recognizer.getInputStream().getSourceName();
-		if (!sourceName.isEmpty() && !sourceName.equals(IntStream.UNKNOWN_SOURCE_NAME)) {
-			System.err.println(sourceName + ":" + line + ":" + charPositionInLine + ": " + msg);
-		} else {
-			System.err.println("line " + line + ":" + charPositionInLine + ": " + msg);
-		}
+		SourceLocation sourceLocation = new SourceLocation(sourceName, line, charPositionInLine);
+		System.err.println(sourceLocation + ": " + msg);
 	}
 }

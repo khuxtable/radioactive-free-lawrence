@@ -4,11 +4,11 @@ import java.util.*;
 
 import lombok.*;
 
+import org.kathrynhuxtable.radiofreelawrence.game.grammar.SourceLocation;
+
 @Data
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
 public class StateNode implements BaseNode {
 
-	Map<String, StateClauseNode> states = new LinkedHashMap<>();
+	private Map<String, StateClauseNode> states = new LinkedHashMap<>();
+	private SourceLocation sourceLocation;
 }

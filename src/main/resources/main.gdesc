@@ -49,26 +49,30 @@ repeat {
     }
 }
 repeat {
-    if (key(quit)) {    // If the word QUIT occurs in the command
+    if (key(quit)) {    // If the word QUIT occurs in the command, exit the game
         say("As you wish.");
-        stop();         // Exit the game
+        stop();
     }
+
     here();             // Execute code, if any, associated with this location
-    //respond(down, up, out, "There is no such exit here.");
-    arg1();             // Handle player's command
+    arg1();             // Execute action verb, if any
+    for (var optr : inhand) {
+        optr();         // Execute code, if any, associated with this object
+    }
+
     bail.out();         // Command not handled - report an error
 }
 
+// Deliver invalid command message
 proc bail.out {
-    var qualifier;                  // Local variable initialised to zero
     if (status == 1) {
-        if (arg1 instanceof object) { // If that word is an object name
+        if (arg1 instanceof object) { // If first word is an object name
             if (!isnear(arg1)) {
                 quip("There is no # here!", arg1);
             } else {
                 quip("You need to say what you want to do with the #.", arg1);
             }
-        } else {
+        } else {                    // Must be a verb
             quip("You need to say what you want to #.", arg1);
         }
     }

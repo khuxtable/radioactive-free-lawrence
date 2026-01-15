@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import org.kathrynhuxtable.radiofreelawrence.game.GameData;
+import org.kathrynhuxtable.radiofreelawrence.game.grammar.SourceLocation;
 
 @Data
 @Builder
@@ -55,6 +56,8 @@ public class BinaryNode implements ExprNode {
 	private Operator operator;
 	private ExprNode left;
 	private ExprNode right;
+
+	private SourceLocation sourceLocation;
 
 	@Override
 	public int evaluate(GameData gameData) {

@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import org.kathrynhuxtable.radiofreelawrence.game.GameData;
 import org.kathrynhuxtable.radiofreelawrence.game.exception.GameRuntimeException;
+import org.kathrynhuxtable.radiofreelawrence.game.grammar.SourceLocation;
 
 @Data
 @Builder
@@ -19,6 +20,7 @@ public class UnaryNode implements ExprNode {
 
 	private UnaryOperator operator;
 	private ExprNode expression;
+	private SourceLocation sourceLocation;
 
 	@Override
 	public int evaluate(GameData gameData) {

@@ -7,6 +7,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import org.kathrynhuxtable.radiofreelawrence.game.grammar.SourceLocation;
+
 @Data
 @Builder
 @NoArgsConstructor
@@ -14,4 +16,5 @@ import lombok.NoArgsConstructor;
 public class ExprListNode implements BaseNode {
 
 	private List<ExprNode> exprNodes;
+	private SourceLocation sourceLocation;
 }

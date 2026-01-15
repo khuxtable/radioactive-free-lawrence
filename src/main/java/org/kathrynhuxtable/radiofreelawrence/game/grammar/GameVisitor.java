@@ -12,9 +12,7 @@ import java.util.stream.Collectors;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import org.antlr.v4.runtime.CharStream;
-import org.antlr.v4.runtime.CharStreams;
-import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
 import org.kathrynhuxtable.gdesc.parser.GameLexer;
@@ -35,6 +33,7 @@ import org.kathrynhuxtable.radiofreelawrence.game.grammar.tree.UnaryNode.UnaryOp
 public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 	private final GameNode root;
 	private final ErrorReporter errorReporter;
+
 
 	public void readFile(String filePath, boolean optional) throws IOException {
 		try (InputStream inputStream = GameVisitor.class.getResourceAsStream("/" + filePath)) {
@@ -122,6 +121,7 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 				.flags(ctx.flagClause().stream()
 						.map(c -> c.getText().toLowerCase())
 						.collect(Collectors.toList()))
+				.sourceLocation(new SourceLocation(ctx))
 				.build();
 		node.getFlags().forEach(flag -> {
 			if (root.getIdentifiers().containsKey(flag)) {
@@ -143,6 +143,7 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 						.map(v -> TextUtils.cleanStringLiteral(v.STRING_LITERAL().getText()).toLowerCase())
 						.collect(Collectors.toList()))
 				.noise(false)
+				.sourceLocation(new SourceLocation(ctx))
 				.build();
 		for (String verb : node.getVerbs()) {
 			if (root.getVerbs().containsKey(verb)) {
@@ -165,6 +166,7 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 						.map(n -> TextUtils.cleanStringLiteral(n.STRING_LITERAL().getText()).toLowerCase())
 						.collect(Collectors.toList()))
 				.noise(false)
+				.sourceLocation(new SourceLocation(ctx))
 				.build();
 		root.getNoise().addAll(node.getVerbs());
 		return node;
@@ -181,6 +183,7 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 				.texts(texts)
 				.method(ctx.method() == null ? null : TextMethod.valueOf(ctx.method().getText().toUpperCase()))
 				.fragment(false)
+				.sourceLocation(new SourceLocation(ctx))
 				.build();
 		if (node.getName() != null) {
 			if (root.getIdentifiers().containsKey(node.getName())) {
@@ -203,6 +206,7 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 				.texts(texts)
 				.method(ctx.method() == null ? null : TextMethod.valueOf(ctx.method().getText().toUpperCase()))
 				.fragment(true)
+				.sourceLocation(new SourceLocation(ctx))
 				.build();
 		if (node.getName() != null) {
 			if (root.getIdentifiers().containsKey(node.getName())) {
@@ -219,10 +223,12 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 	public ActionNode visitActionDirective(ActionDirectiveContext ctx) {
 		String name = TextUtils.cleanStringLiteral(ctx.arg1.getText()).toLowerCase();
 		ActionNode node = root.getActions().computeIfAbsent(name, k -> new ActionNode());
+		node.setSourceLocation(new SourceLocation(ctx));
 		node.setArg1(name);
 		node.getActionCodes().add(ActionCode.builder()
 				.arg2(ctx.arg2 == null ? null : TextUtils.cleanStringLiteral(ctx.arg2.getText()).toLowerCase())
 				.code((BlockNode) visit(ctx.block()))
+				.sourceLocation(new SourceLocation(ctx.block()))
 				.build());
 		return node;
 	}
@@ -236,6 +242,7 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 						.map(i -> i.getText().toLowerCase())
 						.collect(Collectors.toList()))
 				.code((BlockNode) visit(ctx.block()))
+				.sourceLocation(new SourceLocation(ctx.block()))
 				.build();
 		if (node.getName() != null) {
 			if (root.getIdentifiers().containsKey(node.getName())) {
@@ -252,6 +259,7 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 	public InitialNode visitInitialDirective(InitialDirectiveContext ctx) {
 		InitialNode node = InitialNode.builder()
 				.code((BlockNode) visit(ctx.block()))
+				.sourceLocation(new SourceLocation(ctx))
 				.build();
 		root.getInits().add(node);
 		return node;
@@ -262,6 +270,7 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 	public RepeatNode visitRepeatDirective(RepeatDirectiveContext ctx) {
 		RepeatNode node = RepeatNode.builder()
 				.code((BlockNode) visit(ctx.block()))
+				.sourceLocation(new SourceLocation(ctx))
 				.build();
 		root.getRepeats().add(node);
 		return node;
@@ -271,6 +280,8 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 	@Override
 	public StateNode visitStateDirective(StateDirectiveContext ctx) {
 		StateNode node = new StateNode();
+		node.setSourceLocation(new SourceLocation(ctx));
+
 		boolean first = true;
 		for (StateClauseContext childCtx : ctx.stateClause()) {
 			StateClauseNode clause = (StateClauseNode) visit(childCtx);
@@ -279,6 +290,7 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 				if (clause.getValue() == null) {
 					clause.setValue(NumberLiteralNode.builder()
 							.number(0)
+							.sourceLocation(new SourceLocation(childCtx))
 							.build());
 				}
 			}
@@ -297,7 +309,10 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 	// IDENTIFIER (EQUAL expression)?
 	@Override
 	public StateClauseNode visitStateClause(StateClauseContext ctx) {
-		return new StateClauseNode(ctx.IDENTIFIER().getText().toLowerCase(), ctx.expression() == null ? null : (ExprNode) visit(ctx.expression()));
+		return new StateClauseNode(
+				ctx.IDENTIFIER().getText().toLowerCase(),
+				ctx.expression() == null ? null : (ExprNode) visit(ctx.expression()),
+				new SourceLocation(ctx));
 	}
 
 	// IDENTIFIER | IDENTIFIER LBRACK NUM_LITERAL RBRACK
@@ -307,7 +322,10 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 			List<VariableNode> varList = root.getVariables();
 			TerminalNode idCtx = ctx.IDENTIFIER();
 			String varName = idCtx.getText().toLowerCase();
-			VariableNode node = VariableNode.builder().variable(varName).build();
+			VariableNode node = VariableNode.builder()
+					.variable(varName)
+					.sourceLocation(new SourceLocation(ctx))
+					.build();
 			if (root.getIdentifiers().containsKey(varName)) {
 				errorReporter.reportError(ctx, "Duplicate identifier \"" + varName + "\"");
 			}
@@ -318,6 +336,7 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 			ArrayNode node = ArrayNode.builder()
 					.name(ctx.IDENTIFIER().getText().toLowerCase())
 					.size(Integer.parseInt(ctx.NUM_LITERAL().getText()))
+					.sourceLocation(new SourceLocation(ctx))
 					.build();
 			if (node.getName() != null) {
 				if (root.getIdentifiers().containsKey(node.getName())) {
@@ -343,16 +362,17 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 				.briefDescription(briefDescription)
 				.longDescription(longDescription)
 				.code((BlockNode) visit(ctx.optionalBlock()))
+				.sourceLocation(new SourceLocation(ctx))
 				.build();
 		if (root.getIdentifiers().containsKey(node.getName())) {
 			errorReporter.reportError(ctx, "Duplicate identifier \"" + node.getName() + "\"");
 		}
 		root.getIdentifiers().put(node.getName(), node);
-			if (root.getVerbs().containsKey(node.getName())) {
-				errorReporter.reportError(ctx, "Duplicate verb \"" + node.getName() + "\"");
-			}
-			// Add first word to vocabulary.
-			root.getVerbs().put(node.getName(), node);
+		if (root.getVerbs().containsKey(node.getName())) {
+			errorReporter.reportError(ctx, "Duplicate verb \"" + node.getName() + "\"");
+		}
+		// Add first word to vocabulary.
+		root.getVerbs().put(node.getName(), node);
 		for (String var : node.getVerbs()) {
 			if (root.getIdentifiers().containsKey(var)) {
 				errorReporter.reportError(ctx, "Duplicate identifier \"" + var + "\"");
@@ -379,6 +399,7 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 				.briefDescription(briefDescription)
 				.longDescription(longDescription)
 				.code((BlockNode) visit(ctx.optionalBlock()))
+				.sourceLocation(new SourceLocation(ctx))
 				.build();
 		if (root.getIdentifiers().containsKey(node.getName())) {
 			errorReporter.reportError(ctx, "Duplicate identifier \"" + node.getName() + "\"");
@@ -408,6 +429,7 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 				.statements(ctx.statement().stream()
 						.map(s -> (StatementNode) visit(s))
 						.collect(Collectors.toList()))
+				.sourceLocation(new SourceLocation(ctx))
 				.build();
 	}
 
@@ -416,19 +438,23 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 	public StatementNode visitLocalVariableDeclarationStatement(LocalVariableDeclarationStatementContext ctx) {
 		return LocalVariableDeclarationStatementNode.builder()
 				.declarators(((LocalVariableDeclarationNode) visit(ctx.localVariableDeclaration())).getDeclarators())
+				.sourceLocation(new SourceLocation(ctx))
 				.build();
 	}
 
 	// SEMI
 	@Override
 	public StatementNode visitEmptyStatement(EmptyStatementContext ctx) {
-		return new EmptyStatementNode();
+		EmptyStatementNode node = new EmptyStatementNode();
+		node.setSourceLocation(new SourceLocation(ctx));
+		return node;
 	}
 
 	@Override
 	public BaseNode visitExpressionStatement(ExpressionStatementContext ctx) {
 		return ExpressionStatementNode.builder()
 				.expression((ExprNode) visit(ctx.statementExpression()))
+				.sourceLocation(new SourceLocation(ctx))
 				.build();
 	}
 
@@ -442,6 +468,7 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 				.thenStatements(ctx.block().stream()
 						.map(b -> (StatementNode) visit(b))
 						.toList())
+				.sourceLocation(new SourceLocation(ctx))
 				.build();
 	}
 
@@ -452,6 +479,7 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 				.declarators(ctx.variableDeclarator().stream()
 						.map(d -> (VariableDeclaratorNode) visit(d))
 						.collect(Collectors.toList()))
+				.sourceLocation(new SourceLocation(ctx))
 				.build();
 	}
 
@@ -459,13 +487,14 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 	@Override
 	public BaseNode visitWhileStatement(WhileStatementContext ctx) {
 		String label = null;
-		if (ctx.optionalLabel() != null) {
-			label = getIdentifierNode(ctx.optionalLabel().IDENTIFIER()).getName();
+		if (ctx.optionalLabel() != null && ctx.optionalLabel().IDENTIFIER() != null) {
+			label = getIdentifierNode(ctx.optionalLabel().IDENTIFIER(), new SourceLocation(ctx.optionalLabel())).getName();
 		}
 		return WhileStatementNode.builder()
 				.label(label)
 				.expression((ExprNode) visit(ctx.expression()))
 				.statement((StatementNode) visit(ctx.block()))
+				.sourceLocation(new SourceLocation(ctx))
 				.build();
 	}
 
@@ -473,14 +502,15 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 	@Override
 	public BaseNode visitRepeatStatement(RepeatStatementContext ctx) {
 		String label = null;
-		if (ctx.optionalLabel() != null) {
-			label = getIdentifierNode(ctx.optionalLabel().IDENTIFIER()).getName();
+		if (ctx.optionalLabel() != null && ctx.optionalLabel().IDENTIFIER() != null) {
+			label = getIdentifierNode(ctx.optionalLabel().IDENTIFIER(), new SourceLocation(ctx.optionalLabel())).getName();
 		}
 		return WhileStatementNode.builder()
 				.label(label)
 				.postTest(true)
 				.expression((ExprNode) visit(ctx.expression()))
 				.statement((StatementNode) visit(ctx.block()))
+				.sourceLocation(new SourceLocation(ctx))
 				.build();
 	}
 
@@ -488,14 +518,15 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 	@Override
 	public BaseNode visitBasicForStatement(BasicForStatementContext ctx) {
 		String label = null;
-		if (ctx.optionalLabel() != null) {
-			label = getIdentifierNode(ctx.optionalLabel().IDENTIFIER()).getName();
+		if (ctx.optionalLabel() != null && ctx.optionalLabel().IDENTIFIER() != null) {
+			label = getIdentifierNode(ctx.optionalLabel().IDENTIFIER(), new SourceLocation(ctx.optionalLabel())).getName();
 		}
 		List<StatementNode> init;
 		if (ctx.forInit() != null && ctx.forInit().localVariableDeclaration() != null) {
 			init = Collections.singletonList(LocalVariableDeclarationStatementNode.builder()
 					.declarators(
 							((LocalVariableDeclarationNode) visit(ctx.forInit().localVariableDeclaration())).getDeclarators())
+					.sourceLocation(new SourceLocation(ctx))
 					.build());
 		} else if (ctx.forInit() != null) {
 			init = ((StatementExpressionListNode) visit(ctx.forInit())).getStatements();
@@ -508,6 +539,7 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 				.test((ExprNode) visit(ctx.expression()))
 				.update(((StatementExpressionListNode) visit(ctx.forUpdate().statementExpressionList())).getStatements())
 				.statement((StatementNode) visit(ctx.block()))
+				.sourceLocation(new SourceLocation(ctx))
 				.build();
 	}
 
@@ -516,13 +548,14 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 	public BaseNode visitEnhancedForStatement(EnhancedForStatementContext ctx) {
 		String label = null;
 		if (ctx.optionalLabel() != null && ctx.optionalLabel().IDENTIFIER() != null) {
-			label = getIdentifierNode(ctx.optionalLabel().IDENTIFIER()).getName();
+			label = getIdentifierNode(ctx.optionalLabel().IDENTIFIER(), new SourceLocation(ctx.optionalLabel())).getName();
 		}
 		return EnhancedForStatementNode.builder()
 				.label(label)
-				.identifier(getIdentifierNode(ctx.IDENTIFIER()))
+				.identifier(getIdentifierNode(ctx.IDENTIFIER(), getSourceLocation(ctx.IDENTIFIER())))
 				.expression((ExprNode) visit(ctx.expression()))
 				.statement((StatementNode) visit(ctx.block()))
+				.sourceLocation(new SourceLocation(ctx))
 				.build();
 	}
 
@@ -530,10 +563,11 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 	@Override
 	public BaseNode visitBreakStatement(BreakStatementContext ctx) {
 		ControlType controlType = ctx.PROC() != null ? ControlType.PROC : ctx.REPEAT() != null ? ControlType.REPEAT : ControlType.CODE;
-		String identifier = ctx.IDENTIFIER() == null ? null : getIdentifierNode(ctx.IDENTIFIER()).getName();
+		String identifier = ctx.IDENTIFIER() == null ? null : getIdentifierNode(ctx.IDENTIFIER(), getSourceLocation(ctx.IDENTIFIER())).getName();
 		return BreakStatementNode.builder()
 				.identifier(identifier)
 				.controlType(controlType)
+				.sourceLocation(new SourceLocation(ctx))
 				.build();
 	}
 
@@ -541,10 +575,11 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 	@Override
 	public BaseNode visitContinueStatement(ContinueStatementContext ctx) {
 		ControlType controlType = ctx.PROC() != null ? ControlType.PROC : ctx.REPEAT() != null ? ControlType.REPEAT : ControlType.CODE;
-		String identifier = ctx.IDENTIFIER() == null ? null : getIdentifierNode(ctx.IDENTIFIER()).getName();
+		String identifier = ctx.IDENTIFIER() == null ? null : getIdentifierNode(ctx.IDENTIFIER(), getSourceLocation(ctx.IDENTIFIER())).getName();
 		return ContinueStatementNode.builder()
 				.identifier(identifier)
 				.controlType(controlType)
+				.sourceLocation(new SourceLocation(ctx))
 				.build();
 	}
 
@@ -554,8 +589,12 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 		return ReturnStatementNode.builder()
 				.expression(
 						ctx.expression() == null ?
-								NumberLiteralNode.builder().number(0).build() :
+								NumberLiteralNode.builder()
+										.number(0)
+										.sourceLocation(getSourceLocation(ctx.SEMI()))
+										.build() :
 								(ExprNode) visit(ctx.expression()))
+				.sourceLocation(new SourceLocation(ctx))
 				.build();
 	}
 
@@ -566,9 +605,11 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 				.statements(ctx.statementExpression().stream()
 						.map(s -> ExpressionStatementNode.builder()
 								.expression((ExprNode) visit(s))
+								.sourceLocation(new SourceLocation(s))
 								.build())
 						.collect(Collectors.toList())
 				)
+				.sourceLocation(new SourceLocation(ctx))
 				.build();
 	}
 
@@ -576,8 +617,9 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 	@Override
 	public BaseNode visitVariableDeclarator(VariableDeclaratorContext ctx) {
 		return VariableDeclaratorNode.builder()
-				.identifier(getIdentifierNode(ctx.IDENTIFIER()))
+				.identifier(getIdentifierNode(ctx.IDENTIFIER(), getSourceLocation(ctx.IDENTIFIER())))
 				.expression(ctx.expression() == null ? null : (ExprNode) visit(ctx.expression()))
+				.sourceLocation(new SourceLocation(ctx))
 				.build();
 	}
 
@@ -593,6 +635,7 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 		return ArrayAccessNode.builder()
 				.arrayName(ctx.IDENTIFIER().getText().toLowerCase())
 				.index((ExprNode) visit(ctx.expression()))
+				.sourceLocation(new SourceLocation(ctx))
 				.build();
 	}
 
@@ -603,18 +646,21 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 	public BaseNode visitFunctionInvocation(FunctionInvocationContext ctx) {
 		if (ctx.IDENTIFIER() != null) {
 			return FunctionInvocationNode.builder()
-					.identifier(getIdentifierNode(ctx.IDENTIFIER()))
+					.identifier(getIdentifierNode(ctx.IDENTIFIER(), getSourceLocation(ctx.IDENTIFIER())))
 					.parameters(((ExprListNode) visit(ctx.optionalExpressionList())).getExprNodes())
+					.sourceLocation(new SourceLocation(ctx))
 					.build();
 		} else if (ctx.STRING_LITERAL() != null) {
 			return FunctionInvocationNode.builder()
 					.verbFunction(TextUtils.cleanStringLiteral(ctx.STRING_LITERAL().getText()).toLowerCase())
 					.parameters(((ExprListNode) visit(ctx.optionalExpressionList())).getExprNodes())
+					.sourceLocation(new SourceLocation(ctx))
 					.build();
 		} else {
 			return FunctionInvocationNode.builder()
 					.internalFunction(ctx.internalFunction().getText().toLowerCase())
 					.parameters(((ExprListNode) visit(ctx.optionalExpressionList())).getExprNodes())
+					.sourceLocation(new SourceLocation(ctx))
 					.build();
 		}
 	}
@@ -632,6 +678,7 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 		}
 		return ExprListNode.builder()
 				.exprNodes(exprNodeList)
+				.sourceLocation(new SourceLocation(ctx))
 				.build();
 	}
 
@@ -642,6 +689,7 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 				.assignmentOperator(AssignmentOperator.findOperator(ctx.assignmentOperator().getText()))
 				.left((ExprNode) visit(ctx.lvalue()))
 				.right((ExprNode) visit(ctx.expression()))
+				.sourceLocation(new SourceLocation(ctx))
 				.build();
 	}
 
@@ -652,6 +700,7 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 				.expression((ExprNode) visit(ctx.conditionalOrExpression()))
 				.trueExpression((ExprNode) visit(ctx.expression()))
 				.falseExpression((ExprNode) visit(ctx.conditionalExpression()))
+				.sourceLocation(new SourceLocation(ctx))
 				.build();
 	}
 
@@ -666,6 +715,7 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 					.operator(BinaryNode.Operator.OR)
 					.left((ExprNode) visit(ctx.conditionalOrExpression()))
 					.right((ExprNode) visit(ctx.conditionalAndExpression()))
+					.sourceLocation(new SourceLocation(ctx))
 					.build();
 		}
 	}
@@ -681,6 +731,7 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 					.operator(BinaryNode.Operator.AND)
 					.left((ExprNode) visit(ctx.conditionalAndExpression()))
 					.right((ExprNode) visit(ctx.inclusiveOrExpression()))
+					.sourceLocation(new SourceLocation(ctx))
 					.build();
 		}
 	}
@@ -696,6 +747,7 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 					.operator(BinaryNode.Operator.BITOR)
 					.left((ExprNode) visit(ctx.inclusiveOrExpression()))
 					.right((ExprNode) visit(ctx.exclusiveOrExpression()))
+					.sourceLocation(new SourceLocation(ctx))
 					.build();
 		}
 	}
@@ -711,6 +763,7 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 					.operator(BinaryNode.Operator.XOR)
 					.left((ExprNode) visit(ctx.exclusiveOrExpression()))
 					.right((ExprNode) visit(ctx.andExpression()))
+					.sourceLocation(new SourceLocation(ctx))
 					.build();
 		}
 	}
@@ -726,6 +779,7 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 					.operator(BinaryNode.Operator.BITOR)
 					.left((ExprNode) visit(ctx.andExpression()))
 					.right((ExprNode) visit(ctx.relationalExpression()))
+					.sourceLocation(new SourceLocation(ctx))
 					.build();
 		}
 	}
@@ -741,6 +795,7 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 					.operator(Operator.findOperator(ctx.getChild(1).getText()))
 					.left((ExprNode) visit(ctx.shiftExpression(0)))
 					.right((ExprNode) visit(ctx.shiftExpression(1)))
+					.sourceLocation(new SourceLocation(ctx))
 					.build();
 		}
 	}
@@ -758,6 +813,7 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 					.operator(Operator.findOperator(ctx.getChild(1).getText()))
 					.left((ExprNode) visit(ctx.shiftExpression()))
 					.right((ExprNode) visit(ctx.additiveExpression()))
+					.sourceLocation(new SourceLocation(ctx))
 					.build();
 		}
 	}
@@ -774,6 +830,7 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 					.operator(Operator.findOperator(ctx.getChild(1).getText()))
 					.left((ExprNode) visit(ctx.additiveExpression()))
 					.right((ExprNode) visit(ctx.multiplicativeExpression()))
+					.sourceLocation(new SourceLocation(ctx))
 					.build();
 		}
 	}
@@ -791,6 +848,7 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 					.operator(Operator.findOperator(ctx.getChild(1).getText()))
 					.left((ExprNode) visit(ctx.multiplicativeExpression()))
 					.right((ExprNode) visit(ctx.unaryExpression()))
+					.sourceLocation(new SourceLocation(ctx))
 					.build();
 		}
 	}
@@ -809,6 +867,7 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 			return UnaryNode.builder()
 					.operator(UnaryOperator.MINUS)
 					.expression((ExprNode) visit(ctx.unaryExpression()))
+					.sourceLocation(new SourceLocation(ctx))
 					.build();
 		}
 	}
@@ -820,6 +879,7 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 		return UnaryNode.builder()
 				.operator("++".equals(ctx.getChild(0).getText()) ? UnaryOperator.PREINC : UnaryOperator.PREDEC)
 				.expression((ExprNode) visit(ctx.unaryExpression()))
+				.sourceLocation(new SourceLocation(ctx))
 				.build();
 	}
 
@@ -835,6 +895,7 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 			return UnaryNode.builder()
 					.operator("~".equals(ctx.getChild(0).getText()) ? UnaryOperator.BITNOT : UnaryOperator.NOT)
 					.expression((ExprNode) visit(ctx.unaryExpression()))
+					.sourceLocation(new SourceLocation(ctx))
 					.build();
 		}
 	}
@@ -849,6 +910,7 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 		return UnaryNode.builder()
 				.operator("++".equals(ctx.getChild(1).getText()) ? UnaryOperator.POSTINC : UnaryOperator.POSTDEC)
 				.expression((ExprNode) visit(ctx.primary()))
+				.sourceLocation(new SourceLocation(ctx))
 				.build();
 	}
 
@@ -861,13 +923,19 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 		} catch (IllegalArgumentException e) {
 			identifierType = null;
 		}
-		return new InstanceofNode(getIdentifierNode(ctx.IDENTIFIER()), identifierType);
+		return InstanceofNode.builder()
+				.identifier(getIdentifierNode(ctx.IDENTIFIER(), getSourceLocation(ctx.IDENTIFIER())))
+				.identifierType(identifierType)
+				.sourceLocation(new SourceLocation(ctx))
+				.build();
 	}
 
 	// REF IDENTIFIER
 	@Override
 	public BaseNode visitRefExpression(RefExpressionContext ctx) {
-		return new RefNode(getIdentifierNode(ctx.IDENTIFIER()));
+		return new RefNode(
+				getIdentifierNode(ctx.IDENTIFIER(), getSourceLocation(ctx.IDENTIFIER())),
+				new SourceLocation(ctx));
 	}
 
 	// TEXT_BLOCK | STRING_LITERAL
@@ -892,18 +960,22 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 		} else if (ctx.CHAR_LITERAL() != null) {
 			return NumberLiteralNode.builder()
 					.number(TextUtils.cleanCharLiteral(ctx.CHAR_LITERAL().getText()))
+					.sourceLocation(new SourceLocation(ctx))
 					.build();
 		} else if (ctx.BOOL_LITERAL() != null) {
 			return NumberLiteralNode.builder()
 					.number("true".equals(ctx.BOOL_LITERAL().getText()) ? 1 : 0)
+					.sourceLocation(new SourceLocation(ctx))
 					.build();
 		} else if (ctx.NULL_LITERAL() != null) {
 			return NumberLiteralNode.builder()
 					.number(0)
+					.sourceLocation(new SourceLocation(ctx))
 					.build();
 		} else {
 			return NumberLiteralNode.builder()
 					.number(Integer.parseInt(ctx.getText()))
+					.sourceLocation(new SourceLocation(ctx))
 					.build();
 		}
 	}
@@ -911,18 +983,34 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 	// IDENTIFIER
 	@Override
 	public BaseNode visitIdentifierReference(IdentifierReferenceContext ctx) {
-		return new IdentifierNode(ctx.getText().toLowerCase());
+		return new IdentifierNode(ctx.getText().toLowerCase(), new SourceLocation(ctx));
 	}
 
-	public IdentifierNode getIdentifierNode(TerminalNode identifier) {
-		return new IdentifierNode(identifier.getText().toLowerCase());
+	public IdentifierNode getIdentifierNode(TerminalNode identifier, SourceLocation sourceLocation) {
+		return new IdentifierNode(identifier.getText().toLowerCase(), sourceLocation);
 	}
 
-	private static @NonNull TextElementNode getTextLiteralNode(TerminalNode ctx) {
-		return new TextElementNode(TextUtils.cleanStringLiteral(ctx.getText()));
+	private @NonNull TextElementNode getTextLiteralNode(TerminalNode ctx) {
+		TextElementNode node = TextElementNode.builder()
+				.text(TextUtils.cleanStringLiteral(ctx.getText()))
+				.sourceLocation(getSourceLocation(ctx))
+				.build();
+		root.getTextElements().add(node);
+		return node;
 	}
 
-	private static @NonNull TextElementNode getTextBlockNode(TerminalNode ctx) {
-		return new TextElementNode(TextUtils.cleanTextBlock(ctx.getText()));
+	private @NonNull TextElementNode getTextBlockNode(TerminalNode ctx) {
+		TextElementNode node = TextElementNode.builder()
+				.text(TextUtils.cleanTextBlock(ctx.getText()))
+				.sourceLocation(getSourceLocation(ctx))
+				.build();
+		root.getTextElements().add(node);
+		return node;
+	}
+
+	private SourceLocation getSourceLocation(TerminalNode node) {
+		Token token = node.getSymbol();
+		String sourceName = token.getInputStream() == null ? null : token.getInputStream().getSourceName();
+		return new SourceLocation(sourceName, token.getLine(), token.getCharPositionInLine());
 	}
 }

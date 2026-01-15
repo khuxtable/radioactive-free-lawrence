@@ -6,13 +6,17 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import org.kathrynhuxtable.radiofreelawrence.game.GameData;
+import org.kathrynhuxtable.radiofreelawrence.game.grammar.SourceLocation;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class TextElementNode implements ExprNode {
+public class TextElementNode implements ExprNode, HasRefno {
 	private String text;
+
+	private int refno;
+	private SourceLocation sourceLocation;
 
 	@Override
 	public int evaluate(GameData gameData) {

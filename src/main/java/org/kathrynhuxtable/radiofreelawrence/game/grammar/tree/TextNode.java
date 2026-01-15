@@ -7,6 +7,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import org.kathrynhuxtable.radiofreelawrence.game.grammar.SourceLocation;
+
 @Data
 @Builder
 @AllArgsConstructor
@@ -15,10 +17,11 @@ public class TextNode implements BaseNode, HasRefno {
 
 	public enum TextMethod { INCREMENT, CYCLE, RANDOM, ASSIGNED }
 
-	String name;
-	List<String> texts;
-	TextMethod method;
-	boolean fragment;
+	private String name;
+	private List<String> texts;
+	private TextMethod method;
+	private boolean fragment;
 
-	int refno;
+	private int refno;
+	private SourceLocation sourceLocation;
 }
