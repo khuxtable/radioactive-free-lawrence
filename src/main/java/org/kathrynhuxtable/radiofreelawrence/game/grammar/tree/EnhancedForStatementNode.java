@@ -38,7 +38,12 @@ public class EnhancedForStatementNode implements StatementNode {
 					}
 				}
 			}
-			gameData.localVariables.addVariable(identifier.getName(), 0);
+			gameData.localVariables.addVariable(
+					identifier.getName(),
+					NumberLiteralNode.builder()
+							.number(0)
+							.sourceLocation(sourceLocation)
+							.build());
 			for (Integer obj : objects) {
 				try {
 					gameData.localVariables.setLocalVariableValue(identifier.getName(), obj);

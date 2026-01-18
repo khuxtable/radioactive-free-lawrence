@@ -30,7 +30,12 @@ public class LocalVariableDeclarationStatementNode implements StatementNode {
 				value = variableDeclaratorNode.getExpression().evaluate(gameData);
 			}
 
-			gameData.localVariables.addVariable(identifier, value);
+			gameData.localVariables.addVariable(
+					identifier,
+					NumberLiteralNode.builder()
+							.number(value)
+							.sourceLocation(sourceLocation)
+							.build());
 		}
 	}
 }

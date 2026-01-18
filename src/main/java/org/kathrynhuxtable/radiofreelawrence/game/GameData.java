@@ -101,9 +101,15 @@ public class GameData {
 	}
 
 	public String getTextIdentifierValue(String identifier, int type) {
-		Integer local = localVariables.getLocalVariableValue(identifier.toLowerCase());
+		BaseNode local = localVariables.getLocalVariableValue(identifier.toLowerCase());
 		if (local != null) {
-			return getTextIdentifierValue(local, 0);
+			if (local instanceof TextElementNode textElementNode) {
+				return getTextIdentifierValue(textElementNode.getRefno(), 0);
+			} else if (local instanceof NumberLiteralNode numberLiteralNode) {
+				return getTextIdentifierValue(numberLiteralNode.getNumber(), 0);
+			} else {
+				throw new GameRuntimeException(local.getSourceLocation() + ": invalid type for local variable " + identifier);
+			}
 		}
 
 		// FIXME Need to handle the cyclic, random, etc. options.
@@ -250,7 +256,7 @@ public class GameData {
 	}
 
 	public int getIdentifierRefno(String identifier) {
-		Integer local = localVariables.getLocalVariableValue(identifier.toLowerCase());
+		BaseNode local = localVariables.getLocalVariableValue(identifier.toLowerCase());
 		if (local != null) {
 			return 0;
 		}
@@ -276,9 +282,15 @@ public class GameData {
 	}
 
 	public int getIntIdentifierValue(String identifier) {
-		Integer local = localVariables.getLocalVariableValue(identifier.toLowerCase());
+		BaseNode local = localVariables.getLocalVariableValue(identifier.toLowerCase());
 		if (local != null) {
-			return local;
+			if (local instanceof TextElementNode textElementNode) {
+				return textElementNode.getRefno();
+			} else if (local instanceof NumberLiteralNode numberLiteralNode) {
+				return numberLiteralNode.getNumber();
+			} else {
+				throw new GameRuntimeException(local.getSourceLocation() + ": Invalid type for local variable " + identifier);
+			}
 		}
 
 		BaseNode idNode = gameNode.getIdentifiers().get(identifier.toLowerCase());
@@ -438,7 +450,17 @@ public class GameData {
 			}
 		} else {
 			BaseNode idNode;
-			Integer local = localVariables.getLocalVariableValue(name.toLowerCase());
+			BaseNode localNode = localVariables.getLocalVariableValue(name.toLowerCase());
+			Integer local = null;
+			if (localNode != null) {
+				if (localNode instanceof TextElementNode textElementNode) {
+					local = textElementNode.getRefno();
+				} else if (localNode instanceof NumberLiteralNode numberLiteralNode) {
+					local = numberLiteralNode.getNumber();
+				} else {
+					throw new GameRuntimeException(localNode.getSourceLocation() + ": Invalid internal function in local variable " + name.toLowerCase());
+				}
+			}
 			if (local != null && local >= fobj && local < lobj) {
 				idNode = objects[local - fobj];
 			} else {
@@ -538,9 +560,16 @@ public class GameData {
 		for (int i = 0; i < args.size(); i++) {
 			if (i < parameters.size()) {
 				if (parameters.get(i) instanceof TextElementNode textElementNode) {
-					localVariables.addVariable(args.get(i), textElementNode.getRefno());
+					localVariables.addVariable(
+							args.get(i),
+							textElementNode);
 				} else {
-					localVariables.addVariable(args.get(i), parameters.get(i).evaluate(this));
+					localVariables.addVariable(
+							args.get(i),
+							NumberLiteralNode.builder()
+									.number(parameters.get(i).evaluate(this))
+									.sourceLocation(parameters.get(i).getSourceLocation())
+									.build());
 				}
 			}
 		}

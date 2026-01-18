@@ -80,7 +80,7 @@ repeat {
     if (status < 0) {           // Can't find 2nd or 1st command word in the vocabulary
         quip("Pardon?");        // Command parse failure -- abort the main loop
     }
-    if (key(quit)) {    // If the word QUIT occurs in the command, exit the game
+    if (key("quit")) {    // If the word QUIT occurs in the command, exit the game
         say("As you wish.");
         stop();
     }
