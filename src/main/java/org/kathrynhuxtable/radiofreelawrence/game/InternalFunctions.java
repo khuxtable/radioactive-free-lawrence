@@ -173,6 +173,21 @@ public class InternalFunctions {
 				if (!textElementNode.getText().equals(node.getName())) {
 					return 0;
 				}
+			} else if (parameter instanceof IdentifierNode identifierNode) {
+				int idVal = gameData.getIntIdentifierValue(identifierNode.getName());
+				if (idVal == 0) {
+					// Unrecognized value -- ignore
+					continue;
+				}
+				BaseNode node = gameData.getRefnoNode(idVal);
+				if (node instanceof TextNode textNode) {
+					VocabularyNode vnode = (VocabularyNode) gameData.getRefnoNode(refno);
+					if (!textNode.getTexts().get(0).equals(vnode.getName())) {
+						return 0;
+					}
+				} else if (idVal != refno) {
+					return 0;
+				}
 			} else {
 				int value = parameter.evaluate(gameData);
 				if (value != refno) {

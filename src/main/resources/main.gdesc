@@ -13,7 +13,11 @@ flags place
     been.here;      // place flag, maintained by the kernel
 
 flags object
-    seen;           // object flag, maintained by the kernel
+    seen,           // object flag, maintained by the kernel
+    cant.drop,
+    cant.take;
+
+state player.power = 1000;
 
 include "objects.gdesc";
 
@@ -24,10 +28,36 @@ include "actions.gdesc";
 initial {
     apport(coke, In_Joes);
     apport(sandwich, In_Joes);
+    apport(axe, in_spencer);
+    apport(gun, pterodactyl);
+    apport(udk, north_wescoe);
+    apport(zapgun, wescoe_cafeteria);
+    apport(token, sunnyside_naismith);
+    apport(udk, murphy); // copy
+    apport(gun, o_zone); // copy
+    apport(banana, twenty_third);
+    apport(sandwich, krogers); // copy
+    apport(dagger, lot);
+    apport(axe, naismith); // copy
+    apport(glove, naismith);
+    apport(book, stack_warned);
+    apport(sword, jayhawk_sunflower);
+    apport(chain, jayhawk_sunflower);
+    apport(hole, slums);
+    apport(glove, slums);
+    apport(gun, dark); // copy
+    apport(rifle, puddle);
+    apport(sandwich, cave); // copy
+    apport(box, mazel);
+
+    apport(meter, inhand);
+    setflag(meter, cant.drop);
+    setflag(meter, cant.take);
 }
 initial {
     goto(Ninth_Mississippi);
 }
+// Handle player location description
 repeat {
     if (isflag(status, moved)) {
         describe(here);
@@ -40,6 +70,9 @@ repeat {
             describe(optr);
         }
     }
+}
+// Handle player input
+repeat {
     input();                    // Get and parse player's command
     //say("arg1 is $", arg1);
     //say("arg2 is $", arg2);
@@ -47,18 +80,18 @@ repeat {
     if (status < 0) {           // Can't find 2nd or 1st command word in the vocabulary
         quip("Pardon?");        // Command parse failure -- abort the main loop
     }
-}
-repeat {
     if (key(quit)) {    // If the word QUIT occurs in the command, exit the game
         say("As you wish.");
         stop();
     }
 
+    player.power--;
     here();             // Execute code, if any, associated with this location
     arg1();             // Execute action verb, if any
     for (var optr : inhand) {
         optr();         // Execute code, if any, associated with this object
     }
+    player.power++;
 
     bail.out();         // Command not handled - report an error
 }
@@ -78,3 +111,19 @@ proc bail.out {
     }
     quip("You can't do that!");     // Generic no can do
 }
+
+text no.direction
+    """
+    You can't tell directions here.
+    Try Up, Down, Left, Right, Forward, Backward""";
+
+text what.is.north "What is \"North?\"";
+text what.is.south "What is \"South?\"";
+text what.is.east "What is \"East?\"";
+text what.is.west "What is \"West?\"";
+text what.is.up "What is \"Up?\"";
+text what.is.down "What is \"Down?\"";
+text what.is.left "What is \"Left?\"";
+text what.is.right "What is \"Right?\"";
+text what.is.forward "What is \"Forward?\"";
+text what.is.backward "What is \"Backward?\"";

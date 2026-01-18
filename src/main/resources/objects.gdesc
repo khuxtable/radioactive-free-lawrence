@@ -1,16 +1,41 @@
 object axe
     "small axe"
-    "There is a small axe here.";
+    "There is a small axe here."
+        {
+            isverb(swing, useweapon, 1, 40, 100, 0);
+            isverb(throw, useweapon, 1, 25, 75, 0);
+        }
 object banana
     "slightly brown banana"
-    "There is a slightly brown banana here.";
+    "There is a slightly brown banana here."
+        {
+            isverb(eat, consume, false, -2, -2, -10, "That tasted HORRIBLE; what a bellyache!", "slightly brown banana peel");
+        }
 object book
     "book"
-    "There is a book here.";
+    "There is a book here."
+        {
+            if (key(open)) {
+                quip("The pages are fused together.");
+            } else if (key(read)) {
+                quip("The book is closed. The cover reads \"How to Survive a Nuclear War.\"");
+            }
+        }
 object box
-    "a locked box";
+    "box"
+    "There is a locked box here."
+        {
+            isverb(throw, useweapon, 1, 50, 25, 0);
+            isverb(open, alterpower, 0, 100, 2000, 2000,
+            "Congratulations! You have found the treasure.\nYou are hereby awarded with 200% life force.",
+            "The interior is filled with meters and other strange appurtenances,\nbut nothing seems to happen.");
+        }
 object chain
-    "a length of chain";
+    "chain"
+    "There is a length of chain here."
+        {
+            isverb(belt, useweapon, 3, 50, 75, 0);
+        }
 object coke
     "coke can"
     "There is a can of coke here."
@@ -20,45 +45,116 @@ object coke
         }
 object dagger
     "dagger"
-    "There is a dagger here.";
+    "There is a dagger here."
+        {
+            isverb(swing, useweapon, 1, 45, 50, 0);
+            isverb(stab, useweapon, 1, 45, 50, 0);
+            isverb(throw, useweapon, 1, 20, 50, 0);
+        }
 object glove
     "silk glove"
-    "There is a silk glove here.";
+    "There is a silk glove here."
+        {
+            isverb(pickpocket, steal, 50, 40);
+        }
 object grenade
     "grenade"
     "There is a grenade here."
-    "A grenade, which does not actually appear anywhere";
+    "A grenade, which does not actually appear anywhere"
+        {
+            isverb(throw, useweapon, 9, 50, 200, 0);
+            isverb(hurl, useweapon, 9, 50, 200, 0);
+        }
 object gun
     "gun"
-    "There is a gun here.";
+    "There is a gun here."
+        {
+            isverb(shoot, useweapon, 1, 30, 200, 0);
+            isverb(fire, useweapon, 1, 30, 200, 0);
+        }
 object hole
     "small hole"
-    "There is a small hole here.";
+    "There is a small hole here."
+        {
+            if (key(open)) {
+                say("The hole opens and sucks you in.");
+                move(open, pu_soapfilm);
+            } else if (key(take)) {
+                say("The hole opens and sucks you in...Sucker!");
+                move(open, pu_soapfilm);
+            }
+        }
 object meter
     "life-force meter"
-    "There is a life-force meter here. Cannot be dropped.";
+    "There is a life-force meter here. Cannot be dropped."
+        {
+            isverb(read, readmeter);
+        }
 object meteroid         // For wizard players
     "life-force meteroid"
-    "There is a life-force meteroid here. Cannot be dropped.";
+    "There is a life-force meteroid here. Cannot be dropped."
+        {
+            isverb(read, readmeter);
+            isverb(xsbar, extended.command, "xsbar");
+            isverb(xnusers, extended.command, "xnusers");
+            isverb(xdie, extended.command, "xdie");
+            isverb(xwho, extended.command, "xwho");
+            isverb(xbst, extended.command, "xbst");
+            isverb(xvocabulary, extended.command, "xvocabulary");
+        }
 object rifle
     "rifle"
-    "There is a rifle here.";
+    "There is a rifle here."
+        {
+            isverb(shoot, useweapon, 1, 50, 300, 0);
+            isverb(fire, useweapon, 1, 50, 300, 0);
+        }
 object sandwich
     "sandwich"
-    "There is a tasty looking sandwich here.";
+    "There is a tasty looking sandwich here."
+        {
+            isverb(eat, consume, false, 1, 30, 50, "That tasted good. You were hungry.", "a sandwich wrapper");
+        }
 object sword
     "sword"
-    "There is a sword here.";
+    "There is a sword here."
+        {
+            isverb(swing, useweapon, 1, 40, 100, 0);
+            isverb(stab, useweapon, 1, 40, 100, 0);
+        }
 object truncheon
     "truncheon"
-    "There is a truncheon here.";
+    "There is a truncheon here."
+        {
+            isverb(swing, useweapon, 1, 40, 100, 0);
+        }
 object token
     "bus token"
-    "There is a melted bus token here.";
+    "There is a melted bus token here."
+        {
+            isverb(ride, warp, true, 50, 100);
+        }
 object udk
     "UDK"
     "There is a faded UDK here."
-    "a faded copy of the university newspaper, the \"University Daily Kansan\"";
+    "a faded copy of the university newspaper, the \"University Daily Kansan\""
+        {
+            isverb(read, say.random,
+            10, "The UDK says, 'US declares war on Rusia'.",
+            5, "The UDK says, 'Radiation victims should go to the Reactor Center'.",
+            20, "The UDK says, 'KSU 50; KU 36'.",
+            10, "Too faded to read, but your hands are now covered with printer's ink.",
+            5, "'Rusia drops bomb; Chancellor says grounds WILL be watered.'",
+            15, "'Lawrence destroyed; Homecoming ruined.'",
+            100, "The hot wind blurs your eyes, preventing you from reading it."
+            );
+        }
+
 object zapgun
     "zapgun"
-    "There is a toy zapgun here.";
+    "There is a toy zapgun here."
+        {
+            isverb(terminate, terminate.with.prejudice);
+            isverb(warp, warp, true, 50, 0);
+            isverb(zap, warp, false, 25, 0);
+        }

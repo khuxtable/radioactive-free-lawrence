@@ -338,6 +338,8 @@ public class GameData {
 		int refno = 0;
 		if (flagVar instanceof IdentifierNode) {
 			refno = getIdentifierRefno(((IdentifierNode) flagVar).getName().toLowerCase());
+		} else {
+			refno = flagVar.evaluate(this);
 		}
 		return testflag(refno, state);
 	}

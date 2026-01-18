@@ -8,6 +8,7 @@ place ninth_mississippi
         {
             move("south", stadium);
             move("east", joes);
+            isverb("north", say.message, no.direction);
         }
 place joes
     "You are outside Joe's Bakery."
@@ -40,7 +41,7 @@ place stadium
             move("north", ninth_mississippi);
             move("south", mississippi);
             move("east", stadium_apartments);
-            move("sw", campanile);
+            move("southwest", campanile);
         }
 place campanile
     "You are at the campanile."
@@ -65,8 +66,16 @@ place potters
     you can see a leaning tower. The rest of the scenery is obscured by
     hillside."""
         {
-            move("swim", campanile);
-            move("crawl", campanile);
+            say.and.move("swim", campanile, "Swimming in mud is difficult, but possible.");
+            say.and.move("crawl", campanile, "The mud just barely supports your weight.");
+            isverb("back", say.message, "Back? You can't even go forward.");
+            isverb("down", say.message, "That is really silly.");
+            isverb("float", say.message, "You do that really well.");
+            isverb("jump", say.message, "It didn't do the frogs any good.");
+            isverb("north", say.message, "You can't walk through the mud any farther.");
+            isverb("south", say.message, "You can't walk through the mud any farther.");
+            isverb("west", say.message, "You can't walk through the mud any farther.");
+            isverb("east", say.message, "You can't walk back to the bank.");
         }
 place carruth_oleary
     """
@@ -97,6 +106,8 @@ place steel_door
             move("south", jayhawk_sunflower);
             move("north", mississippi);
             move("pet", entrance);
+            isverb("east", say.message, "The dog growls aggressively and snaps at you.");
+            isverb("open", say.message, "The dog snaps at your hand before you can open the door.");
         }
 place spencer
     """
@@ -108,6 +119,7 @@ place spencer
             move("east", mississippi);
             move("in", in_spencer);
             move("enter", in_spencer);
+            isverb("north", say.message, "The way is blocked by rubble.");
         }
 place in_spencer
     """
@@ -127,6 +139,7 @@ place pterodactyl
             move("south", north_wescoe);
             move("east", jayhawk_sunflower);
             move("west", fountain);
+            isverb("north", say.message, "You could get hurt down there.");
         }
 place north_wescoe
     """
@@ -153,6 +166,7 @@ place south_wescoe
             move("west", visual_arts);
             move("up", north_wescoe);
             move("down", acc);
+            isverb("enter", beast.check, guards, wescoe_cafeteria, "The guards prevent you from entering.");
         }
 place wescoe_cafeteria
     """
@@ -185,6 +199,10 @@ place pu_soap_film
             move("left", pu_shrooms);
             move("right", pu_space);
             move("forward", pu_vomit);
+            isverb("north", say.message, no.direction);
+            isverb("south", say.message, no.direction);
+            isverb("east", say.message, no.direction);
+            isverb("west", say.message, no.direction);
         }
 place pu_warm_fuzzy
     """
@@ -197,6 +215,10 @@ place pu_warm_fuzzy
             move("left", pu_shrooms);
             move("right", pu_space);
             move("forward", pu_mist);
+            isverb("north", say.message, no.direction);
+            isverb("south", say.message, no.direction);
+            isverb("east", say.message, no.direction);
+            isverb("west", say.message, no.direction);
         }
 place pu_shrooms
     """
@@ -210,6 +232,10 @@ place pu_shrooms
             move("left", pu_lsd);
             move("right", pu_mist);
             move("forward", pu_vomit);
+            isverb("north", say.message, no.direction);
+            isverb("south", say.message, no.direction);
+            isverb("east", say.message, no.direction);
+            isverb("west", say.message, no.direction);
         }
 place pu_space
     """
@@ -222,6 +248,10 @@ place pu_space
             move("left", pu_mist);
             move("right", pu_lsd);
             move("forward", pu_vomit);
+            isverb("north", say.message, no.direction);
+            isverb("south", say.message, no.direction);
+            isverb("east", say.message, no.direction);
+            isverb("west", say.message, no.direction);
         }
 place pu_mist
     """
@@ -234,6 +264,10 @@ place pu_mist
             move("left", pu_shrooms);
             move("right", pu_space);
             move("forward", pu_zen1);
+            isverb("north", say.message, no.direction);
+            isverb("south", say.message, no.direction);
+            isverb("east", say.message, no.direction);
+            isverb("west", say.message, no.direction);
         }
 place pu_zen1
     """
@@ -243,7 +277,17 @@ place pu_zen1
     may be misinterpreted, but you can't tell since you have
     completely lost track of that train of thought."""
         {
-            move("fire", pu_zen2);
+            isverb("fire", say.and.move, pu_zen2, "What is \"Fire\"?");
+            isverb("north", say.message, what.is.north);
+            isverb("south", say.message, what.is.south);
+            isverb("east", say.message, what.is.east);
+            isverb("west", say.message, what.is.west);
+            isverb("up", say.message, what.is.up);
+            isverb("down", say.message, what.is.down);
+            isverb("left", say.message, what.is.left);
+            isverb("right", say.message, what.is.right);
+            isverb("forward", say.message, what.is.forward);
+            isverb("backward", say.message, what.is.backward);
         }
 place pu_zen2
     """
@@ -253,7 +297,17 @@ place pu_zen2
     may be misinterpreted, but you can't tell since you have
     completely lost track of that train of thought."""
         {
-            move("is", pu_zen3);
+            isverb("is", say.and.move, pu_zen3, "What is \"Fire\"?");
+            isverb("north", say.message, what.is.north);
+            isverb("south", say.message, what.is.south);
+            isverb("east", say.message, what.is.east);
+            isverb("west", say.message, what.is.west);
+            isverb("up", say.message, what.is.up);
+            isverb("down", say.message, what.is.down);
+            isverb("left", say.message, what.is.left);
+            isverb("right", say.message, what.is.right);
+            isverb("forward", say.message, what.is.forward);
+            isverb("backward", say.message, what.is.backward);
         }
 place pu_zen3
     """
@@ -263,7 +317,17 @@ place pu_zen3
     may be misinterpreted, but you can't tell since you have
     completely lost track of that train of thought."""
         {
-            move("the", pu_zen4);
+            say.and.move("the", pu_zen4, "What is \"Fire\"?");
+            isverb("north", say.message, what.is.north);
+            isverb("south", say.message, what.is.south);
+            isverb("east", say.message, what.is.east);
+            isverb("west", say.message, what.is.west);
+            isverb("up", say.message, what.is.up);
+            isverb("down", say.message, what.is.down);
+            isverb("left", say.message, what.is.left);
+            isverb("right", say.message, what.is.right);
+            isverb("forward", say.message, what.is.forward);
+            isverb("backward", say.message, what.is.backward);
         }
 place pu_zen4
     """
@@ -273,7 +337,17 @@ place pu_zen4
     may be misinterpreted, but you can't tell since you have
     completely lost track of that train of thought."""
         {
-            move("poppy", potters);
+            isverb("poppy", say.and.move, potters, "That is 'Fire'?\nYour stomach lurches and you fall.\nGlup, squish, splat.");
+            isverb("north", say.message, what.is.north);
+            isverb("south", say.message, what.is.south);
+            isverb("east", say.message, what.is.east);
+            isverb("west", say.message, what.is.west);
+            isverb("up", say.message, what.is.up);
+            isverb("down", say.message, what.is.down);
+            isverb("left", say.message, what.is.left);
+            isverb("right", say.message, what.is.right);
+            isverb("forward", say.message, what.is.forward);
+            isverb("backward", say.message, what.is.backward);
         }
 place pu_lsd
     """
@@ -287,6 +361,10 @@ place pu_lsd
             move("left", pu_shrooms);
             move("right", pu_space);
             move("up", pu_vomit);
+            isverb("north", say.message, no.direction);
+            isverb("south", say.message, no.direction);
+            isverb("east", say.message, no.direction);
+            isverb("west", say.message, no.direction);
         }
 place pu_ms
     """
@@ -299,6 +377,10 @@ place pu_ms
             move("left", pu_space);
             move("right", pu_shrooms);
             move("forward", pu_vomit);
+            isverb("north", say.message, no.direction);
+            isverb("south", say.message, no.direction);
+            isverb("east", say.message, no.direction);
+            isverb("west", say.message, no.direction);
         }
 place pu_vomit
     """
@@ -310,6 +392,10 @@ place pu_vomit
             move("left", pu_shrooms);
             move("right", pu_space);
             move("forward", pu_mist);
+            isverb("north", say.message, no.direction);
+            isverb("south", say.message, no.direction);
+            isverb("east", say.message, no.direction);
+            isverb("west", say.message, no.direction);
         }
 place pu_core
     """
@@ -323,6 +409,10 @@ place pu_core
             move("left", pu_core);
             move("right", pu_core);
             move("forward", pu_core);
+            isverb("north", say.message, no.direction);
+            isverb("south", say.message, no.direction);
+            isverb("east", say.message, no.direction);
+            isverb("west", say.message, no.direction);
         }
 place visual_arts
     """
@@ -391,9 +481,10 @@ place learned
             move("north", jayhawk_bookstore);
             move("south", sunnyside_naismith);
             move("east", visual_arts);
-            move("west", reactor_pit1);
+            isverb("west", say.and.move, reactor_pit1, "You trip and fall into the pit.");
             move("up", jayhawk_bookstore);
-            move("jump", reactor);
+            isverb("down", say.message, "The sides of the pit are to steep to climb.");
+            isverb("jump", say.and.move, reactor, "You leap across the pit.");
         }
 place reactor
     """
@@ -411,6 +502,9 @@ place in_reactor
     There is a large panel of switches and dials here."""
         {
             move("out", reactor);
+            isverb("decontaminate", alter.power, true, 100, 1000, 1000,
+            "You are bathed in a brilliant multi-colored light.\nAll radiation is leaving your body.",
+            "You hear a whirring sound, but nothing seems to happen.");
         }
 place reactor_pit1
     """
@@ -419,12 +513,12 @@ place reactor_pit1
     unless you have claws. Littered around you are many
     broken bottles and tin cans."""
         {
-            move("north", reactor_pit2);
-            move("south", reactor_pit2);
-            move("east", reactor_pit2);
-            move("west", reactor_pit2);
-            move("up", reactor_pit2);
-            move("down", reactor_pit2);
+            say.and.move("north", reactor_pit2, "There is no way to go in that direction.");
+            say.and.move("south", reactor_pit2, "There is no way to go in that direction.");
+            say.and.move("east", reactor_pit2, "There is no way to go in that direction.");
+            say.and.move("west", reactor_pit2, "There is no way to go in that direction.");
+            say.and.move("up", reactor_pit2, "There is no way to go in that direction.");
+            say.and.move("down", reactor_pit2, "There is no way to go in that direction.");
         }
 place reactor_pit2
     """
@@ -433,12 +527,12 @@ place reactor_pit2
     unless you have claws. Littered around you are many
     broken bottles and tin cans."""
         {
-            move("north", reactor_pit3);
-            move("south", reactor_pit3);
-            move("east", reactor_pit3);
-            move("west", reactor_pit3);
-            move("up", reactor_pit3);
-            move("down", reactor_pit3);
+            say.and.move("north", reactor_pit3, "There is no way to go in that direction.");
+            say.and.move("south", reactor_pit3, "There is no way to go in that direction.");
+            say.and.move("east", reactor_pit3, "There is no way to go in that direction.");
+            say.and.move("west", reactor_pit3, "There is no way to go in that direction.");
+            say.and.move("up", reactor_pit3, "There is no way to go in that direction.");
+            say.and.move("down", reactor_pit3, "There is no way to go in that direction.");
         }
 place reactor_pit3
     """
@@ -447,12 +541,12 @@ place reactor_pit3
     unless you have claws. Littered around you are many
     broken bottles and tin cans."""
         {
-            move("north", fissure);
-            move("south", fissure);
-            move("east", fissure);
-            move("west", fissure);
-            move("up", reactor);
-            move("down", fissure);
+            say.and.move("north", fissure, "There is no way to go in that direction.");
+            say.and.move("south", fissure, "There is no way to go in that direction.");
+            say.and.move("east", fissure, "There is no way to go in that direction.");
+            say.and.move("west", fissure, "There is no way to go in that direction.");
+            say.and.move("up", reactor, "You finally find purchase and climb up.");
+            say.and.move("down", fissure, "There is no way to go in that direction.");
         }
 place fissure
     """
@@ -502,6 +596,7 @@ place river_bend
     some light."""
         {
             move("east", underground_river);
+            isverb("north", say.message, "The way is too narrow to pass.");
         }
 place waterfall
     """
@@ -539,13 +634,18 @@ place rivers_end
     the roof of the cave."""
         {
             move("south", sandy_beach);
+            isverb("east", say.message, "I haven't written that part yet...");
+            isverb("west", say.messaeg, "I haven't written that part yet...");
         }
 place small_opening
     """
     You are in a small opening underneath the waterfall. There is
     nothing of interest here. Why did you do that?"""
         {
-            move("jump", side_passage); // Should die here.
+            move("back", side_passage);
+            isverb("jump", alter.power, true, 80, -10, -10,
+            "Aaaaaiiiiiiiieeeeeeee!!!!!!\nSplat.",
+            "You must be crazy!");
         }
 place jayhawk_bookstore
     """
@@ -584,6 +684,7 @@ place twenty_third
         {
             move("north", hut);
             move("east", krogers);
+            isverb("south", say.message, "There is nothing but desert out there.");
         }
 place hut
     """
@@ -601,6 +702,7 @@ place krogers
             move("north", naismith);
             move("east", lot);
             move("west", twenty_third);
+            isverb("south", say.message, "There is only sand out there.");
         }
 place lot
     """
@@ -619,6 +721,7 @@ place naismith
             move("north", sunnyside_naismith);
             move("south", krogers);
             move("east", lhs);
+            isverb("west", say.message, "The slime will soon go above your head.");
         }
 place lhs
     """
@@ -637,6 +740,8 @@ place rustys
         {
             move("north", lhs);
             move("west", lot);
+            isverb("south", say.message, "You really don't want to go there!");
+            isverb("east", say.message, "A brick wall blocks your way.");
         }
 place acc
     """
@@ -648,6 +753,7 @@ place acc
             move("east", sunflower);
             move("west", sunnyside);
             move("up", malott);
+            isverb("north", say.message, "The way is blocked by the slag of Facilities-Operations.");
         }
 place sunflower
     """
@@ -658,6 +764,8 @@ place sunflower
             move("south", acc);
             move("east", south_watson);
             move("west", jayhawk_sunflower);
+            isverb("north", say.message, "You can't get up the hill.");
+            isverb("up", say.message, "You can't get up the hill.");
         }
 place north_watson
     """
@@ -711,6 +819,12 @@ place stacks
         {
             move("in", reference);
             move("out", stack_warned);
+            isverb("north", say.message, "There is no way OUT!");
+            isverb("south", say.message, "There is no way OUT!");
+            isverb("east", say.message, "There is no way OUT!");
+            isverb("west", say.message, "There is no way OUT!");
+            isverb("back", say.message, "You seem to have forgotten which way you came in.");
+            isverb("help", say.message, "Don't go OUT.");
         }
 place stack_warned
     """
@@ -718,6 +832,11 @@ place stack_warned
     yourself this time."""
         {
             move("help", stacks);
+            isverb("north", say.message, "There is no way out!");
+            isverb("south", say.message, "There is no way out!");
+            isverb("east", say.message, "There is no way out!");
+            isverb("west", say.message, "There is no way out!");
+            isverb("back", say.message, "You can't back out now.");
         }
 place jayhawk_sunflower
     """
@@ -804,6 +923,10 @@ place gsp_corbin
             move("south", crossfish);
             move("east", slums);
             move("west", stadium_apartments);
+            isverb("north", say.message, "The bikers let no one pass.");
+            isverb("pet", say.message, "Petting only works with dogs, stupid.");
+            isverb("shoot", say.message, "You shouldn't make trouble around bikers.");
+            isverb("fire", say.message, "You shouldn't make trouble around bikers.");
         }
 place scums
     """

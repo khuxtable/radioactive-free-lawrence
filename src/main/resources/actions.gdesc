@@ -12,9 +12,25 @@ proc consume disappears count minPower maxPower message emptyDescription {
     break repeat;
 }
 proc useweapon affects rchance damage drain {
-    say("nfw");
+    quip("nfw");
+}
+proc say.message msg {
+    quip(msg);
+}
+proc say.and.move mykey where msg {
+    if (key(mykey)) {
+        say(msg);
+        move(where);
+    }
+}
+proc beast.check bst where no.can.do {
+    //quip(no.can.do);
+    move(where);
 }
 
+action "read" "meter" {
+    quip("You have $ life force.", player.power);
+}
 action "inventory" {
     var count;
     for (var optr : inhand) {
@@ -53,6 +69,9 @@ action "describe" {
 }
 action "take" {
     if (ishere(arg2)) {
+        if (isflag(arg2, cant.take)) {
+            quip("You cannot take the #.", arg2);
+        }
         get(arg2);
         quip("You take the #.", arg2);
     } else {
@@ -64,6 +83,9 @@ action "steal" {
 }
 action "drop" {
     if (have(arg2)) {      // True only if the player has the thing
+        if (isflag(*arg2, cant.drop)) {
+            quip("You cannot drop the #.", arg2);
+        }
         say("You drop the #.", arg2);
         drop(arg2);          // Move the thing from player's inventory to here
         break repeat;
