@@ -313,6 +313,24 @@ public class GameData {
 		}
 	}
 
+	public int getIntIdentifierValue(int refno) {
+		if (refno < fobj) {
+			throw new GameRuntimeException("refno " + refno + " is not valid");
+		} else if (refno < lobj) {
+			return refno;
+		} else if (refno < lloc) {
+			return refno;
+		} else if (refno < lvar) {
+			return variables[refno - fvar];
+		} else if (refno < ltext) {
+			return refno;
+		} else if (refno < lverb) {
+			return refno;
+		} else {
+			throw new GameRuntimeException("refno " + refno + " is not valid");
+		}
+	}
+
 	public void setIntIdentifierValue(String identifier, int value) {
 		if (localVariables.setLocalVariableValue(identifier.toLowerCase(), value)) {
 			return;
@@ -341,6 +359,12 @@ public class GameData {
 			setIntIdentifierValue(identifierNode.getName(), value);
 		} else if (leftHandSide instanceof ArrayAccessNode arrayAccessNode) {
 			setArrayValue(arrayAccessNode.getArrayName(), arrayAccessNode.getIndex().evaluate(this), value);
+		} else if (leftHandSide instanceof DerefNode derefNode) {
+			int refno = getIntIdentifierValue(derefNode.getIdentifier().getName());
+			if (refno < fvar || refno >= lvar) {
+				throw new GameRuntimeException("Cannot set left hand side: " + refno + " is not a variable refno");
+			}
+			variables[refno - fvar] = value;
 		} else {
 			throw new GameRuntimeException("unexpected left hand side in array access");
 		}

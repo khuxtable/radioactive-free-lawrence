@@ -15,6 +15,7 @@ public class DerefNode implements ExprNode {
 
 	@Override
 	public int evaluate(GameData gameData) {
-		return gameData.getIntIdentifierValue(identifier.getName());
+		int refno = gameData.getIntIdentifierValue(identifier.getName());
+		return gameData.getIntIdentifierValue(refno);
 	}
 }
