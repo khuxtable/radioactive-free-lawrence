@@ -499,6 +499,15 @@ public class GameData {
 
 	private void callPlace(PlaceNode idNode) {
 		if (idNode != null && idNode.getCode() != null) {
+			localVariables.newFunctionScope();
+
+			localVariables.addVariable(
+					"this",
+					NumberLiteralNode.builder()
+							.number(idNode.getRefno())
+							.sourceLocation(idNode.getSourceLocation())
+							.build());
+
 			try {
 				idNode.getCode().execute(this);
 			} catch (BreakException | ContinueException e) {
@@ -508,12 +517,23 @@ public class GameData {
 				// Implicit continue
 			} catch (ReturnException e) {
 				// Fall through
+			} finally {
+				localVariables.closeFunctionScope();
 			}
 		}
 	}
 
 	private void callObject(ObjectNode idNode) {
 		if (idNode != null && idNode.getCode() != null) {
+			localVariables.newFunctionScope();
+
+			localVariables.addVariable(
+					"this",
+					NumberLiteralNode.builder()
+							.number(idNode.getRefno())
+							.sourceLocation(idNode.getSourceLocation())
+							.build());
+
 			try {
 				idNode.getCode().execute(this);
 			} catch (BreakException | ContinueException e) {
@@ -523,12 +543,13 @@ public class GameData {
 				// Implicit continue
 			} catch (ReturnException e) {
 				// Fall through
+			} finally {
+				localVariables.closeFunctionScope();
 			}
 		}
 	}
 
 	public void callAction(VerbNode idNode) {
-		// FIXME handle synonyms
 		ActionNode node = gameNode.getActions().get(idNode.getVerbs().get(0));
 		if (node != null) {
 			for (ActionCode actionCode : node.getActionCodes()) {
@@ -554,23 +575,26 @@ public class GameData {
 	}
 
 	private int callProc(ProcNode procNode, List<ExprNode> parameters) {
+		List<ExprNode> evalParameters = new ArrayList<>();
+		for (ExprNode parameter : parameters) {
+			if (parameter instanceof TextElementNode textElementNode) {
+				evalParameters.add(textElementNode);
+			} else {
+				evalParameters.add(NumberLiteralNode.builder()
+						.number(parameter.evaluate(this))
+						.sourceLocation(parameter.getSourceLocation())
+						.build());
+			}
+		}
+
 		localVariables.newFunctionScope();
 
 		List<String> args = procNode.getArgs();
 		for (int i = 0; i < args.size(); i++) {
-			if (i < parameters.size()) {
-				if (parameters.get(i) instanceof TextElementNode textElementNode) {
-					localVariables.addVariable(
-							args.get(i),
-							textElementNode);
-				} else {
-					localVariables.addVariable(
-							args.get(i),
-							NumberLiteralNode.builder()
-									.number(parameters.get(i).evaluate(this))
-									.sourceLocation(parameters.get(i).getSourceLocation())
-									.build());
-				}
+			if (i < evalParameters.size()) {
+				localVariables.addVariable(
+						args.get(i),
+						evalParameters.get(i));
 			}
 		}
 

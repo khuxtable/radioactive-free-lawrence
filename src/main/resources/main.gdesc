@@ -26,29 +26,29 @@ include "places.gdesc";
 include "actions.gdesc";
 
 initial {
-    apport(coke, In_Joes);
-    apport(sandwich, In_Joes);
     apport(axe, in_spencer);
-    apport(gun, pterodactyl);
-    apport(udk, north_wescoe);
-    apport(zapgun, wescoe_cafeteria);
-    apport(token, sunnyside_naismith);
-    apport(udk, murphy); // copy
-    apport(gun, o_zone); // copy
+    apport(bagel, krogers); // copy
     apport(banana, twenty_third);
-    apport(sandwich, krogers); // copy
-    apport(dagger, lot);
-    apport(axe, naismith); // copy
-    apport(glove, naismith);
     apport(book, stack_warned);
-    apport(sword, jayhawk_sunflower);
+    apport(box, mazel);
     apport(chain, jayhawk_sunflower);
-    apport(hole, slums);
+    apport(chicken_sandwich, cave); // copy
+    apport(coke, In_Joes);
+    apport(dagger, lot);
     apport(glove, slums);
     apport(gun, dark); // copy
+    apport(hatchet, naismith); // copy
+    apport(hole, slums);
+    apport(newspaper, north_wescoe);
+    apport(opera_glove, naismith);
+    apport(pistol, o_zone); // copy
+    apport(revolver, pterodactyl);
     apport(rifle, puddle);
-    apport(sandwich, cave); // copy
-    apport(box, mazel);
+    apport(sandwich, In_Joes);
+    apport(sword, jayhawk_sunflower);
+    apport(token, sunnyside_naismith);
+    apport(udk, murphy); // copy
+    apport(zapgun, wescoe_cafeteria);
 
     apport(meter, inhand);
     setflag(meter, cant.drop);

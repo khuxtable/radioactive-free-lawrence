@@ -70,6 +70,23 @@ public class InternalFunctions {
 		return Math.random() * 100 < parameters[0].evaluate(gameData) ? 1 : 0;
 	}
 
+	@InternalFunction(name = "getrandom")
+	public int random(ExprNode... parameters) {
+		int min;
+		int max;
+		if (parameters.length == 0) {
+			min = 0;
+			max = 100;
+		} else if (parameters.length == 1) {
+			min = 0;
+			max = parameters[0].evaluate(gameData);
+		} else {
+			min = parameters[0].evaluate(gameData);
+			max = parameters[1].evaluate(gameData);
+		}
+		return (int) (Math.random() * (max - min + 1)) + min;
+	}
+
 	@InternalFunction(name = "have")
 	public int ishave(ExprNode... parameters) {
 		int refno = parameters[0].evaluate(gameData);
@@ -284,7 +301,11 @@ public class InternalFunctions {
 			throw new GameRuntimeException("second parameter to isverb must be proc identifier");
 		}
 
-		gameData.callFunction(identifierNode.getName(), Arrays.asList(Arrays.copyOfRange(parameters, 2, parameters.length)));
+		List<ExprNode> exprNodeList = new ArrayList<>();
+//		exprNodeList.add(objectNode);
+		exprNodeList.addAll(Arrays.asList(Arrays.copyOfRange(parameters, 2, parameters.length)));
+
+		gameData.callFunction(identifierNode.getName(), exprNodeList);
 
 		throw new BreakException(ControlType.REPEAT);
 	}

@@ -1,13 +1,9 @@
 // When eating or drinking something
-proc consume disappears count minPower maxPower message emptyDescription {
-    //            "disappears": false,
-    //            "count": 1,
-    //            "minPower": 2,
-    //            "maxPower": 50,
-    //            "message": "Things go better with coke; but only a little better.",
-    //            "emptyDesc": [
-    //            "an empty coke can"
-    //        ]
+proc consume obj disappears count minPower maxPower message emptyDescription {
+    var power = getrandom(minPower, maxPower);
+    player.power += power;
+    // I don't currently hae a way to implement the count, so assume 1 and disappears = true.
+    apport(obj, ylem);
     say(message);
     break repeat;
 }
@@ -105,29 +101,6 @@ action "vocabulary" {
         set(context, q_vocab_0);
         quip("more?");
     }
-}
-//action "drink" "coke" {
-//    if (have(coke)) {
-//        quip("Things go better with coke, but only a little better.");
-//        // TODO Need to increase power and reduce uses. Only 1 use.
-////        "action": "Consume",
-////        "disappears": false,
-////        "count": 1,
-////        "minPower": 2,
-////        "maxPower": 50,
-////        "message": "Things go better with coke; but only a little better.",
-////        "emptyLabel": "COKEcan",
-////        "emptyDesc": [
-////          "an empty coke can"
-////        ]
-//    }
-//}
-action "throw" "coke" {
-//    "action": "UseWeapon",
-//    "affects": 1,
-//    "chance": 50,
-//    "damage": 25,
-//    "drain": 0
 }
 action "swing" "axe" {
 

@@ -5,11 +5,18 @@ object axe
             isverb(swing, useweapon, 1, 40, 100, 0);
             isverb(throw, useweapon, 1, 25, 75, 0);
         }
+object hatchet
+    "small hatchet"
+    "There is a small hatchet here."
+        {
+            isverb(swing, useweapon, 1, 40, 100, 0);
+            isverb(throw, useweapon, 1, 25, 75, 0);
+        }
 object banana
     "slightly brown banana"
     "There is a slightly brown banana here."
         {
-            isverb(eat, consume, false, -2, -2, -10, "That tasted HORRIBLE; what a bellyache!", "slightly brown banana peel");
+            isverb(eat, consume, false, 1, -2, -10, "That tasted HORRIBLE; what a bellyache!", "slightly brown banana peel");
         }
 object book
     "book"
@@ -40,7 +47,7 @@ object coke
     "coke can"
     "There is a can of coke here."
         {
-            isverb(drink, consume, false, 1, 2, 50, "Things go better with coke, but only a little better.", "an empty coke can");
+            isverb(drink, consume, this, false, 1, 2, 50, "Things go better with coke, but only a little better.", "an empty coke can");
             isverb(throw, useweapon, 1, 50, 25, 0);
         }
 object dagger
@@ -57,6 +64,12 @@ object glove
         {
             isverb(pickpocket, steal, 50, 40);
         }
+object opera_glove
+    "silk opera glove"
+    "There is a silk opera glove here."
+        {
+            isverb(pickpocket, steal, 50, 40);
+        }
 object grenade
     "grenade"
     "There is a grenade here."
@@ -68,6 +81,20 @@ object grenade
 object gun
     "gun"
     "There is a gun here."
+        {
+            isverb(shoot, useweapon, 1, 30, 200, 0);
+            isverb(fire, useweapon, 1, 30, 200, 0);
+        }
+object pistol
+    "pistol"
+    "There is a pistol here."
+        {
+            isverb(shoot, useweapon, 1, 30, 200, 0);
+            isverb(fire, useweapon, 1, 30, 200, 0);
+        }
+object revolver
+    "revolver"
+    "There is a revolver here."
         {
             isverb(shoot, useweapon, 1, 30, 200, 0);
             isverb(fire, useweapon, 1, 30, 200, 0);
@@ -113,7 +140,19 @@ object sandwich
     "sandwich"
     "There is a tasty looking sandwich here."
         {
-            isverb(eat, consume, false, 1, 30, 50, "That tasted good. You were hungry.", "a sandwich wrapper");
+            isverb(eat, consume, this, false, 1, 30, 50, "That tasted good. You were hungry.", "a sandwich wrapper");
+        }
+object chicken_sandwich
+    "chicken sandwich"
+    "There is a chicken sandwich here."
+        {
+            isverb(eat, consume, this, true, 1, 30, 50, "That tasted good. You were hungry.", "");
+        }
+object bagel
+    "bagel"
+    "There is a tasty looking bagel here."
+        {
+            isverb(eat, consume, this, true, 1, 30, 50, "That tasted good. You were hungry.", "");
         }
 object sword
     "sword"
@@ -137,6 +176,21 @@ object token
 object udk
     "UDK"
     "There is a faded UDK here."
+    "a faded copy of the university newspaper, the \"University Daily Kansan\""
+        {
+            isverb(read, say.random,
+            10, "The UDK says, 'US declares war on Rusia'.",
+            5, "The UDK says, 'Radiation victims should go to the Reactor Center'.",
+            20, "The UDK says, 'KSU 50; KU 36'.",
+            10, "Too faded to read, but your hands are now covered with printer's ink.",
+            5, "'Rusia drops bomb; Chancellor says grounds WILL be watered.'",
+            15, "'Lawrence destroyed; Homecoming ruined.'",
+            100, "The hot wind blurs your eyes, preventing you from reading it."
+            );
+        }
+object newspaper
+    "newspaper"
+    "There is a faded newspaper here."
     "a faded copy of the university newspaper, the \"University Daily Kansan\""
         {
             isverb(read, say.random,
