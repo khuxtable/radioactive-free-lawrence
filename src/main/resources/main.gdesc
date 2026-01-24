@@ -13,11 +13,12 @@ flags place
     been.here;      // place flag, maintained by the kernel
 
 flags object
-    seen,           // object flag, maintained by the kernel
+    seen, // object flag, maintained by the kernel
     cant.drop,
     cant.take;
 
-state player.power = 1000;
+variable player.power;
+variable emerald.city.count;
 
 include "objects.gdesc";
 
@@ -53,11 +54,15 @@ initial {
     apport(meter, inhand);
     setflag(meter, cant.drop);
     setflag(meter, cant.take);
+
+    player.power = 1000;
+    emerald.city.count = 3;
+
 }
 initial {
     goto(Ninth_Mississippi);
 }
-// Handle player location description
+    // Handle player location description
 repeat {
     if (isflag(status, moved)) {
         describe(here);
@@ -71,7 +76,7 @@ repeat {
         }
     }
 }
-// Handle player input
+    // Handle player input
 repeat {
     input();                    // Get and parse player's command
     //say("arg1 is $", arg1);
@@ -96,7 +101,7 @@ repeat {
     bail.out();         // Command not handled - report an error
 }
 
-// Deliver invalid command message
+    // Deliver invalid command message
 proc bail.out {
     if (status == 1) {
         if (arg1 instanceof object) { // If first word is an object name
@@ -127,3 +132,12 @@ text what.is.left "What is \"Left?\"";
 text what.is.right "What is \"Right?\"";
 text what.is.forward "What is \"Forward?\"";
 text what.is.backward "What is \"Backward?\"";
+text try.boot
+    """
+    You open the file to reveal the message:
+            To get out of the computer, try 'Boot'.""";
+text bright.flash.and
+    """
+    There's no place like home.
+
+    There is a bright flash and ..."""

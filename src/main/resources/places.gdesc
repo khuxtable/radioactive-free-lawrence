@@ -42,6 +42,7 @@ place stadium
             move("south", mississippi);
             move("east", stadium_apartments);
             move("southwest", campanile);
+            move("up", yellow_brick_road);
         }
 place campanile
     "You are at the campanile."
@@ -169,8 +170,7 @@ place south_wescoe
             isverb("enter", beast.check, guards, wescoe_cafeteria, "The guards prevent you from entering.");
         }
 place wescoe_cafeteria
-    """
-    You are in the Wescoe Cafeteria."""
+    "You are in the Wescoe Cafeteria."
         {
             move("exit", south_wescoe);
         }
@@ -452,8 +452,7 @@ place sunnyside
             move("west", sunnyside_naismith);
         }
 place sunnyside_naismith
-    """
-    You are at the intersection of Sunnyside and Naismith."""
+    "You are at the intersection of Sunnyside and Naismith."
         {
             move("north", murphy);
             move("south", o_zone);
@@ -571,8 +570,7 @@ place under_learned
             move("up", learned);
         }
 place twisty_corridor
-    """
-    You are in a twisty corridor."""
+    "You are in a twisty corridor."
         {
             move("north", fissure);
             move("up", sunnyside_naismith);
@@ -768,16 +766,14 @@ place sunflower
             isverb("up", say.message, "You can't get up the hill.");
         }
 place north_watson
-    """
-    You are standing in front of Watson Library."""
+    "You are standing in front of Watson Library."
         {
             move("north", lippincott);
             move("west", sunflower);
             move("in", watson_entrance);
         }
 place south_watson
-    """
-    You are standing behind Watson Library."""
+    "You are standing behind Watson Library."
         {
             move("west", sunflower);
             move("in", stacks);
@@ -933,89 +929,179 @@ place scums
     This used to be an eating establishment of some kind.
     Skeletons with hands clutched to their bellies lie
     everywhere. A sign hanging askew says SCUMS deli."""
-        {}
+        {
+            isverb("north", say.message, "You seem to be locked in!");
+            isverb("south", say.message, "You seem to be locked in!");
+            isverb("east", say.message, "You seem to be locked in!");
+            isverb("west", say.message, "You seem to be locked in!");
+            move("sign", slums);
+            isverb("help", say.message, "The exit is probably blocked by something.");
+        }
 place slums
     """
     These are the slummiest slums around. Cockroaches lie lazily
     in hammocks and staph germs wallow in puddles."""
-        {}
+        {
+            move("north", dg_bank);
+            move("east", scums);
+            move("west", union);
+            move("up", union);
+        }
 place dg_bank
     """
     You are at the corner of Ninth and Kentucky.
     The remains of the Douglas County Bank are here."""
-        {}
+        {
+            move("south", slums);
+            move("west", joes);
+        }
 place entrance
     """
     You are standing inside the entrance to the steam tunnels.
     The only light comes from a bare bulb overhead. There are
     exits in many directions."""
-        {}
+        {
+            move("north", steel_door);
+            move("out", steel_door);
+            move("east", branch);
+            move("west", demon);
+            move("south", puddle);
+        }
 place branch
     """
     You are at a branch in the steamy tunnel. The tunnel continues
     down and south from here."""
-        {}
+        {
+            move("south", rubbish);
+            move("west", entrance);
+            move("down", pit);
+        }
 place pit
     """
     You are standing atop a slender pinacle in a huge circular room. Water
     drips past you and splats on the floor some 20' below you. The room is
     so musty, it literally exudes yuck!"""
-        {}
+        {
+            isverb("north", say.message, "Can you fly?");
+            isverb("south", say.message, "Can you fly?");
+            isverb("east", say.message, "Can you fly?");
+            isverb("west", say.message, "Can you fly?");
+            isverb("up", say.message, "You fall back down.");
+            move("down", scums);
+            say.and.move("fly", scums, "Being unaccustomed to flying you soon fall.");
+        }
 place rubbish
     """
     What is all this rubbish? It looks like leftovers from
     a scholarship hall halloween dinner (and about as appetizing).
     Well worn paths lead north, south, east, and west."""
-        {}
+        {
+            move("north", branch);
+            move("south", demon);
+            move("east", dark);
+            move("west", puddle);
+        }
 place dark
-    """
-    This room is quite dark and it its very hard to make out details."""
-        {}
+    "This room is quite dark and it its very hard to make out details."
+        {
+            move("north", darker);
+            move("south", darker);
+            move("east", darker);
+            isverb("west", say.message, "RATS! Right where You started.");
+            isverb("up", say.message, "Ouch! Your head probably doesn't feel very good.");
+            move("down", darker);
+        }
 place darker
     """
     This room is even darker than the dark room. This room is soooo dark,
     glow worms have it posted as a hazarous area."""
-        {}
+        {
+            move("north", darkest);
+            move("south", darkest);
+            move("east", darkest);
+            isverb("up", say.message, "You climb up only to slide back down.");
+            move("down", darkest);
+        }
 place darkest
     """
     You thought you'd seen dark before. This has got to be the darkest
     room yet. Look on the bright side. Maybe you're just going blind!"""
-        {}
+        {
+            move("north", darker);
+            move("south", darker);
+            isverb("east", say.message, "There is no way east.");
+            move("west", darker);
+            move("up", rubbish);
+            isverb("down", say.message, "You don't want to go farther down.");
+            move("nuclear", in_reactor);
+            isverb("read", say.message, "It's too dark to read anything.");
+            isverb("help", say.message, "You're in this one pretty deep.");
+        }
 place puddle
     """
     The better part of this room is taken up by a large puddle. It doesn't
     look very good for drinking. This seems evident by ring of skeletons
     around it."""
-        {}
+        {
+            move("north", entrance);
+            isverb("south", say.message, "There is no south.");
+            move("east", rubbish);
+            move("west", ladder);
+        }
 place ladder
     """
     This room is beneath a manhole. A rusty ladder leads up to a hole in
     the street above. Light filters in through the hole. Tunnels lead away
     in four directions."""
-        {}
+        {
+            move("north", demon);
+            move("south", sauna);
+            move("east", puddle);
+            move("west", batroom);
+            move("climb", jayhawk_sunflower);
+            move("up", jayhawk_sunflower);
+        }
 place demon
     """
     Light plays crazy tricks on the fog swirling through the room. The
     partially illuminated vapor looks like demons playing in the air.
     It is quite difficult to see any way out of the room."""
-        {}
+        {
+            isverb("north", say.message, "A really curvy passage leads you to a room.");
+            move("south", ladder);
+            move("east", entrance);
+        }
 place sauna
     """
     You are halted a little ways down a north south passage (with no side
     passages). A small, waist-high break in the steam pipe blocks your way.
     It seems obvious you would burn your chest if you continue."""
-        {}
+        {
+            move("north", ladder);
+            isverb("south", say.message, "Walking this way is suicide.");
+            move("crawl", cave);
+        }
 place bat_room
     """
     This seems to have been a crazy man's hide out at one time. Ultra-
     sophisticated machinery drapes the walls. The strange thing is every-
     thing has a bat monogrammed on it. The main passage runs east-west
     small hole leading north."""
-        {}
+        {
+            move("north", dead_end);
+            isverb("south", say.message, "Sorry, no bat-cracks in the wall.");
+            move("east", ladder);
+            move("west", steps);
+        }
 place dead_end
-    """
-    This end is quite dead. The only exit is the way you came."""
-        {}
+    "This end is quite dead. The only exit is the way you came."
+        {
+            isverb("north", say.message, "This is really a dead end.");
+            isverb("south", say.message, "You seem to have lost your sense of direction.");
+            isverb("east", say.message, "This is quite obviously a dead end.");
+            isverb("west", say.message, "Walking into wall is masochistic.");
+            move("back", batroom);
+        }
 place steps
     """
     Standing at the bottom of a winding set of steps, you can see the
@@ -1064,6 +1150,7 @@ place cave
     form. The room is filled with sparkling quartz and silica. The passage
     continues straight ahead with a dark tunnel leading right."""
         {
+            isverb("north", say.message, "Steam blocks your way.");
             move("crawl", sauna);
             move("south", button);
             move("east", cave_in);
@@ -1076,6 +1163,7 @@ place button
     south wall."""
         {
             move("north", cave);
+            isverb("push", say.message, "Nothing happens....strange.");
         }
 place cave_in
     """
@@ -1085,8 +1173,7 @@ place cave_in
             move("west", cave);
         }
 place maze_l
-    """
-    You are lost in a mazelike sewer system."""
+    "You are lost in a mazelike sewer system."
         {
             move("north", maze_k);
             move("south", maze_f);
@@ -1096,8 +1183,7 @@ place maze_l
             move("down", maze_f);
         }
 place maze_k
-    """
-    You are lost in a mazelike sewer system."""
+    "You are lost in a mazelike sewer system."
         {
             move("north", maze_l);
             move("south", maze_k);
@@ -1107,8 +1193,7 @@ place maze_k
             move("down", maze_k);
         }
 place maze_f
-    """
-    You are lost in a mazelike sewer system."""
+    "You are lost in a mazelike sewer system."
         {
             move("north", maze_l);
             move("south", maze_f);
@@ -1118,8 +1203,7 @@ place maze_f
             move("down", maze_k);
         }
 place maze_j
-    """
-    You are lost in a mazelike sewer system."""
+    "You are lost in a mazelike sewer system."
         {
             move("north", maze_b);
             move("south", maze_l);
@@ -1129,8 +1213,7 @@ place maze_j
             move("down", maze_l);
         }
 place maze_b
-    """
-    You are lost in a mazelike sewer system."""
+    "You are lost in a mazelike sewer system."
         {
             move("north", maze_i);
             move("south", maze_b);
@@ -1140,8 +1223,7 @@ place maze_b
             move("down", maze_g);
         }
 place maze_g
-    """
-    You are lost in a mazelike sewer system."""
+    "You are lost in a mazelike sewer system."
         {
             move("north", maze_l);
             move("south", maze_i);
@@ -1151,8 +1233,7 @@ place maze_g
             move("down", maze_b);
         }
 place maze_i
-    """
-    You are lost in a mazelike sewer system."""
+    "You are lost in a mazelike sewer system."
         {
             move("north", maze_i);
             move("south", maze_i);
@@ -1162,8 +1243,7 @@ place maze_i
             move("down", maze_c);
         }
 place maze_c
-    """
-    You are lost in a mazelike sewer system."""
+    "You are lost in a mazelike sewer system."
         {
             move("north", maze_g);
             move("south", maze_h);
@@ -1173,8 +1253,7 @@ place maze_c
             move("down", maze_i);
         }
 place maze_h
-    """
-    You are lost in a mazelike sewer system."""
+    "You are lost in a mazelike sewer system."
         {
             move("north", maze_a);
             move("south", maze_i);
@@ -1184,8 +1263,7 @@ place maze_h
             move("down", maze_b);
         }
 place maze_a
-    """
-    You are lost in a mazelike sewer system."""
+    "You are lost in a mazelike sewer system."
         {
             move("north", maze_h);
             move("south", maze_d);
@@ -1195,8 +1273,7 @@ place maze_a
             move("down", maze_c);
         }
 place maze_e
-    """
-    You are lost in a mazelike sewer system."""
+    "You are lost in a mazelike sewer system."
         {
             move("north", maze);
             move("south", maze_d);
@@ -1206,8 +1283,7 @@ place maze_e
             move("down", maze_o);
         }
 place maze_d
-    """
-    You are lost in a mazelike sewer system."""
+    "You are lost in a mazelike sewer system."
         {
             move("north", maze_m);
             move("south", maze_l);
@@ -1217,8 +1293,7 @@ place maze_d
             move("down", maze_n);
         }
 place maze_o
-    """
-    You are lost in a mazelike sewer system."""
+    "You are lost in a mazelike sewer system."
         {
             move("north", maze_d);
             move("south", maze_m);
@@ -1228,8 +1303,7 @@ place maze_o
             move("down", maze_m);
         }
 place maze_m
-    """
-    You are lost in a mazelike sewer system."""
+    "You are lost in a mazelike sewer system."
         {
             move("north", maze_a);
             move("south", maze_a);
@@ -1239,8 +1313,7 @@ place maze_m
             move("down", maze_n);
         }
 place maze_n
-    """
-    You are lost in a mazelike sewer system."""
+    "You are lost in a mazelike sewer system."
         {
             move("north", maze_m);
             move("south", maze_d);
@@ -1250,43 +1323,53 @@ place maze_n
             move("down", maze_n);
         }
 place wizard_source
-    """
-    You are in the directory .Wizard.Source. The only exit is up."""
-        {}
+    "You are in the directory .Wizard.Source. The only exit is up."
+        {
+            move("up", wizard);
+            isverb("boot", die);
+        }
 place wizard
     """
     You are in the directory .Wizard.
     There are exits marked 'Source' and 'Etc' here as well
     as the path leading up."""
-        {}
+        {
+            move("up", wizard);
+            move("source", wizard_source);
+            move("etc", wizard_etc);
+            isverb("boot", die);
+        }
 place wizard_etc
     """
     You are in the directory .Wizard.Etc. The only exit is up.
     There is a file here named 'Hints'"""
-        {}
+        {
+            say.and.move("boot", ninth_mississippi, "The lights dim and ...");
+            isverb("open", say.message, try.boot);
+        }
 place yellow_brick_road
     """
     You appear to be at the start of a long yellow brick road.
     The road curves off into the distance, so you cannot see where
     the road leads. Nearby is a large house canted at a strange
     angle. There seems to be the body of a witch under the house."""
-        {}
+        {
+            move("follow", follow_the_yellow_brick_road);
+        }
 place follow_the_yellow_brick_road
-    """
-    The yellow brick road continues in front of you."""
-        {}
-place emerald_city1
-    """
-    You are at the gates of a large emerald city.
-    There is a pair of ruby slippers here."""
-        {}
-place emerald_city2
+    "The yellow brick road continues in front of you."
+        {
+            move("back", yellow_brick_road);
+            move("follow", emerald_city);
+        }
+place emerald_city
     """
     You are at the gates of a large emerald city.
     There is a pair of ruby slippers here."""
-        {}
-place emerald_city3
-    """
-    You are at the gates of a large emerald city.
-    There is a pair of ruby slippers here."""
-        {}
+        {
+            isverb("tap", count.and.move, &emerald.city.count, "There's no place like home.", ninth_mississippi, bright.flash.and);
+            isverb("north", say.message, "There is no way to go in that direction.");
+            isverb("south", say.message, "There is no way to go in that direction.");
+            isverb("east", say.message, "There is no way to go in that direction.");
+            isverb("west", say.message, "There is no way to go in that direction.");
+        }

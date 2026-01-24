@@ -23,7 +23,19 @@ proc beast.check bst where no.can.do {
     //quip(no.can.do);
     move(where);
 }
+proc count.and.move countvar not.done destination destination.message {
+    // TODO Need a way to handle countvar on left-hand side
+    if (--emerald.city.count > 0) {
+        quip(not.done);
+    } else {
+        say(destination.message);
+        move(destination);
+    }
+}
 
+action "die" {
+    player.power = -1;
+}
 action "read" "meter" {
     quip("You have $ life force.", player.power);
 }
