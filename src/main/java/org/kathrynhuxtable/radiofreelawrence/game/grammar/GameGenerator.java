@@ -26,8 +26,11 @@ public class GameGenerator {
 		visitor.readFile("main.gdesc", false);
 
 		assignRefnos();
+		initializeLocations();
 		processStateValues();
 		setupArrays();
+
+		validateVariableReferences();
 
 		if (!gameData.errorReporter.getErrors().isEmpty()) {
 			for (String error : gameData.errorReporter.getErrors()) {
@@ -161,13 +164,14 @@ public class GameGenerator {
 			}
 		}
 		gameData.lverb = gameData.refno;
+	}
 
+	private void initializeLocations() {
 		// Assign initial locations to ylem
 		gameData.locations = new int[gameData.gameNode.getObjects().size()];
 		for (ObjectNode obj : gameData.gameNode.getObjects()) {
 			gameData.locations[obj.getRefno() - gameData.fobj] = gameData.floc + 1;
 		}
-
 	}
 
 	private void processStateValues() {
@@ -188,5 +192,9 @@ public class GameGenerator {
 		for (ArrayNode array : gameData.gameNode.getArrays()) {
 			gameData.arrays.put(array.getName(), new int[array.getSize()]);
 		}
+	}
+
+	private void validateVariableReferences() {
+
 	}
 }

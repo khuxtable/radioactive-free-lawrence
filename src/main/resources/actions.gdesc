@@ -2,16 +2,110 @@
 proc consume(obj, disappears, count, minPower, maxPower, message, emptyDescription) {
     var power = getrandom(minPower, maxPower);
     playerPower += power;
-    // I don't currently hae a way to implement the count, so assume 1 and disappears = true.
+    // I don't currently have a way to implement the count, so assume 1 and disappears = true.
     apport(obj, ylem);
     say(message);
     break repeat;
 }
 proc useweapon(affects, rchance, damage, drain) {
-    quip("nfw");
+    quip("not implemented yet");
+//    Place place = (Place) actor.getPlace();
+//
+//    if (command.length <= 1 && place.getPlayers().size() + place.getBeasts().size() != 2) {
+//    actor.mesg(command[0] + " at whom?");
+//    return true;
+//}
+//
+//    if (Util.matches("THrow", getLabel()) || Util.matches("HURL", getLabel())) {
+//    thing.setPlace(place);
+//}
+//
+//    boolean hit = (Util.random(1, 100) <= chance);
+//    int dam = Util.random(1, damage);
+//
+//    if (affects <= 5) {
+//    /*
+//     * Get person to hit.
+//     */
+//
+//    BaseElement them;
+//    if (command.length <= 1) {
+//    if ((them = place.findSingleOpponent(actor, command[0] + " at whom?")) == null) {
+//    return true;
+//}
+//} else if ((them = place.findByName(command[1], null)) == null) {
+//    if (actor instanceof Player) {
+//    actor.mesg("I see no " + command[1] + " here.");
+//}
+//    return true;
+//}
+//
+//    if (them instanceof Player) {
+//    Player player = (Player) them;
+//    if (hit) {
+//    player.setPower(player.getPower() - dam);
+//}
+//
+//    if (hit && player.getPower() < 0) {
+//    them.mesg(actor.getDescription() + "'s " + thing.getDescription() + " kills you.");
+//    actor.mesg("You just killed " + them.getDesc().get(0) + ".");
+//} else if (hit) {
+//    them.mesg(actor.getDescription() + "'s " + thing.getDescription() + " hits you.");
+//    actor.mesg("Your " + thing.getDescription() + " hits " + them.getDescription() + ".");
+//} else {
+//    them.mesg(actor.getDescription() + "'s " + thing.getDescription() + " misses you.");
+//    actor.mesg("Your " + thing.getDescription() + " misses " + them.getDescription() + ".");
+//}
+//    return true;
+//} else if (them instanceof Beast) {
+//    Beast beast = (Beast) them;
+//
+//    if (hit) {
+//    beast.setPower(beast.getPower() - dam);
+//}
+//
+//    them.addMessage(MessageType.POWER, actor, hit);
+//
+//    if (hit && beast.getPower() < 0) {
+//    String description = them.getDescription();
+//    beast.die();
+//    actor.mesg("You just killed " + description + ".");
+//} else if (hit) {
+//    actor.mesg("Your " + thing.getDescription() + " hits " + them.getDescription() + ".");
+//} else {
+//    actor.mesg("Your " + thing.getDescription() + " misses " + them.getDescription() + ".");
+//}
+//    return true;
+//} else if (them instanceof Thing) {
+//    actor.mesg("You cannot " + command[0] + " " + command[1] + ".");
+//    return true;
+//} else {
+//    actor.mesg("I see no " + command[1] + " here.");
+//    return true;
+//}
+//}
+//
+//    // Drain energy for using weapon.
+//    if (actor instanceof Player) {
+//((Player) actor).reducePower(drain);
+//} else {
+//((Beast) actor).reducePower(drain);
+//}
+//
+//    /*
+//     * Get people to hit.
+//     */
+//    int num = place.getPlayers().size() + place.getBeasts().size() - 1;
+//
+//    actor.mesg("Multiple target weapons do not work yet.");
+//    actor.mesg("There are " + num + " targets here, and you could get " + affects + " of them.");
 }
 proc beastCheck(beast, where, noCanDo) {
-    //quip(noCanDo);
+    for (var optr : where) {
+        if (optr == beast) {
+            quip(noCanDo);
+        }
+    }
     move(where);
 }
 proc countAndMove(countvar, max, notDone, destination, destinationMessage) {
@@ -24,6 +118,155 @@ proc countAndMove(countvar, max, notDone, destination, destinationMessage) {
         say(destinationMessage);
         move(destination);
     }
+}
+proc alterPower(flag, rchance, min, max, success, failure) {
+    if (!chance(rchance)) {
+        quip(failure);
+    }
+
+    var delta = getrandom(minPower, maxPower);
+
+    if (flag) {
+        playerPower = delta;
+    } else {
+        playerPower += delta;
+    }
+
+    quip(success);
+}
+proc stealSomething(rchance, detectChance) {
+    quip("not implemented yet");
+//    Place place = (Place) actor.getPlace();
+//
+//    if (command.length <= 1) {
+//    actor.mesg(command[0] + " what?");
+//    return true;
+//} else if (command.length <= 2 && (place.getPlayers().size() + place.getBeasts().size()) != 2) {
+//    actor.mesg(command[0] + " " + command[1] + " from whom?");
+//    return true;
+//}
+//
+//    BaseElement them = null;
+//    if (command.length > 2) {
+//    them = place.findByName(command[2], null);
+//    if (them == null) {
+//    actor.mesg("I see no " + command[2] + " here.");
+//    return true;
+//} else if (them instanceof Thing) {
+//    actor.mesg("You can only " + command[0] + " from a living player or 'beast'.");
+//    return true;
+//}
+//} else if ((them = place.findSingleOpponent(actor, command[0] + " from whom?")) == null) {
+//    return true;
+//}
+//
+//    Thing obj = (Thing) them.findByName(command[1], Thing.class);
+//    if (obj == null) {
+//    actor.mesg(them.getLabel() + " does not have " + command[1]);
+//    return true;
+//}
+//
+//    boolean success = Util.random(0, 100) <= chance;
+//    boolean detected = Util.random(0, 100) <= detectChance;
+//
+//    if (success) {
+//    obj.setPlace(actor);
+//    actor.mesg("You have stolen " + them.getLabel() + "'s " + obj.getLabel());
+//    if (detected) {
+//    them.mesg(actor.getLabel() + " has stolen your " + obj.getLabel());
+//}
+//} else {
+//    actor.mesg("You fail to steal " + them.getLabel() + "'s " + obj.getLabel());
+//    if (detected) {
+//    them.mesg(actor.getLabel() + " has attempted to steal your " + obj.getLabel());
+//}
+//}
+}
+proc warp(self, rchance, dropChance) {
+    quip("not implemented yet");
+//    int i = 1;
+//    Place place = (Place) actor.getPlace();
+//
+//    BaseElement them = null;
+//    String name = null;
+//    if (self) {
+//    them = actor;
+//} else {
+//    if (i >= command.length) {
+//    actor.mesg(command[0] + " whom?");
+//    return true;
+//}
+//    name = command[i++];
+//
+//    if ((them = place.findByName(name, null)) == null) {
+//    actor.mesg("I see no " + name + " here.");
+//    return true;
+//}
+//}
+//
+//    Place p = null;
+//    if (i >= command.length) {
+//    List<Place> allPlaces = new ArrayList<Place>(getGameInformation().getPlaces().values());
+//    p = allPlaces.get(Util.random(0, allPlaces.size() - 1));
+//} else {
+//    name = command[i++];
+//    p = getGameInformation().findPlace(name);
+//    if (p == null) {
+//    actor.mesg("There is no such place as " + name + ".");
+//    return true;
+//}
+//}
+//
+//    boolean hit = Util.random(1, 100) <= chance;
+//
+//    /*
+//     * args[2] is % chance of dropping the thing.
+//     */
+//
+//    if (hit && Util.random(1, 100) <= dropChance) {
+//    thing.setPlace(place);
+//}
+//
+//    if (them instanceof Player) {
+//    if (!hit) {
+//    actor.mesg("Nothing happens.");
+//    if (them != actor) {
+//    them.mesg("You feel a slight tingling sensation.");
+//}
+//    return true;
+//}
+//
+//    them.setPlace(place = p);
+//
+//    if (them == actor) {
+//    actor.mesg("Colors swirl about you.");
+//    actor.doCommand("look");
+//} else {
+//    them.mesg(actor.getDescription() + "'s " + thing.getLabel() + " hits you.\nColors swirl about you.\nYou are at " + place.getLabel() + ".");
+//    actor.mesg("Colors swirl about " + them.getDescription() + " and they vanish.");
+//}
+//} else if (them instanceof Thing) {
+//    if (!hit) {
+//    actor.mesg("Nothing happens.");
+//    return true;
+//}
+//
+//    them.setPlace(place = p);
+//
+//    actor.mesg("Colors swirl about " + them.getDescription() + " and it vanishes.");
+//} else if (them instanceof Beast) {
+//    if (!hit) {
+//    actor.mesg("Nothing happens.");
+//    return true;
+//}
+//
+//    them.setPlace(place = p);
+//
+//    actor.mesg("Colors swirl about " + them.getDescription() + " and it vanishes.");
+//    return true;
+//} else {
+//    actor.mesg("You cannot zap " + them.getLabel() + ".");
+//}
 }
 
 action "die" {
@@ -78,9 +321,6 @@ action "take" {
     } else {
         quip("I see no # here.", arg2);
     }
-}
-action "steal" {
-
 }
 action "drop" {
     if (have(arg2)) {      // True only if the player has the thing

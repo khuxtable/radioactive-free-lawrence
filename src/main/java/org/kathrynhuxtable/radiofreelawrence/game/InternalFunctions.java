@@ -374,6 +374,36 @@ public class InternalFunctions {
 		return 0;
 	}
 
+	@InternalFunction(name = "sayrandom")
+	public int sayRandom(ExprNode... parameters) {
+		try {
+			if (parameters.length == 0) return 0;
+
+			int dice = (int) (Math.random() * 100) + 1;
+			int prob = 0;
+			for (int i = 0; i < parameters.length - 1; i += 2) {
+				prob += parameters[i].evaluate(gameData);
+				if (dice < prob) {
+					ExprNode parameter = parameters[i + 1];
+					String text = null;
+					if (parameter instanceof IdentifierNode) {
+						text = gameData.getTextIdentifierValue(((IdentifierNode) parameter).getName(), 0);
+					} else if (parameter instanceof TextElementNode) {
+						text = ((TextElementNode) parameter).getText();
+					}
+					if (text != null) {
+						System.out.println(text);
+						break;
+					}
+				}
+			}
+		} catch (Exception e) {
+			throw new GameRuntimeException(parameters[0].getSourceLocation() + ": exception in 'sayrandom'", e);
+		}
+
+		throw new BreakException(ControlType.REPEAT);
+	}
+
 	@InternalFunction(name = "append")
 	public int append(ExprNode... text) {
 		// FIXME Implement this

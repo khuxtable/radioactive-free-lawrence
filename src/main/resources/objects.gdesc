@@ -61,13 +61,13 @@ object glove
     "silk glove"
     "There is a silk glove here."
 {
-    "pickpocket": { steal(50, 40); }
+    "pickpocket": { stealSomething(50, 40); }
 }
 object opera_glove
     "silk opera glove"
     "There is a silk opera glove here."
 {
-    "pickpocket": { steal(50, 40); }
+    "pickpocket": { stealSomething(50, 40); }
 }
 object grenade
     "grenade"
@@ -122,12 +122,12 @@ object meteroid         // For wizard players
     "There is a life-force meteroid here. Cannot be dropped."
 {
     "read": { readmeter(); }
-    "xsbar": { extendedCommand("xsbar"); }
-    "xnusers": { extendedCommand("xnusers"); }
-    "xdie": { extendedCommand("xdie"); }
-    "xwho": { extendedCommand("xwho"); }
-    "xbst": { extendedCommand("xbst"); }
-    "xvocabulary": { extendedCommand("xvocabulary"); }
+//    "xsbar": { extendedcommand("xsbar"); }
+//    "xnusers": { extendedcommand("xnusers"); }
+//    "xdie": { extendedcommand("xdie"); }
+//    "xwho": { extendedcommand("xwho"); }
+//    "xbst": { extendedcommand("xbst"); }
+//    "xvocabulary": { extendedcommand("xvocabulary"); }
 }
 object rifle
     "rifle"
@@ -179,7 +179,7 @@ object udk
     "a faded copy of the university newspaper, the \"University Daily Kansan\""
 {
     "read": {
-        sayRandom(
+        sayrandom(
         10, "The UDK says, 'US declares war on Rusia'.",
         5, "The UDK says, 'Radiation victims should go to the Reactor Center'.",
         20, "The UDK says, 'KSU 50; KU 36'.",
@@ -196,7 +196,7 @@ object newspaper
     "a faded copy of the university newspaper, the \"University Daily Kansan\""
 {
     "read": {
-        sayRandom(
+        sayrandom(
         10, "The UDK says, 'US declares war on Rusia'.",
         5, "The UDK says, 'Radiation victims should go to the Reactor Center'.",
         20, "The UDK says, 'KSU 50; KU 36'.",
@@ -207,7 +207,6 @@ object newspaper
         );
     }
 }
-
 object zapgun
     "zapgun"
     "There is a toy zapgun here."
