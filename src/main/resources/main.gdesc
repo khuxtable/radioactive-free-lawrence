@@ -10,15 +10,15 @@ flags variable
     moved;          // Optional STATUS variable flag, maintained by the kernel
 
 flags place
-    been.here;      // place flag, maintained by the kernel
+    beenHere;       // place flag, maintained by the kernel
 
 flags object
-    seen, // object flag, maintained by the kernel
-    cant.drop,
-    cant.take;
+    seen,           // object flag, maintained by the kernel
+    cantDrop,
+    cantTake;
 
-variable player.power;
-variable emerald.city.count;
+variable playerPower;
+variable emeraldCityCount;
 
 include "objects.gdesc";
 
@@ -52,13 +52,13 @@ initial {
     apport(zapgun, wescoe_cafeteria);
 
     apport(meter, inhand);
-    setflag(meter, cant.drop);
-    setflag(meter, cant.take);
+    setflag(meter, cantDrop);
+    setflag(meter, cantTake);
 
-    player.power = 1000;
+    playerPower = 1000;
 }
 initial {
-    goto(Ninth_Mississippi);
+    goto(ninth_mississippi);
 }
 repeat {
     // Handle player location description
@@ -88,19 +88,19 @@ repeat {
         stop();
     }
 
-    player.power--;
+    playerPower--;
     here();             // Execute code, if any, associated with this location
     arg1();             // Execute action verb, if any
     for (var optr : inhand) {
         optr();         // Execute code, if any, associated with this object
     }
-    player.power++;
+    playerPower++;
 
-    bail.out();         // Command not handled - report an error
+    bailOut();         // Command not handled - report an error
 }
 
     // Deliver invalid command message
-proc bail.out {
+proc bailOut {
     if (status == 1) {
         if (arg1 instanceof object) { // If first word is an object name
             if (!isnear(arg1)) {
@@ -115,25 +115,25 @@ proc bail.out {
     quip("You can't do that!");     // Generic no can do
 }
 
-text no.direction
+text noDirection
     """
     You can't tell directions here.
     Try Up, Down, Left, Right, Forward, Backward""";
-text what.is.north "What is \"North?\"";
-text what.is.south "What is \"South?\"";
-text what.is.east "What is \"East?\"";
-text what.is.west "What is \"West?\"";
-text what.is.up "What is \"Up?\"";
-text what.is.down "What is \"Down?\"";
-text what.is.left "What is \"Left?\"";
-text what.is.right "What is \"Right?\"";
-text what.is.forward "What is \"Forward?\"";
-text what.is.backward "What is \"Backward?\"";
-text try.boot
+text whatIsNorth "What is \"North?\"";
+text whatIsSouth "What is \"South?\"";
+text whatIsEast "What is \"East?\"";
+text whatIsWest "What is \"West?\"";
+text whatIsUp "What is \"Up?\"";
+text whatIsDown "What is \"Down?\"";
+text whatIsLeft "What is \"Left?\"";
+text whatIsRight "What is \"Right?\"";
+text whatIsForward "What is \"Forward?\"";
+text whatIsBackward "What is \"Backward?\"";
+text tryBoot
     """
     You open the file to reveal the message:
             To get out of the computer, try 'Boot'.""";
-text bright.flash.and
+text brightFlashAnd
     """
     There's no place like home.
 

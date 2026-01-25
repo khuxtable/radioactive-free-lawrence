@@ -164,7 +164,7 @@ public class GameData {
 			if (type < 0) {
 				return placeNode.getName();
 			}
-			int beenHereFlag = getIntIdentifierValue("been.here");
+			int beenHereFlag = getIntIdentifierValue("beenHere");
 			boolean beenHere = testflag(refno, beenHereFlag);
 			setFlag(refno, beenHereFlag);
 			return (!beenHere || type > 0) && placeNode.getLongDescription() != null ? placeNode.getLongDescription() : placeNode.getBriefDescription();

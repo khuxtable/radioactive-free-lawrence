@@ -115,19 +115,19 @@ object meter
     "life-force meter"
     "There is a life-force meter here. Cannot be dropped."
 {
-    "read": { quip("You have $ life force.", player.power); }
+    "read": { quip("You have $ life force.", playerPower); }
 }
 object meteroid         // For wizard players
     "life-force meteroid"
     "There is a life-force meteroid here. Cannot be dropped."
 {
     "read": { readmeter(); }
-    "xsbar": { extended.command("xsbar"); }
-    "xnusers": { extended.command("xnusers"); }
-    "xdie": { extended.command("xdie"); }
-    "xwho": { extended.command("xwho"); }
-    "xbst": { extended.command("xbst"); }
-    "xvocabulary": { extended.command("xvocabulary"); }
+    "xsbar": { extendedCommand("xsbar"); }
+    "xnusers": { extendedCommand("xnusers"); }
+    "xdie": { extendedCommand("xdie"); }
+    "xwho": { extendedCommand("xwho"); }
+    "xbst": { extendedCommand("xbst"); }
+    "xvocabulary": { extendedCommand("xvocabulary"); }
 }
 object rifle
     "rifle"
@@ -179,7 +179,7 @@ object udk
     "a faded copy of the university newspaper, the \"University Daily Kansan\""
 {
     "read": {
-        say.random(
+        sayRandom(
         10, "The UDK says, 'US declares war on Rusia'.",
         5, "The UDK says, 'Radiation victims should go to the Reactor Center'.",
         20, "The UDK says, 'KSU 50; KU 36'.",
@@ -196,7 +196,7 @@ object newspaper
     "a faded copy of the university newspaper, the \"University Daily Kansan\""
 {
     "read": {
-        say.random(
+        sayRandom(
         10, "The UDK says, 'US declares war on Rusia'.",
         5, "The UDK says, 'Radiation victims should go to the Reactor Center'.",
         20, "The UDK says, 'KSU 50; KU 36'.",
@@ -212,7 +212,7 @@ object zapgun
     "zapgun"
     "There is a toy zapgun here."
 {
-    "terminate": { terminate.with.prejudice(); }
+    "terminate": { terminateWithPrejudice(); }
     "warp": { warp(true, 50, 0); }
     "zap": { warp(false, 25, 0); }
 }

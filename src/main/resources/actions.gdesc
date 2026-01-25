@@ -1,7 +1,7 @@
 // When eating or drinking something
 proc consume(obj, disappears, count, minPower, maxPower, message, emptyDescription) {
     var power = getrandom(minPower, maxPower);
-    player.power += power;
+    playerPower += power;
     // I don't currently hae a way to implement the count, so assume 1 and disappears = true.
     apport(obj, ylem);
     say(message);
@@ -10,27 +10,27 @@ proc consume(obj, disappears, count, minPower, maxPower, message, emptyDescripti
 proc useweapon(affects, rchance, damage, drain) {
     quip("nfw");
 }
-proc beast.check(beast, where, no.can.do) {
-    //quip(no.can.do);
+proc beastCheck(beast, where, noCanDo) {
+    //quip(noCanDo);
     move(where);
 }
-proc count.and.move(countvar, max, not.done, destination, destination.message) {
+proc countAndMove(countvar, max, notDone, destination, destinationMessage) {
     if (*countvar <= 0) {
         *countvar = max;
     }
     if (--*countvar > 0) {
-        quip(not.done);
+        quip(notDone);
     } else {
-        say(destination.message);
+        say(destinationMessage);
         move(destination);
     }
 }
 
 action "die" {
-    player.power = -1;
+    playerPower = -1;
 }
 action "read" "meter" {
-    quip("You have $ life force.", player.power);
+    quip("You have $ life force.", playerPower);
 }
 action "inventory" {
     var count;
@@ -70,7 +70,7 @@ action "describe" {
 }
 action "take" {
     if (ishere(arg2)) {
-        if (isflag(*arg2, cant.take)) {
+        if (isflag(*arg2, cantTake)) {
             quip("You cannot take the #.", arg2);
         }
         get(arg2);
@@ -84,7 +84,7 @@ action "steal" {
 }
 action "drop" {
     if (have(arg2)) {      // True only if the player has the thing
-        if (isflag(*arg2, cant.drop)) {
+        if (isflag(*arg2, cantDrop)) {
             quip("You cannot drop the #.", arg2);
         }
         say("You drop the #.", arg2);

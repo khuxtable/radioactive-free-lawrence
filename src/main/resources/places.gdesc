@@ -8,7 +8,7 @@ place ninth_mississippi
 {
     "south": { move(stadium); }
     "east": { move(joes); }
-    "north": { quip(no.direction); }
+    "north": { quip(noDirection); }
 }
 place joes
     "You are outside Joe's Bakery."
@@ -167,7 +167,7 @@ place south_wescoe
     "west": { move(visual_arts); }
     "up": { move(north_wescoe); }
     "down": { move(acc); }
-    "enter": { beast.check(guards, wescoe_cafeteria, "The guards prevent you from entering."); }
+    "enter": { beastCheck(guards, wescoe_cafeteria, "The guards prevent you from entering."); }
 }
 place wescoe_cafeteria
     "You are in the Wescoe Cafeteria."
@@ -199,10 +199,10 @@ place pu_soap_film
     "left": { move(pu_shrooms); }
     "right": { move(pu_space); }
     "forward": { move(pu_vomit); }
-    "north": { quip(no.direction); }
-    "south": { quip(no.direction); }
-    "east": { quip(no.direction); }
-    "west": { quip(no.direction); }
+    "north": { quip(noDirection); }
+    "south": { quip(noDirection); }
+    "east": { quip(noDirection); }
+    "west": { quip(noDirection); }
 }
 place pu_warm_fuzzy
     """
@@ -215,10 +215,10 @@ place pu_warm_fuzzy
     "left": { move(pu_shrooms); }
     "right": { move(pu_space); }
     "forward": { move(pu_mist); }
-    "north": { quip(no.direction); }
-    "south": { quip(no.direction); }
-    "east": { quip(no.direction); }
-    "west": { quip(no.direction); }
+    "north": { quip(noDirection); }
+    "south": { quip(noDirection); }
+    "east": { quip(noDirection); }
+    "west": { quip(noDirection); }
 }
 place pu_shrooms
     """
@@ -232,10 +232,10 @@ place pu_shrooms
     "left": { move(pu_lsd); }
     "right": { move(pu_mist); }
     "forward": { move(pu_vomit); }
-    "north": { quip(no.direction); }
-    "south": { quip(no.direction); }
-    "east": { quip(no.direction); }
-    "west": { quip(no.direction); }
+    "north": { quip(noDirection); }
+    "south": { quip(noDirection); }
+    "east": { quip(noDirection); }
+    "west": { quip(noDirection); }
 }
 place pu_space
     """
@@ -248,10 +248,10 @@ place pu_space
     "left": { move(pu_mist); }
     "right": { move(pu_lsd); }
     "forward": { move(pu_vomit); }
-    "north": { quip(no.direction); }
-    "south": { quip(no.direction); }
-    "east": { quip(no.direction); }
-    "west": { quip(no.direction); }
+    "north": { quip(noDirection); }
+    "south": { quip(noDirection); }
+    "east": { quip(noDirection); }
+    "west": { quip(noDirection); }
 }
 place pu_mist
     """
@@ -264,10 +264,10 @@ place pu_mist
     "left": { move(pu_shrooms); }
     "right": { move(pu_space); }
     "forward": { move(pu_zen1); }
-    "north": { quip(no.direction); }
-    "south": { quip(no.direction); }
-    "east": { quip(no.direction); }
-    "west": { quip(no.direction); }
+    "north": { quip(noDirection); }
+    "south": { quip(noDirection); }
+    "east": { quip(noDirection); }
+    "west": { quip(noDirection); }
 }
 place pu_zen1
     """
@@ -278,16 +278,16 @@ place pu_zen1
     completely lost track of that train of thought."""
 {
     "fire": { move(pu_zen2, "What is \"Fire\"?"); }
-    "north": { quip(what.is.north); }
-    "south": { quip(what.is.south); }
-    "east": { quip(what.is.east); }
-    "west": { quip(what.is.west); }
-    "up": { quip(what.is.up); }
-    "down": { quip(what.is.down); }
-    "left": { quip(what.is.left); }
-    "right": { quip(what.is.right); }
-    "forward": { quip(what.is.forward); }
-    "backward": { quip(what.is.backward); }
+    "north": { quip(whatIsNorth); }
+    "south": { quip(whatIsSouth); }
+    "east": { quip(whatIsEast); }
+    "west": { quip(whatIsWest); }
+    "up": { quip(whatIsUp); }
+    "down": { quip(whatIsDown); }
+    "left": { quip(whatIsLeft); }
+    "right": { quip(whatIsRight); }
+    "forward": { quip(whatIsForward); }
+    "backward": { quip(whatIsBackward); }
 }
 place pu_zen2
     """
@@ -298,16 +298,16 @@ place pu_zen2
     completely lost track of that train of thought."""
 {
     "is": { move(pu_zen3, "What is \"Fire\"?"); }
-    "north": { quip(what.is.north); }
-    "south": { quip(what.is.south); }
-    "east": { quip(what.is.east); }
-    "west": { quip(what.is.west); }
-    "up": { quip(what.is.up); }
-    "down": { quip(what.is.down); }
-    "left": { quip(what.is.left); }
-    "right": { quip(what.is.right); }
-    "forward": { quip(what.is.forward); }
-    "backward": { quip(what.is.backward); }
+    "north": { quip(whatIsNorth); }
+    "south": { quip(whatIsSouth); }
+    "east": { quip(whatIsEast); }
+    "west": { quip(whatIsWest); }
+    "up": { quip(whatIsUp); }
+    "down": { quip(whatIsDown); }
+    "left": { quip(whatIsLeft); }
+    "right": { quip(whatIsRight); }
+    "forward": { quip(whatIsForward); }
+    "backward": { quip(whatIsBackward); }
 }
 place pu_zen3
     """
@@ -318,16 +318,16 @@ place pu_zen3
     completely lost track of that train of thought."""
 {
     "the": { move(pu_zen4, "What is \"Fire\"?"); }
-    "north": { quip(what.is.north); }
-    "south": { quip(what.is.south); }
-    "east": { quip(what.is.east); }
-    "west": { quip(what.is.west); }
-    "up": { quip(what.is.up); }
-    "down": { quip(what.is.down); }
-    "left": { quip(what.is.left); }
-    "right": { quip(what.is.right); }
-    "forward": { quip(what.is.forward); }
-    "backward": { quip(what.is.backward); }
+    "north": { quip(whatIsNorth); }
+    "south": { quip(whatIsSouth); }
+    "east": { quip(whatIsEast); }
+    "west": { quip(whatIsWest); }
+    "up": { quip(whatIsUp); }
+    "down": { quip(whatIsDown); }
+    "left": { quip(whatIsLeft); }
+    "right": { quip(whatIsRight); }
+    "forward": { quip(whatIsForward); }
+    "backward": { quip(whatIsBackward); }
 }
 place pu_zen4
     """
@@ -338,16 +338,16 @@ place pu_zen4
     completely lost track of that train of thought."""
 {
     "poppy": { move(potters, "That is 'Fire'?\nYour stomach lurches and you fall.\nGlup, squish, splat."); }
-    "north": { quip(what.is.north); }
-    "south": { quip(what.is.south); }
-    "east": { quip(what.is.east); }
-    "west": { quip(what.is.west); }
-    "up": { quip(what.is.up); }
-    "down": { quip(what.is.down); }
-    "left": { quip(what.is.left); }
-    "right": { quip(what.is.right); }
-    "forward": { quip(what.is.forward); }
-    "backward": { quip(what.is.backward); }
+    "north": { quip(whatIsNorth); }
+    "south": { quip(whatIsSouth); }
+    "east": { quip(whatIsEast); }
+    "west": { quip(whatIsWest); }
+    "up": { quip(whatIsUp); }
+    "down": { quip(whatIsDown); }
+    "left": { quip(whatIsLeft); }
+    "right": { quip(whatIsRight); }
+    "forward": { quip(whatIsForward); }
+    "backward": { quip(whatIsBackward); }
 }
 place pu_lsd
     """
@@ -361,10 +361,10 @@ place pu_lsd
     "left": { move(pu_shrooms); }
     "right": { move(pu_space); }
     "up": { move(pu_vomit); }
-    "north": { quip(no.direction); }
-    "south": { quip(no.direction); }
-    "east": { quip(no.direction); }
-    "west": { quip(no.direction); }
+    "north": { quip(noDirection); }
+    "south": { quip(noDirection); }
+    "east": { quip(noDirection); }
+    "west": { quip(noDirection); }
 }
 place pu_ms
     """
@@ -377,10 +377,10 @@ place pu_ms
     "left": { move(pu_space); }
     "right": { move(pu_shrooms); }
     "forward": { move(pu_vomit); }
-    "north": { quip(no.direction); }
-    "south": { quip(no.direction); }
-    "east": { quip(no.direction); }
-    "west": { quip(no.direction); }
+    "north": { quip(noDirection); }
+    "south": { quip(noDirection); }
+    "east": { quip(noDirection); }
+    "west": { quip(noDirection); }
 }
 place pu_vomit
     """
@@ -392,10 +392,10 @@ place pu_vomit
     "left": { move(pu_shrooms); }
     "right": { move(pu_space); }
     "forward": { move(pu_mist); }
-    "north": { quip(no.direction); }
-    "south": { quip(no.direction); }
-    "east": { quip(no.direction); }
-    "west": { quip(no.direction); }
+    "north": { quip(noDirection); }
+    "south": { quip(noDirection); }
+    "east": { quip(noDirection); }
+    "west": { quip(noDirection); }
 }
 place pu_core
     """
@@ -409,10 +409,10 @@ place pu_core
     "left": { move(pu_core); }
     "right": { move(pu_core); }
     "forward": { move(pu_core); }
-    "north": { quip(no.direction); }
-    "south": { quip(no.direction); }
-    "east": { quip(no.direction); }
-    "west": { quip(no.direction); }
+    "north": { quip(noDirection); }
+    "south": { quip(noDirection); }
+    "east": { quip(noDirection); }
+    "west": { quip(noDirection); }
 }
 place visual_arts
     """
@@ -502,7 +502,7 @@ place in_reactor
 {
     "out": { move(reactor); }
     "decontaminate": {
-        alter.power(true, 100, 1000, 1000,
+        alterPower(true, 100, 1000, 1000,
         "You are bathed in a brilliant multi-colored light.\nAll radiation is leaving your body.",
         "You hear a whirring sound, but nothing seems to happen.");
     }
@@ -635,7 +635,7 @@ place rivers_end
 {
     "south": { move(sandy_beach); }
     "east": { quip("I haven't written that part yet..."); }
-    "west": { say.messaeg("I haven't written that part yet..."); }
+    "west": { quip("I haven't written that part yet..."); }
 }
 place small_opening
     """
@@ -644,7 +644,7 @@ place small_opening
 {
     "back": { move(side_passage); }
     "jump": {
-        alter.power(true, 80, -10, -10,
+        alterPower(true, 80, -10, -10,
         "Aaaaaiiiiiiiieeeeeeee!!!!!!\nSplat.",
         "You must be crazy!");
     }
@@ -1349,7 +1349,7 @@ place wizard_etc
     There is a file here named 'Hints'"""
 {
     "boot": { move(ninth_mississippi, "The lights dim and ..."); }
-    "open": { quip(try.boot); }
+    "open": { quip(tryBoot); }
 }
 place yellow_brick_road
     """
@@ -1371,7 +1371,7 @@ place emerald_city
     You are at the gates of a large emerald city.
     There is a pair of ruby slippers here."""
 {
-    "tap": { count.and.move(&emerald.city.count, 3, "There's no place like home.", ninth_mississippi, bright.flash.and); }
+    "tap": { countAndMove(&emeraldCityCount, 3, "There's no place like home.", ninth_mississippi, brightFlashAnd); }
     "north": { quip("There is no way to go in that direction."); }
     "south": { quip("There is no way to go in that direction."); }
     "east": { quip("There is no way to go in that direction."); }
