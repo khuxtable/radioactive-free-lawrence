@@ -76,7 +76,7 @@ action "describe" {
 }
 action "take" {
     if (ishere(arg2)) {
-        if (isflag(arg2, cant.take)) {
+        if (isflag(*arg2, cant.take)) {
             quip("You cannot take the #.", arg2);
         }
         get(arg2);
@@ -101,17 +101,7 @@ action "drop" {
     }
 }
 action "vocabulary" {
-    respond(verbs, vocab_verbs);
-    if (key(nouns)) {
-        show_nouns();
-    }
-    respond(travel, vocab_travel);
-    respond(screen, vocab_screen);
-    if (status == 1 || key(all)) {
-        say(vocab_general);
-        set(context, q_vocab_0);
-        quip("more?");
-    }
+    vocab();
 }
 action "swing" "axe" {
 

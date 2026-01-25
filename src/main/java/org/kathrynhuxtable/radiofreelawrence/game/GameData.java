@@ -46,8 +46,9 @@ public class GameData {
 	public int lverb;
 	public ObjectNode[] objects;
 	public PlaceNode[] places;
-	public VocabularyNode[] verbs;
+	public VariableNode[] vars;
 	public TextNode[] texts;
+	public VocabularyNode[] verbs;
 
 	// Mutable data
 
@@ -67,15 +68,17 @@ public class GameData {
 	}
 
 	public IdentifierType getRefnoType(int refno) {
-		if (refno >= fobj && refno < lobj) {
+		if (refno < fobj) {
+			return null;
+		} else if (refno < lobj) {
 			return IdentifierType.OBJECT;
-		} else if (refno >= floc && refno < lloc) {
+		} else if (refno < lloc) {
 			return IdentifierType.PLACE;
-		} else if (refno >= fvar && refno < lvar) {
+		} else if (refno < lvar) {
 			return IdentifierType.VARIABLE;
-		} else if (refno >= ftext && refno < ltext) {
+		} else if (refno < ltext) {
 			return IdentifierType.TEXT;
-		} else if (refno >= fverb && refno < lverb) {
+		} else if (refno < lverb) {
 			return IdentifierType.VERB;
 		} else {
 			return null;
@@ -84,19 +87,33 @@ public class GameData {
 
 	public BaseNode getRefnoNode(int refno) {
 		if (refno < fobj) {
-			throw new GameRuntimeException("refno " + refno + " is not valid");
+			return null;
 		} else if (refno < lobj) {
 			return objects[refno - fobj];
 		} else if (refno < lloc) {
 			return places[refno - floc];
 		} else if (refno < lvar) {
-			throw new GameRuntimeException("refno " + refno + " is not valid -- variable nodes not allowed here");
+			return vars[refno - fvar];
 		} else if (refno < ltext) {
 			return texts[refno - ftext];
 		} else if (refno < lverb) {
 			return (BaseNode) verbs[refno - fverb];
 		} else {
-			throw new GameRuntimeException("refno " + refno + " is not valid");
+			return null;
+		}
+	}
+
+	public int getIdentifierRefno(String identifier) {
+		BaseNode local = localVariables.getLocalVariableValue(identifier.toLowerCase());
+		if (local != null) {
+			return 0;
+		}
+
+		BaseNode idNode = gameNode.getIdentifiers().get(identifier.toLowerCase());
+		if (idNode instanceof HasRefno hasRefno) {
+			return hasRefno.getRefno();
+		} else {
+			return 0;
 		}
 	}
 
@@ -114,29 +131,12 @@ public class GameData {
 
 		// FIXME Need to handle the cyclic, random, etc. options.
 		BaseNode idNode = gameNode.getIdentifiers().get(identifier.toLowerCase());
-		if (idNode instanceof VariableNode) {
-			return "???";//variables[((VariableNode) idNode).getRefno() - fvar];
-		} else if (idNode instanceof StateClauseNode) {
-			return "???";//states.get(identifier);
-		} else if (idNode instanceof FlagNode) {
-			return "???";
-		} else if (idNode instanceof PlaceNode placeNode) {
-			int beenHereFlag = getIntIdentifierValue("been.here");
-			boolean beenHere = testflag(placeNode.getRefno(), beenHereFlag);
-			return (!beenHere || type > 0) && placeNode.getLongDescription() != null ? placeNode.getLongDescription() : placeNode.getBriefDescription();
-		} else if (idNode instanceof ObjectNode objectNode) {
-			boolean inHand = locations[objectNode.getRefno() - fobj] == floc;
-			int seenFlag = getIntIdentifierValue("seen");
-			boolean seen = testflag(objectNode.getRefno(), seenFlag);
-			if (inHand) {
-				return objectNode.getInventoryDescription();
-			} else {
-				return (!seen || type > 0) && objectNode.getLongDescription() != null ? objectNode.getLongDescription() : objectNode.getBriefDescription();
-			}
-		} else if (idNode instanceof VerbNode) {
-			return "???";//((VerbNode) idNode).getRefno();
-		} else if (idNode instanceof TextNode) {
-			return ((TextNode) idNode).getTexts().get(0);
+		if (idNode instanceof HasRefno hasRefno) {
+			return getTextIdentifierValue(hasRefno.getRefno(), type);
+		} else if (idNode instanceof StateClauseNode stateClauseNode) {
+			return Integer.toString(states.get(stateClauseNode.getState()));
+		} else if (idNode instanceof FlagNode flagNode) {
+			return Integer.toString(flagNode.getFlags().indexOf(identifier));
 		} else {
 			return "???";
 		}
@@ -255,32 +255,6 @@ public class GameData {
 		throw new GameRuntimeException("Missing ']' in switch text in \"" + new String(charArray) + "\"");
 	}
 
-	public int getIdentifierRefno(String identifier) {
-		BaseNode local = localVariables.getLocalVariableValue(identifier.toLowerCase());
-		if (local != null) {
-			return 0;
-		}
-
-		BaseNode idNode = gameNode.getIdentifiers().get(identifier.toLowerCase());
-		if (idNode instanceof VariableNode) {
-			return ((VariableNode) idNode).getRefno();
-		} else if (idNode instanceof StateClauseNode) {
-			return 0;
-		} else if (idNode instanceof FlagNode) {
-			return 0;
-		} else if (idNode instanceof PlaceNode) {
-			return ((PlaceNode) idNode).getRefno();
-		} else if (idNode instanceof ObjectNode) {
-			return ((ObjectNode) idNode).getRefno();
-		} else if (idNode instanceof VerbNode) {
-			return ((VerbNode) idNode).getRefno();
-		} else if (idNode instanceof TextNode) {
-			return ((TextNode) idNode).getRefno();
-		} else {
-			return 0;
-		}
-	}
-
 	public int getIntIdentifierValue(String identifier) {
 		BaseNode local = localVariables.getLocalVariableValue(identifier.toLowerCase());
 		if (local != null) {
@@ -294,20 +268,12 @@ public class GameData {
 		}
 
 		BaseNode idNode = gameNode.getIdentifiers().get(identifier.toLowerCase());
-		if (idNode instanceof VariableNode) {
-			return variables[((VariableNode) idNode).getRefno() - fvar];
+		if (idNode instanceof HasRefno hasRefno) {
+			return getIntIdentifierValue(hasRefno.getRefno());
 		} else if (idNode instanceof StateClauseNode) {
 			return states.get(identifier);
-		} else if (idNode instanceof FlagNode) {
-			return ((FlagNode) idNode).getFlags().indexOf(identifier);
-		} else if (idNode instanceof PlaceNode) {
-			return ((PlaceNode) idNode).getRefno();
-		} else if (idNode instanceof ObjectNode) {
-			return ((ObjectNode) idNode).getRefno();
-		} else if (idNode instanceof VerbNode) {
-			return ((VerbNode) idNode).getRefno();
-		} else if (idNode instanceof TextNode) {
-			return ((TextNode) idNode).getRefno();
+		} else if (idNode instanceof FlagNode flagNode) {
+			return flagNode.getFlags().indexOf(identifier);
 		} else {
 			return 0;
 		}
@@ -339,8 +305,6 @@ public class GameData {
 		BaseNode idNode = gameNode.getIdentifiers().get(identifier.toLowerCase());
 		if (idNode instanceof VariableNode) {
 			variables[((VariableNode) idNode).getRefno() - fvar] = value;
-		} else if (idNode instanceof StateClauseNode) {
-			states.put(identifier, value);
 		} else {
 			throw new GameRuntimeException("Cannot set identifier " + identifier);
 		}

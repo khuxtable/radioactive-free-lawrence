@@ -62,8 +62,8 @@ initial {
 initial {
     goto(Ninth_Mississippi);
 }
-    // Handle player location description
 repeat {
+    // Handle player location description
     if (isflag(status, moved)) {
         describe(here);
         var youSee = true;
@@ -76,8 +76,8 @@ repeat {
         }
     }
 }
-    // Handle player input
 repeat {
+    // Handle player input
     input();                    // Get and parse player's command
     //say("arg1 is $", arg1);
     //say("arg2 is $", arg2);
@@ -121,7 +121,6 @@ text no.direction
     """
     You can't tell directions here.
     Try Up, Down, Left, Right, Forward, Backward""";
-
 text what.is.north "What is \"North?\"";
 text what.is.south "What is \"South?\"";
 text what.is.east "What is \"East?\"";
@@ -140,4 +139,4 @@ text bright.flash.and
     """
     There's no place like home.
 
-    There is a bright flash and ..."""
+    There is a bright flash and ...""";

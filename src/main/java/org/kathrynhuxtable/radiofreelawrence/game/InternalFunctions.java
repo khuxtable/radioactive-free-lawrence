@@ -412,6 +412,7 @@ public class InternalFunctions {
 	@InternalFunction(name = "vocab")
 	public int vocab(ExprNode... text) {
 		// FIXME Implement this
+		// TODO Need a way to get "verbs" from places and objects.
 		return 0;
 	}
 

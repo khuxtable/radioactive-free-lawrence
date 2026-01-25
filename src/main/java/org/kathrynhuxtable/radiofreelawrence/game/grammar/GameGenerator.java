@@ -121,9 +121,11 @@ public class GameGenerator {
 		gameData.lloc = gameData.refno;
 
 		gameData.fvar = gameData.refno;
+		gameData.vars = new VariableNode[gameData.gameNode.getVariables().size()];
 		gameData.variables = new int[gameData.gameNode.getVariables().size()];
 		gameData.variableFlags = new long[gameData.gameNode.getVariables().size()];
 		for (VariableNode var : gameData.gameNode.getVariables()) {
+			gameData.vars[gameData.refno - gameData.fvar] = var;
 			gameData.variables[gameData.refno - gameData.fvar] = 0;
 			var.setRefno(gameData.refno++);
 		}
