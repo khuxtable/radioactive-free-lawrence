@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.nio.channels.Channels;
 import java.nio.charset.CodingErrorAction;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -239,22 +240,42 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 	// PROC name=IDENTIFIER (IDENTIFIER)* block
 	@Override
 	public ProcNode visitProcDirective(ProcDirectiveContext ctx) {
+		List<String> parameterNames;
+		if (ctx.optionalParameterList() == null) {
+			parameterNames = Collections.emptyList();
+		} else {
+			OptionalParameterListNode parameterListNode = (OptionalParameterListNode) visitOptionalParameterList(ctx.optionalParameterList());
+			parameterNames = parameterListNode.getParameterNames();
+		}
+
 		ProcNode node = ProcNode.builder()
 				.name(ctx.name.getText().toLowerCase())
-				.args(ctx.IDENTIFIER().subList(1, ctx.IDENTIFIER().size()).stream()
-						.map(i -> i.getText().toLowerCase())
-						.collect(Collectors.toList()))
+				.args(parameterNames)
 				.code((BlockNode) visit(ctx.block()))
 				.sourceLocation(new SourceLocation(ctx.block()))
 				.build();
+
 		if (node.getName() != null) {
 			if (root.getIdentifiers().containsKey(node.getName())) {
 				errorReporter.reportError(ctx, "Duplicate identifier \"" + node.getName() + "\"");
 			}
 			root.getIdentifiers().put(node.getName(), node);
 		}
+
 		root.getProcs().put(ctx.name.getText().toLowerCase(), node);
 		return node;
+	}
+
+	// LPAREN RPAREN
+	// LPAREN IDENTIFIER (COMMA IDENTIFIER)* RPAREN
+	@Override
+	public BaseNode visitOptionalParameterList(OptionalParameterListContext ctx) {
+		return OptionalParameterListNode.builder()
+				.parameterNames(ctx.IDENTIFIER().stream()
+						.map(i -> i.getText().toLowerCase())
+						.collect(Collectors.toList()))
+				.sourceLocation(new SourceLocation(ctx))
+				.build();
 	}
 
 	// INITIAL block

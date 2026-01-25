@@ -30,9 +30,10 @@ object box
     "There is a locked box here."
 {
     "throw": { useweapon(1, 50, 25, 0); }
-    "open": { alterpower(0, 100, 2000, 2000,
-              "Congratulations! You have found the treasure.\nYou are hereby awarded with 200% life force.",
-              "The interior is filled with meters and other strange appurtenances,\nbut nothing seems to happen.");
+    "open": {
+        alterpower(0, 100, 2000, 2000,
+        "Congratulations! You have found the treasure.\nYou are hereby awarded with 200% life force.",
+        "The interior is filled with meters and other strange appurtenances,\nbut nothing seems to happen.");
     }
 }
 object chain
@@ -101,7 +102,8 @@ object hole
     "small hole"
     "There is a small hole here."
 {
-    "open": { say("The hole opens and sucks you in.");
+    "open": {
+        say("The hole opens and sucks you in.");
         move(open, pu_soapfilm);
     }
     "take": {
@@ -176,15 +178,16 @@ object udk
     "There is a faded UDK here."
     "a faded copy of the university newspaper, the \"University Daily Kansan\""
 {
-    "read": { say.random(
-              10, "The UDK says, 'US declares war on Rusia'.",
-              5, "The UDK says, 'Radiation victims should go to the Reactor Center'.",
-              20, "The UDK says, 'KSU 50; KU 36'.",
-              10, "Too faded to read, but your hands are now covered with printer's ink.",
-              5, "'Rusia drops bomb; Chancellor says grounds WILL be watered.'",
-              15, "'Lawrence destroyed; Homecoming ruined.'",
-              100, "The hot wind blurs your eyes, preventing you from reading it."
-              );
+    "read": {
+        say.random(
+        10, "The UDK says, 'US declares war on Rusia'.",
+        5, "The UDK says, 'Radiation victims should go to the Reactor Center'.",
+        20, "The UDK says, 'KSU 50; KU 36'.",
+        10, "Too faded to read, but your hands are now covered with printer's ink.",
+        5, "'Rusia drops bomb; Chancellor says grounds WILL be watered.'",
+        15, "'Lawrence destroyed; Homecoming ruined.'",
+        100, "The hot wind blurs your eyes, preventing you from reading it."
+        );
     }
 }
 object newspaper
@@ -192,15 +195,16 @@ object newspaper
     "There is a faded newspaper here."
     "a faded copy of the university newspaper, the \"University Daily Kansan\""
 {
-    "read": { say.random(
-              10, "The UDK says, 'US declares war on Rusia'.",
-              5, "The UDK says, 'Radiation victims should go to the Reactor Center'.",
-              20, "The UDK says, 'KSU 50; KU 36'.",
-              10, "Too faded to read, but your hands are now covered with printer's ink.",
-              5, "'Rusia drops bomb; Chancellor says grounds WILL be watered.'",
-              15, "'Lawrence destroyed; Homecoming ruined.'",
-              100, "The hot wind blurs your eyes, preventing you from reading it."
-              );
+    "read": {
+        say.random(
+        10, "The UDK says, 'US declares war on Rusia'.",
+        5, "The UDK says, 'Radiation victims should go to the Reactor Center'.",
+        20, "The UDK says, 'KSU 50; KU 36'.",
+        10, "Too faded to read, but your hands are now covered with printer's ink.",
+        5, "'Rusia drops bomb; Chancellor says grounds WILL be watered.'",
+        15, "'Lawrence destroyed; Homecoming ruined.'",
+        100, "The hot wind blurs your eyes, preventing you from reading it."
+        );
     }
 }
 

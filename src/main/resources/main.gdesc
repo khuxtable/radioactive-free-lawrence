@@ -56,8 +56,6 @@ initial {
     setflag(meter, cant.take);
 
     player.power = 1000;
-    emerald.city.count = 3;
-
 }
 initial {
     goto(Ninth_Mississippi);

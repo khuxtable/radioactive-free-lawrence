@@ -1,5 +1,5 @@
 // When eating or drinking something
-proc consume obj disappears count minPower maxPower message emptyDescription {
+proc consume(obj, disappears, count, minPower, maxPower, message, emptyDescription) {
     var power = getrandom(minPower, maxPower);
     player.power += power;
     // I don't currently hae a way to implement the count, so assume 1 and disappears = true.
@@ -7,23 +7,17 @@ proc consume obj disappears count minPower maxPower message emptyDescription {
     say(message);
     break repeat;
 }
-proc useweapon affects rchance damage drain {
+proc useweapon(affects, rchance, damage, drain) {
     quip("nfw");
 }
-proc say.message msg {
-    quip(msg);
-}
-proc say.and.move mykey where msg {
-    if (key(mykey)) {
-        say(msg);
-        move(where);
-    }
-}
-proc beast.check bst where no.can.do {
+proc beast.check(beast, where, no.can.do) {
     //quip(no.can.do);
     move(where);
 }
-proc count.and.move countvar not.done destination destination.message {
+proc count.and.move(countvar, max, not.done, destination, destination.message) {
+    if (*countvar <= 0) {
+        *countvar = max;
+    }
     if (--*countvar > 0) {
         quip(not.done);
     } else {

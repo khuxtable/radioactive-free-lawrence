@@ -67,8 +67,8 @@ place potters
     you can see a leaning tower. The rest of the scenery is obscured by
     hillside."""
 {
-    "swim": { say.and.move(campanile, "Swimming in mud is difficult, but possible."); }
-    "crawl": { say.and.move(campanile, "The mud just barely supports your weight."); }
+    "swim": { move(campanile, "Swimming in mud is difficult, but possible."); }
+    "crawl": { move(campanile, "The mud just barely supports your weight."); }
     "back": { quip("Back? You can't even go forward."); }
     "down": { quip("That is really silly."); }
     "float": { quip("You do that really well."); }
@@ -277,7 +277,7 @@ place pu_zen1
     may be misinterpreted, but you can't tell since you have
     completely lost track of that train of thought."""
 {
-    "fire": { say.and.move(pu_zen2, "What is \"Fire\"?"); }
+    "fire": { move(pu_zen2, "What is \"Fire\"?"); }
     "north": { quip(what.is.north); }
     "south": { quip(what.is.south); }
     "east": { quip(what.is.east); }
@@ -297,7 +297,7 @@ place pu_zen2
     may be misinterpreted, but you can't tell since you have
     completely lost track of that train of thought."""
 {
-    "is": { say.and.move(pu_zen3, "What is \"Fire\"?"); }
+    "is": { move(pu_zen3, "What is \"Fire\"?"); }
     "north": { quip(what.is.north); }
     "south": { quip(what.is.south); }
     "east": { quip(what.is.east); }
@@ -317,7 +317,7 @@ place pu_zen3
     may be misinterpreted, but you can't tell since you have
     completely lost track of that train of thought."""
 {
-    "the": { say.and.move(pu_zen4, "What is \"Fire\"?"); }
+    "the": { move(pu_zen4, "What is \"Fire\"?"); }
     "north": { quip(what.is.north); }
     "south": { quip(what.is.south); }
     "east": { quip(what.is.east); }
@@ -337,7 +337,7 @@ place pu_zen4
     may be misinterpreted, but you can't tell since you have
     completely lost track of that train of thought."""
 {
-    "poppy": { say.and.move(potters, "That is 'Fire'?\nYour stomach lurches and you fall.\nGlup, squish, splat."); }
+    "poppy": { move(potters, "That is 'Fire'?\nYour stomach lurches and you fall.\nGlup, squish, splat."); }
     "north": { quip(what.is.north); }
     "south": { quip(what.is.south); }
     "east": { quip(what.is.east); }
@@ -480,10 +480,10 @@ place learned
     "north": { move(jayhawk_bookstore); }
     "south": { move(sunnyside_naismith); }
     "east": { move(visual_arts); }
-    "west": { say.and.move(reactor_pit1, "You trip and fall into the pit."); }
+    "west": { move(reactor_pit1, "You trip and fall into the pit."); }
     "up": { move(jayhawk_bookstore); }
     "down": { quip("The sides of the pit are to steep to climb."); }
-    "jump": { say.and.move(reactor, "You leap across the pit."); }
+    "jump": { move(reactor, "You leap across the pit."); }
 }
 place reactor
     """
@@ -514,12 +514,12 @@ place reactor_pit1
     unless you have claws. Littered around you are many
     broken bottles and tin cans."""
 {
-    "north": { say.and.move(reactor_pit2, "There is no way to go in that direction."); }
-    "south": { say.and.move(reactor_pit2, "There is no way to go in that direction."); }
-    "east": { say.and.move(reactor_pit2, "There is no way to go in that direction."); }
-    "west": { say.and.move(reactor_pit2, "There is no way to go in that direction."); }
-    "up": { say.and.move(reactor_pit2, "There is no way to go in that direction."); }
-    "down": { say.and.move(reactor_pit2, "There is no way to go in that direction."); }
+    "north": { move(reactor_pit2, "There is no way to go in that direction."); }
+    "south": { move(reactor_pit2, "There is no way to go in that direction."); }
+    "east": { move(reactor_pit2, "There is no way to go in that direction."); }
+    "west": { move(reactor_pit2, "There is no way to go in that direction."); }
+    "up": { move(reactor_pit2, "There is no way to go in that direction."); }
+    "down": { move(reactor_pit2, "There is no way to go in that direction."); }
 }
 place reactor_pit2
     """
@@ -528,12 +528,12 @@ place reactor_pit2
     unless you have claws. Littered around you are many
     broken bottles and tin cans."""
 {
-    "north": { say.and.move(reactor_pit3, "There is no way to go in that direction."); }
-    "south": { say.and.move(reactor_pit3, "There is no way to go in that direction."); }
-    "east": { say.and.move(reactor_pit3, "There is no way to go in that direction."); }
-    "west": { say.and.move(reactor_pit3, "There is no way to go in that direction."); }
-    "up": { say.and.move(reactor_pit3, "There is no way to go in that direction."); }
-    "down": { say.and.move(reactor_pit3, "There is no way to go in that direction."); }
+    "north": { move(reactor_pit3, "There is no way to go in that direction."); }
+    "south": { move(reactor_pit3, "There is no way to go in that direction."); }
+    "east": { move(reactor_pit3, "There is no way to go in that direction."); }
+    "west": { move(reactor_pit3, "There is no way to go in that direction."); }
+    "up": { move(reactor_pit3, "There is no way to go in that direction."); }
+    "down": { move(reactor_pit3, "There is no way to go in that direction."); }
 }
 place reactor_pit3
     """
@@ -542,12 +542,12 @@ place reactor_pit3
     unless you have claws. Littered around you are many
     broken bottles and tin cans."""
 {
-    "north": { say.and.move(fissure, "There is no way to go in that direction."); }
-    "south": { say.and.move(fissure, "There is no way to go in that direction."); }
-    "east": { say.and.move(fissure, "There is no way to go in that direction."); }
-    "west": { say.and.move(fissure, "There is no way to go in that direction."); }
-    "up": { say.and.move(reactor, "You finally find purchase and climb up."); }
-    "down": { say.and.move(fissure, "There is no way to go in that direction."); }
+    "north": { move(fissure, "There is no way to go in that direction."); }
+    "south": { move(fissure, "There is no way to go in that direction."); }
+    "east": { move(fissure, "There is no way to go in that direction."); }
+    "west": { move(fissure, "There is no way to go in that direction."); }
+    "up": { move(reactor, "You finally find purchase and climb up."); }
+    "down": { move(fissure, "There is no way to go in that direction."); }
 }
 place fissure
     """
@@ -992,7 +992,7 @@ place pit
     "west": { quip("Can you fly?"); }
     "up": { quip("You fall back down."); }
     "down": { move(scums); }
-    "fly": { say.and.move(scums, "Being unaccustomed to flying you soon fall."); }
+    "fly": { move(scums, "Being unaccustomed to flying you soon fall."); }
 }
 place rubbish
     """
@@ -1348,7 +1348,7 @@ place wizard_etc
     You are in the directory .Wizard.Etc. The only exit is up.
     There is a file here named 'Hints'"""
 {
-    "boot": { say.and.move(ninth_mississippi, "The lights dim and ..."); }
+    "boot": { move(ninth_mississippi, "The lights dim and ..."); }
     "open": { quip(try.boot); }
 }
 place yellow_brick_road
@@ -1371,7 +1371,7 @@ place emerald_city
     You are at the gates of a large emerald city.
     There is a pair of ruby slippers here."""
 {
-    "tap": { count.and.move(&emerald.city.count, "There's no place like home.", ninth_mississippi, bright.flash.and); }
+    "tap": { count.and.move(&emerald.city.count, 3, "There's no place like home.", ninth_mississippi, bright.flash.and); }
     "north": { quip("There is no way to go in that direction."); }
     "south": { quip("There is no way to go in that direction."); }
     "east": { quip("There is no way to go in that direction."); }

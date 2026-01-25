@@ -323,14 +323,14 @@ public class InternalFunctions {
 
 	@InternalFunction(name = "move")
 	public int move_(ExprNode... parameters) {
-		int place = parameters[parameters.length - 1] instanceof TextElementNode ?
-				gameData.getIntIdentifierValue(((TextElementNode) parameters[parameters.length - 1]).getText().toLowerCase()) :
-				parameters[parameters.length - 1].evaluate(gameData);
+		int place = parameters[0] instanceof TextElementNode ?
+				gameData.getIntIdentifierValue(((TextElementNode) parameters[0]).getText().toLowerCase()) :
+				parameters[0].evaluate(gameData);
+
 		if (parameters.length > 1) {
-			if (iskey(Arrays.copyOfRange(parameters, 0, parameters.length - 1)) == 0) {
-				return 0;
-			}
+			say_(Arrays.copyOfRange(parameters, 1, parameters.length));
 		}
+
 		gameData.setIntIdentifierValue("there", gameData.getIntIdentifierValue("here"));
 		gameData.setIntIdentifierValue("here", place);
 		gameData.setFlag(gameData.getIdentifierRefno("status"), gameData.getIntIdentifierValue("moved"));
