@@ -9,6 +9,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 
+import org.kathrynhuxtable.radiofreelawrence.game.exception.GameRuntimeException;
 import org.kathrynhuxtable.radiofreelawrence.game.grammar.GameGenerator;
 
 @RequiredArgsConstructor
@@ -42,7 +43,11 @@ public class RadioactiveFreeLawrenceApplication {
 				gameData.callInits();
 
 				for (; ; ) {
-					gameData.callRepeats();
+					try {
+						gameData.callRepeats();
+					} catch (GameRuntimeException e) {
+						e.printStackTrace(System.out);
+					}
 				}
 			} catch (Exception e) {
 				log.error(e.getMessage(), e);

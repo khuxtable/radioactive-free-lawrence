@@ -411,9 +411,23 @@ public class InternalFunctions {
 
 	@InternalFunction(name = "vocab")
 	public int vocab(ExprNode... text) {
-		// FIXME Implement this
-		// TODO Need a way to get "verbs" from places and objects.
-		return 0;
+		int here = gameData.getIntIdentifierValue("here");
+		for (String verb : gameData.places[here - gameData.floc].getCommands().keySet()) {
+			System.out.println(verb + " [here]");
+		}
+		for (String verb : gameData.gameNode.getActions().keySet()) {
+			System.out.println(verb + " [action]");
+		}
+		int inhand = gameData.getIntIdentifierValue("inhand");
+		for (int objRefno = gameData.fobj; objRefno < gameData.lobj; objRefno++) {
+			if (gameData.locations[objRefno - gameData.fobj] == inhand) {
+				ObjectNode objectNode = gameData.objects[objRefno - gameData.fobj];
+				for (String verb : objectNode.getCommands().keySet()) {
+					System.out.println(verb + " [" + objectNode.getName() + "]");
+				}
+			}
+		}
+		throw new BreakException(ControlType.REPEAT);
 	}
 
 	@InternalFunction(name = "tie")

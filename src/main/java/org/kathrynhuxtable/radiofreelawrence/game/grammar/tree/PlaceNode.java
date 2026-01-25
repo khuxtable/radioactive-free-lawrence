@@ -1,6 +1,7 @@
 package org.kathrynhuxtable.radiofreelawrence.game.grammar.tree;
 
 import java.util.List;
+import java.util.Map;
 
 import lombok.*;
 
@@ -17,7 +18,7 @@ public class PlaceNode implements BaseNode, HasRefno, VocabularyNode {
 
 	private String briefDescription;
 	private String longDescription;
-	private BlockNode code;
+	private Map<String, BlockNode> commands;
 
 	private int refno;
 	private SourceLocation sourceLocation;

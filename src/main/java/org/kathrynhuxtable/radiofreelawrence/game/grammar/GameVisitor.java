@@ -12,7 +12,10 @@ import java.util.stream.Collectors;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import org.antlr.v4.runtime.*;
+import org.antlr.v4.runtime.CharStream;
+import org.antlr.v4.runtime.CharStreams;
+import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
 import org.kathrynhuxtable.gdesc.parser.GameLexer;
@@ -361,7 +364,9 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 						.collect(Collectors.toList()))
 				.briefDescription(briefDescription)
 				.longDescription(longDescription)
-				.code((BlockNode) visit(ctx.optionalBlock()))
+				.commands(ctx.verbCommand().stream()
+						.map(vc -> (VerbCommandNode) visitVerbCommand(vc))
+						.collect(Collectors.toMap(VerbCommandNode::getVerb, VerbCommandNode::getBlock)))
 				.sourceLocation(new SourceLocation(ctx))
 				.build();
 		if (root.getIdentifiers().containsKey(node.getName())) {
@@ -398,7 +403,9 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 				.inventoryDescription(inventoryDescription)
 				.briefDescription(briefDescription)
 				.longDescription(longDescription)
-				.code((BlockNode) visit(ctx.optionalBlock()))
+				.commands(ctx.verbCommand().stream()
+						.map(vc -> (VerbCommandNode) visitVerbCommand(vc))
+						.collect(Collectors.toMap(VerbCommandNode::getVerb, VerbCommandNode::getBlock)))
 				.sourceLocation(new SourceLocation(ctx))
 				.build();
 		if (root.getIdentifiers().containsKey(node.getName())) {
@@ -420,6 +427,16 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 		}
 		root.getObjects().add(node);
 		return node;
+	}
+
+	// verb COLON block
+	@Override
+	public BaseNode visitVerbCommand(VerbCommandContext ctx) {
+		return VerbCommandNode.builder()
+				.verb(TextUtils.cleanStringLiteral(ctx.verb().getText()).toLowerCase())
+				.block(visitBlock(ctx.block()))
+				.sourceLocation(new SourceLocation(ctx))
+				.build();
 	}
 
 	// LBRACE statement* RBRACE

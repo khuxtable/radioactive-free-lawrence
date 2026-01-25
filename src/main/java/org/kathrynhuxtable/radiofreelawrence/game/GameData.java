@@ -485,19 +485,31 @@ public class GameData {
 		}
 	}
 
-	private void callPlace(PlaceNode idNode) {
-		if (idNode != null && idNode.getCode() != null) {
+	private void callPlace(PlaceNode placeNode) {
+		int refno = getIntIdentifierValue("arg1");
+		if (refno == 0) {
+			return;
+		}
+		BaseNode wordNode = getRefnoNode(refno);
+		if (wordNode == null) {
+			return;
+		}
+		String verb = null;
+		if (wordNode instanceof VerbNode verbNode) {
+			verb = verbNode.getName();
+		}
+		if (verb != null && placeNode != null && placeNode.getCommands().get(verb) != null) {
 			localVariables.newFunctionScope();
 
 			localVariables.addVariable(
 					"this",
 					NumberLiteralNode.builder()
-							.number(idNode.getRefno())
-							.sourceLocation(idNode.getSourceLocation())
+							.number(placeNode.getRefno())
+							.sourceLocation(placeNode.getSourceLocation())
 							.build());
 
 			try {
-				idNode.getCode().execute(this);
+				placeNode.getCommands().get(verb).execute(this);
 			} catch (BreakException | ContinueException e) {
 				if (e.getControlType() == ControlType.REPEAT) {
 					throw e;
@@ -511,19 +523,31 @@ public class GameData {
 		}
 	}
 
-	private void callObject(ObjectNode idNode) {
-		if (idNode != null && idNode.getCode() != null) {
+	private void callObject(ObjectNode objectNode) {
+		int refno = getIntIdentifierValue("arg1");
+		if (refno == 0) {
+			return;
+		}
+		BaseNode wordNode = getRefnoNode(refno);
+		if (wordNode == null) {
+			return;
+		}
+		String verb = null;
+		if (wordNode instanceof VerbNode verbNode) {
+			verb = verbNode.getName();
+		}
+		if (objectNode != null && objectNode.getCommands().get(verb) != null) {
 			localVariables.newFunctionScope();
 
 			localVariables.addVariable(
 					"this",
 					NumberLiteralNode.builder()
-							.number(idNode.getRefno())
-							.sourceLocation(idNode.getSourceLocation())
+							.number(objectNode.getRefno())
+							.sourceLocation(objectNode.getSourceLocation())
 							.build());
 
 			try {
-				idNode.getCode().execute(this);
+				objectNode.getCommands().get(verb).execute(this);
 			} catch (BreakException | ContinueException e) {
 				if (e.getControlType() == ControlType.REPEAT) {
 					throw e;
