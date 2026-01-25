@@ -335,7 +335,7 @@ public class GameData {
 	}
 
 	public boolean testFlag(ExprNode flagVar, long state) {
-		int refno = 0;
+		int refno;
 		if (flagVar instanceof IdentifierNode) {
 			refno = getIdentifierRefno(((IdentifierNode) flagVar).getName().toLowerCase());
 		} else {
