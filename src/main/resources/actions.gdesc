@@ -272,9 +272,6 @@ proc warp(self, rchance, dropChance) {
 action "die" {
     playerPower = -1;
 }
-action "read" "meter" {
-    quip("You have $ life force.", playerPower);
-}
 action "inventory" {
     var count;
     for (var optr : inhand) {
@@ -336,45 +333,4 @@ action "drop" {
 }
 action "vocabulary" {
     vocab();
-}
-action "swing" "axe" {
-
-}
-action "throw" "axe" {
-
-}
-action "eat" "banana" {
-
-}
-action "eat" "sandwich" {
-
-}
-action "open" "book" {
-    if (have(book)) {
-        quip("The pages are fused together.");
-    }
-}
-action "read" "book" {
-    if (have(book)) {
-        quip("The book is closed. The cover reads 'How to Survive a Nuclear War.'");
-    }
-}
-action "throw" "box" {
-//    "action": "AlterPower",
-//    "flag": 0,
-//    "chance": 100,
-//    "minPower": 2000,
-//    "maxPower": 2000,
-//    "success": "Congratulations! You have found the treasure.\nYou are hereby awarded with 200% life force.",
-//    "failure": "The interior is filled with meters and other strange appurtenances,\nbut nothing seems to happen."
-}
-action "open" "box" {
-
-}
-action "belt" "chain" {
-//    "action": "UseWeapon",
-//    "affects": 3,
-//    "chance": 50,
-//    "damage": 75,
-//    "drain": 0
 }

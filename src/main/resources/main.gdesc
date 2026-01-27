@@ -91,8 +91,22 @@ repeat {
     playerPower--;
     here();             // Execute code, if any, associated with this location
     arg1();             // Execute action verb, if any
+    var objVerb = 0;
     for (var optr : inhand) {
-        optr();         // Execute code, if any, associated with this object
+        for (var vptr : optr) {
+            if (vptr == arg1) {
+                if (optr == arg2) {
+                    optr();     // Found specific "verb object" match
+                } else if (objVerb > 0) {
+                    bailOut();  // We have a duplicate
+                } else  {
+                    objVerb = optr;
+                }
+            }
+        }
+    }
+    if (objVerb > 0) {
+        objVerb();
     }
     playerPower++;
 

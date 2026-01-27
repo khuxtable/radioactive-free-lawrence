@@ -30,11 +30,19 @@ public class EnhancedForStatementNode implements StatementNode {
 		gameData.localVariables.newBlockScope();
 		try {
 			int expr = expression.evaluate(gameData);
-			List<Integer> objects = new ArrayList<>();
-			if (expr >= gameData.floc && expr < gameData.lloc) {
+			List<Integer> refnos = new ArrayList<>();
+			if (expr >= gameData.fobj && expr < gameData.lobj) {
+				ObjectNode objectNode = gameData.objects[expr -  gameData.fobj];
+				for (String verb : objectNode.getCommands().keySet()) {
+					if (gameData.gameNode.verbs.containsKey(verb)) {
+						VocabularyNode vocabularyNode = gameData.gameNode.verbs.get(verb);
+						refnos.add(((HasRefno) vocabularyNode).getRefno());
+					}
+				}
+			} else if (expr >= gameData.floc && expr < gameData.lloc) {
 				for (int obj = gameData.fobj; obj < gameData.lobj; obj++) {
 					if (gameData.locations[obj - gameData.fobj] == expr) {
-						objects.add(obj);
+						refnos.add(obj);
 					}
 				}
 			}
@@ -44,9 +52,9 @@ public class EnhancedForStatementNode implements StatementNode {
 							.number(0)
 							.sourceLocation(sourceLocation)
 							.build());
-			for (Integer obj : objects) {
+			for (Integer refno : refnos) {
 				try {
-					gameData.localVariables.setLocalVariableValue(identifier.getName(), obj);
+					gameData.localVariables.setLocalVariableValue(identifier.getName(), refno);
 					statement.execute(gameData);
 				} catch (BreakException e) {
 					if (e.ignore(label)) {
