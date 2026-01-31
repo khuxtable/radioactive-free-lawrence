@@ -365,8 +365,17 @@ public class InternalFunctions {
 			if (parameters.length > 1) {
 				qualifier = parameters[1].evaluate(gameData);
 			}
+			int newline = 1;
+			if (parameters.length > 2) {
+				newline = parameters[2].evaluate(gameData);
+			}
 
-			System.out.println(gameData.expandText(text, qualifier));
+			String outputText = gameData.expandText(text, qualifier);
+			if (newline != 0) {
+				System.out.println(outputText);
+			} else {
+				System.out.print(outputText);
+			}
 		} catch (Exception e) {
 			throw new GameRuntimeException(parameters[0].getSourceLocation() + ": exception in 'say'", e);
 		}

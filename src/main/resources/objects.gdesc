@@ -2,15 +2,15 @@ object axe
     "small axe"
     "There is a small axe here."
 {
-    "swing": { useweapon(1, 40, 100, 0); }
-    "throw": { useweapon(1, 25, 75, 0); }
+    "swing": { useweapon(this, false, 1, 40, 100, 0); }
+    "throw": { useweapon(this, true, 1, 25, 75, 0); }
 }
 object hatchet
     "small hatchet"
     "There is a small hatchet here."
 {
-    "swing": { useweapon(1, 40, 100, 0); }
-    "throw": { useweapon(1, 25, 75, 0); }
+    "swing": { useweapon(this, false, 1, 40, 100, 0); }
+    "throw": { useweapon(this, true, 1, 25, 75, 0); }
 }
 object banana
     "slightly brown banana"
@@ -29,7 +29,7 @@ object box
     "box"
     "There is a locked box here."
 {
-    "throw": { useweapon(1, 50, 25, 0); }
+    "throw": { useweapon(this, true, 1, 50, 25, 0); }
     "open": {
         alterpower(0, 100, 2000, 2000,
         "Congratulations! You have found the treasure.\nYou are hereby awarded with 200% life force.",
@@ -40,22 +40,22 @@ object chain
     "chain"
     "There is a length of chain here."
 {
-    "belt": { useweapon(3, 50, 75, 0); }
+    "belt": { useweapon(this, false, 3, 50, 75, 0); }
 }
 object coke
     "coke can"
     "There is a can of coke here."
 {
     "drink": { consume(this, false, 1, 2, 50, "Things go better with coke, but only a little better.", "an empty coke can"); }
-    "throw": { useweapon(1, 50, 25, 0); }
+    "throw": { useweapon(this, true, 1, 50, 25, 0); }
 }
 object dagger
     "dagger"
     "There is a dagger here."
 {
-    "swing": { useweapon(1, 45, 50, 0); }
-    "stab": { useweapon(1, 45, 50, 0); }
-    "throw": { useweapon(1, 20, 50, 0); }
+    "swing": { useweapon(this, false, 1, 45, 50, 0); }
+    "stab": { useweapon(this, false, 1, 45, 50, 0); }
+    "throw": { useweapon(this, true, 1, 20, 50, 0); }
 }
 object glove
     "silk glove"
@@ -74,29 +74,29 @@ object grenade
     "There is a grenade here."
     "A grenade, which does not actually appear anywhere"
 {
-    "throw": { useweapon(9, 50, 200, 0); }
-    "hurl": { useweapon(9, 50, 200, 0); }
+    "throw": { useweapon(this, true, 9, 50, 200, 0); }
+    "hurl": { useweapon(this, true, 9, 50, 200, 0); }
 }
 object gun
     "gun"
     "There is a gun here."
 {
-    "shoot": { useweapon(1, 30, 200, 0); }
-    "fire": { useweapon(1, 30, 200, 0); }
+    "shoot": { useweapon(this, false, 1, 30, 200, 0); }
+    "fire": { useweapon(this, false, 1, 30, 200, 0); }
 }
 object pistol
     "pistol"
     "There is a pistol here."
 {
-    "shoot": { useweapon(1, 30, 200, 0); }
-    "fire": { useweapon(1, 30, 200, 0); }
+    "shoot": { useweapon(this, false, 1, 30, 200, 0); }
+    "fire": { useweapon(this, false, 1, 30, 200, 0); }
 }
 object revolver
     "revolver"
     "There is a revolver here."
 {
-    "shoot": { useweapon(1, 30, 200, 0); }
-    "fire": { useweapon(1, 30, 200, 0); }
+    "shoot": { useweapon(this, false, 1, 30, 200, 0); }
+    "fire": { useweapon(this, false, 1, 30, 200, 0); }
 }
 object hole
     "small hole"
@@ -122,19 +122,19 @@ object meteroid         // For wizard players
     "There is a life-force meteroid here. Cannot be dropped."
 {
     "read": { readmeter(); }
-//    "xsbar": { extendedcommand("xsbar"); }
-//    "xnusers": { extendedcommand("xnusers"); }
-//    "xdie": { extendedcommand("xdie"); }
-//    "xwho": { extendedcommand("xwho"); }
-//    "xbst": { extendedcommand("xbst"); }
-//    "xvocabulary": { extendedcommand("xvocabulary"); }
+    //    "xsbar": { extendedcommand("xsbar"); }
+    //    "xnusers": { extendedcommand("xnusers"); }
+    //    "xdie": { extendedcommand("xdie"); }
+    //    "xwho": { extendedcommand("xwho"); }
+    //    "xbst": { extendedcommand("xbst"); }
+    //    "xvocabulary": { extendedcommand("xvocabulary"); }
 }
 object rifle
     "rifle"
     "There is a rifle here."
 {
-    "shoot": { useweapon(1, 50, 300, 0); }
-    "fire": { useweapon(1, 50, 300, 0); }
+    "shoot": { useweapon(this, false, 1, 50, 300, 0); }
+    "fire": { useweapon(this, false, 1, 50, 300, 0); }
 }
 object sandwich
     "sandwich"
@@ -158,14 +158,14 @@ object sword
     "sword"
     "There is a sword here."
 {
-    "swing": { useweapon(1, 40, 100, 0); }
-    "stab": { useweapon(1, 40, 100, 0); }
+    "swing": { useweapon(this, false, 1, 40, 100, 0); }
+    "stab": { useweapon(this, false, 1, 40, 100, 0); }
 }
 object truncheon
     "truncheon"
     "There is a truncheon here."
 {
-    "swing": { useweapon(1, 40, 100, 0); }
+    "swing": { useweapon(this, false, 1, 40, 100, 0); }
 }
 object token
     "bus token"
@@ -215,3 +215,8 @@ object zapgun
     "warp": { warp(true, 50, 0); }
     "zap": { warp(false, 25, 0); }
 }
+    // NPC objects
+object guards
+    "guards"
+    "A group of armed guards."
+{}

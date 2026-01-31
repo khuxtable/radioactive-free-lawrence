@@ -15,7 +15,8 @@ flags place
 flags object
     seen,           // object flag, maintained by the kernel
     cantDrop,
-    cantTake;
+    cantTake,
+    isNpc;
 
 variable playerPower;
 variable emeraldCityCount;
@@ -49,11 +50,13 @@ initial {
     apport(sword, jayhawk_sunflower);
     apport(token, sunnyside_naismith);
     apport(udk, murphy); // copy
+    apport(guards, wescoe_cafeteria);
     apport(zapgun, wescoe_cafeteria);
 
     apport(meter, inhand);
     setflag(meter, cantDrop);
     setflag(meter, cantTake);
+    setflag(guards, isNpc);
 
     playerPower = 1000;
 }
