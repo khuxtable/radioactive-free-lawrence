@@ -1,9 +1,10 @@
 package org.kathrynhuxtable.radiofreelawrence.game.grammar.tree;
 
-import org.kathrynhuxtable.radiofreelawrence.game.GameData;
-import org.kathrynhuxtable.radiofreelawrence.game.exception.GameRuntimeException;
+import org.objectweb.asm.MethodVisitor;
+
+import org.kathrynhuxtable.radiofreelawrence.game.GameContext;
 
 public interface StatementNode extends BaseNode {
 
-	void execute(GameData gameData) throws GameRuntimeException;
+	void generate(MethodVisitor mv, GameContext gameContext);
 }

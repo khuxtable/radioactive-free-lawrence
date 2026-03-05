@@ -4,8 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.objectweb.asm.MethodVisitor;
 
-import org.kathrynhuxtable.radiofreelawrence.game.GameData;
+import org.kathrynhuxtable.radiofreelawrence.game.GameContext;
 import org.kathrynhuxtable.radiofreelawrence.game.grammar.SourceLocation;
 
 @Data
@@ -18,7 +19,7 @@ public class ArrayAccessNode implements ExprNode {
 	private SourceLocation sourceLocation;
 
 	@Override
-	public int evaluate(GameData gameData) {
-		return gameData.getArrayValue(arrayName, index.evaluate(gameData));
+	public void generate(MethodVisitor cw, GameContext gameContext) {
+
 	}
 }

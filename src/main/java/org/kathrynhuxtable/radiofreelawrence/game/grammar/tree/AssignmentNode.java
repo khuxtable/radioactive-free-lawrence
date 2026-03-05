@@ -4,9 +4,12 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.objectweb.asm.MethodVisitor;
 
-import org.kathrynhuxtable.radiofreelawrence.game.GameData;
+import org.kathrynhuxtable.radiofreelawrence.game.GameContext;
 import org.kathrynhuxtable.radiofreelawrence.game.grammar.SourceLocation;
+
+import static org.objectweb.asm.Opcodes.*;
 
 @Data
 @Builder
@@ -47,54 +50,34 @@ public class AssignmentNode implements ExprNode {
 	}
 
 	private AssignmentOperator assignmentOperator;
-	private ExprNode left;
+	private LValueNode left;
 	private ExprNode right;
 
 	private SourceLocation sourceLocation;
 
 	@Override
-	public int evaluate(GameData gameData) {
-		int value = right.evaluate(gameData);
+	public void generate(MethodVisitor mv, GameContext gameContext) {
+		if (assignmentOperator == AssignmentOperator.EQUAL) {
+			right.generate(mv, gameContext);
+		} else {
+			left.getExpr().generate(mv, gameContext);
+			right.generate(mv, gameContext);
 
-		switch (assignmentOperator) {
-		case EQUAL:
-			gameData.setLeftHandSide(left, value);
-			break;
-		case MUL_ASSIGN:
-			gameData.setLeftHandSide(left, left.evaluate(gameData) * value);
-			break;
-		case DIV_ASSIGN:
-			gameData.setLeftHandSide(left, left.evaluate(gameData) / value);
-			break;
-		case MOD_ASSIGN:
-			gameData.setLeftHandSide(left, left.evaluate(gameData) % value);
-			break;
-		case ADD_ASSIGN:
-			gameData.setLeftHandSide(left, left.evaluate(gameData) + value);
-			break;
-		case SUB_ASSIGN:
-			gameData.setLeftHandSide(left, left.evaluate(gameData) - value);
-			break;
-		case LSHIFT_ASSIGN:
-			gameData.setLeftHandSide(left, left.evaluate(gameData) << value);
-			break;
-		case RSHIFT_ASSIGN:
-			gameData.setLeftHandSide(left, left.evaluate(gameData) >> value);
-			break;
-		case URSHIFT_ASSIGN:
-			gameData.setLeftHandSide(left, left.evaluate(gameData) >>> value);
-			break;
-		case AND_ASSIGN:
-			gameData.setLeftHandSide(left, left.evaluate(gameData) & value);
-			break;
-		case XOR_ASSIGN:
-			gameData.setLeftHandSide(left, left.evaluate(gameData) ^ value);
-			break;
-		case OR_ASSIGN:
-			gameData.setLeftHandSide(left, left.evaluate(gameData) | value);
-			break;
+			switch (assignmentOperator) {
+			case DIV_ASSIGN -> mv.visitInsn(IDIV);
+			case MOD_ASSIGN -> mv.visitInsn(IREM);
+			case ADD_ASSIGN -> mv.visitInsn(IADD);
+			case SUB_ASSIGN -> mv.visitInsn(ISUB);
+			case LSHIFT_ASSIGN -> mv.visitInsn(ISHL);
+			case RSHIFT_ASSIGN -> mv.visitInsn(ISHR);
+			case URSHIFT_ASSIGN -> mv.visitInsn(IUSHR);
+			case AND_ASSIGN -> mv.visitInsn(IAND);
+			case XOR_ASSIGN -> mv.visitInsn(IXOR);
+			case OR_ASSIGN -> mv.visitInsn(IOR);
+			}
 		}
 
-		return value;
+		mv.visitInsn(DUP);
+		left.generate(mv, gameContext);
 	}
 }

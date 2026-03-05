@@ -1,18 +1,17 @@
 package org.kathrynhuxtable.radiofreelawrence.game.grammar.tree;
 
 import lombok.Data;
+import org.objectweb.asm.MethodVisitor;
 
-import org.kathrynhuxtable.radiofreelawrence.game.GameData;
-import org.kathrynhuxtable.radiofreelawrence.game.exception.GameRuntimeException;
+import org.kathrynhuxtable.radiofreelawrence.game.GameContext;
 import org.kathrynhuxtable.radiofreelawrence.game.grammar.SourceLocation;
 
 @Data
 public class EmptyStatementNode implements StatementNode {
-	private String label;
 	private SourceLocation sourceLocation;
 
 	@Override
-	public void execute(GameData gameData) throws GameRuntimeException {
+	public void generate(MethodVisitor mv, GameContext gameContext) {
 		// Nothing to do here.
 	}
 }

@@ -3,21 +3,27 @@ variable third;
 
 variable thingsHere[15];
 
+flags object one, two, xyzzy;
+flags place three, four;
+
 state alabama,
     texas = 5,
+    bogus,
     kansas = 2 + 6,
     missouri;
 state kentucky,
-    tennessee,
-    virginia = "move";
+    tennessee;
 state mytest = testMeNow(32);
 
+proc argSample(text foo, var bar) {
+    say(foo, bar);
+}
 
-proc testMeNow myArg {
-    say(ninth_mississippi);
+proc testMeNow(var myArg) {
+    say(noDirection);
     say("The arg is $", myArg);
-    say("this is {you_do}, so there!", axe);
-    say("[There are no/This is one/There are $] thing[s//s] here", 15);
+    say("this is {you_do}, so there!", missouri);
+    say("[There are no/There is one/There are $] thing[s//s] here", 15);
     var beans = 1;
     for (var iter = 0, j = 5; iter < 4; iter++, j++) {
         say("iter is $", iter);
@@ -25,17 +31,51 @@ proc testMeNow myArg {
         say("bar");
         beans += 1;
         if (beans == 3) {
+            myArg++;
             break;
         }
         say("baz");
     }
     say("beans is $", beans);
-    if (iter == 4) {
+    if (beans == 4) {
         return 14;
     } else {
         return 65;
     }
 }
+
+action "take" "inventory" {
+    say("take inventory here");
+//    "inventory"();     // Execute code associated with the INVENTORY command
+}
+
+object axe
+    "small axe"
+    "There is a small axe here."
+{
+    variable hits = 5;
+    action "swing" {
+//        useweapon(this, false, 1, 40, 100, 0);
+        say("I swing at you");
+        hits = hits + 2;
+    }
+    action "throw" {
+//        useweapon(this, true, 1, 25, 75, 0);
+        say("I throw at you");
+        first = hits;
+    }
+}
+
+initial {
+    say("Something");
+    say(1066);
+    say("mytest is ", mytest);
+}
+
+text noDirection
+    """
+    You can't tell directions here.
+    Try Up, Down, Left, Right, Forward, Backward""";
 
 fragment you_do
     "You #";

@@ -6,10 +6,13 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.objectweb.asm.Label;
+import org.objectweb.asm.MethodVisitor;
 
-import org.kathrynhuxtable.radiofreelawrence.game.GameData;
-import org.kathrynhuxtable.radiofreelawrence.game.exception.GameRuntimeException;
+import org.kathrynhuxtable.radiofreelawrence.game.GameContext;
 import org.kathrynhuxtable.radiofreelawrence.game.grammar.SourceLocation;
+
+import static org.objectweb.asm.Opcodes.*;
 
 @Data
 @Builder
@@ -22,16 +25,21 @@ public class IfStatementNode implements StatementNode {
 	private SourceLocation sourceLocation;
 
 	@Override
-	public void execute(GameData gameData) throws GameRuntimeException {
+	public void generate(MethodVisitor mv, GameContext gameContext) {
+		Label endLabel = new Label();
+
 		for (int i = 0; i < expressions.size(); i++) {
-			if (expressions.get(i).evaluate(gameData) != 0) {
-				thenStatements.get(i).execute(gameData);
-				return;
-			}
+			Label ifNotLabel = new Label();
+			expressions.get(i).generate(mv, gameContext);
+			mv.visitJumpInsn(IFEQ, ifNotLabel);
+			thenStatements.get(i).generate(mv, gameContext);
+			mv.visitLabel(ifNotLabel);
 		}
-		// Handle final else block
+
 		if (thenStatements.size() > expressions.size()) {
-			thenStatements.get(expressions.size()).execute(gameData);
+			thenStatements.get(expressions.size()).generate(mv, gameContext);
 		}
+
+		mv.visitLabel(endLabel);
 	}
 }

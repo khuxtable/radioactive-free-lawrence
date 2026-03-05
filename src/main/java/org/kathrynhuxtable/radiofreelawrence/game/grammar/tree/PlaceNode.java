@@ -4,14 +4,16 @@ import java.util.List;
 import java.util.Map;
 
 import lombok.*;
+import org.objectweb.asm.ClassVisitor;
 
+import org.kathrynhuxtable.radiofreelawrence.game.GameContext;
 import org.kathrynhuxtable.radiofreelawrence.game.grammar.SourceLocation;
 
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class PlaceNode implements BaseNode, HasRefno, VocabularyNode {
+public class PlaceNode implements DeclaratorNode, HasRefno, VocabularyNode {
 	private String name;
 	@Singular
 	private List<String> verbs;
@@ -22,4 +24,9 @@ public class PlaceNode implements BaseNode, HasRefno, VocabularyNode {
 
 	private int refno;
 	private SourceLocation sourceLocation;
+
+	@Override
+	public void generate(ClassVisitor cv, GameContext gameContext) {
+
+	}
 }

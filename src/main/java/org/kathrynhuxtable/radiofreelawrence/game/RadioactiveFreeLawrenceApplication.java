@@ -1,7 +1,10 @@
 package org.kathrynhuxtable.radiofreelawrence.game;
 
+import java.io.FileOutputStream;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.objectweb.asm.ClassWriter;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -11,6 +14,8 @@ import org.springframework.context.annotation.ComponentScan;
 
 import org.kathrynhuxtable.radiofreelawrence.game.exception.GameRuntimeException;
 import org.kathrynhuxtable.radiofreelawrence.game.grammar.GameGenerator;
+import org.kathrynhuxtable.radiofreelawrence.game.grammar.GameVisitor;
+import org.kathrynhuxtable.radiofreelawrence.game.grammar.tree.ObjectNode;
 
 @RequiredArgsConstructor
 @SpringBootApplication
@@ -19,7 +24,7 @@ import org.kathrynhuxtable.radiofreelawrence.game.grammar.GameGenerator;
 public class RadioactiveFreeLawrenceApplication {
 
 	private final GameGenerator gameGenerator;
-	private final GameData gameData;
+	private final GameContext gameContext = new GameContext();
 
 	public static void main(String[] args) {
 		SpringApplication.run(RadioactiveFreeLawrenceApplication.class, args);
@@ -37,21 +42,32 @@ public class RadioactiveFreeLawrenceApplication {
 //				System.out.println(beanName);
 //			}
 
-			try {
-				gameGenerator.generate();
+			GameVisitor visitor = new GameVisitor(gameContext.gameNode, gameContext.errorReporter);
+			visitor.readFile("foo.gdesc", false);
 
-				gameData.callInits();
+			// Generate main Game class
+			ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_FRAMES | ClassWriter.COMPUTE_MAXS);
+			gameContext.gameNode.generate(cw, gameContext);
 
-				for (; ; ) {
-					try {
-						gameData.callRepeats();
-					} catch (GameRuntimeException e) {
-						e.printStackTrace(System.out);
-					}
-				}
-			} catch (Exception e) {
-				log.error(e.getMessage(), e);
+			byte[] bytes = cw.toByteArray();
+			FileOutputStream out = new FileOutputStream("target/classes/" + GameContext.GAME_CLASS_NAME + ".class");
+			out.write(bytes);
+			out.close();
+
+			// Generate object inner classes
+			for (ObjectNode objectNode : gameContext.gameNode.getObjects()) {
+				ClassWriter innerCw = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
+				objectNode.generate(innerCw, gameContext);
+				byte[] innerBytes = innerCw.toByteArray();
+				FileOutputStream innerOut = new FileOutputStream(
+						"target/classes/" + GameContext.GAME_CLASS_NAME + "$" + objectNode.getName() + ".class");
+				innerOut.write(innerBytes);
+				innerOut.close();
 			}
+
+			new GameRunner().run(gameContext);
+
+			System.exit(0);
 		};
 	}
 

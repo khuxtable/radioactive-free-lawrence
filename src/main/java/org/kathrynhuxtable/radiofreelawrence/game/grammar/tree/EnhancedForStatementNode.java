@@ -7,12 +7,15 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.objectweb.asm.Label;
+import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.Type;
+import org.objectweb.asm.commons.LocalVariablesSorter;
 
-import org.kathrynhuxtable.radiofreelawrence.game.GameData;
-import org.kathrynhuxtable.radiofreelawrence.game.exception.BreakException;
-import org.kathrynhuxtable.radiofreelawrence.game.exception.ContinueException;
-import org.kathrynhuxtable.radiofreelawrence.game.exception.GameRuntimeException;
+import org.kathrynhuxtable.radiofreelawrence.game.GameContext;
 import org.kathrynhuxtable.radiofreelawrence.game.grammar.SourceLocation;
+import org.kathrynhuxtable.radiofreelawrence.game.grammar.VariableContext;
+import org.kathrynhuxtable.radiofreelawrence.game.grammar.VariableContext.VariableType;
 
 @Data
 @Builder
@@ -26,84 +29,62 @@ public class EnhancedForStatementNode implements StatementNode {
 	private SourceLocation sourceLocation;
 
 	@Override
-	public void execute(GameData gameData) throws GameRuntimeException {
-		gameData.localVariables.newBlockScope();
-		try {
-			int expr = expression.evaluate(gameData);
-			List<Integer> refnos = new ArrayList<>();
-			if (expr >= gameData.fobj && expr < gameData.lobj) {
-				ObjectNode objectNode = gameData.objects[expr -  gameData.fobj];
-				for (String verb : objectNode.getCommands().keySet()) {
-					if (gameData.gameNode.verbs.containsKey(verb)) {
-						VocabularyNode vocabularyNode = gameData.gameNode.verbs.get(verb);
-						refnos.add(((HasRefno) vocabularyNode).getRefno());
-					}
-				}
-			} else if (expr >= gameData.floc && expr < gameData.lloc) {
-				for (int obj = gameData.fobj; obj < gameData.lobj; obj++) {
-					if (gameData.locations[obj - gameData.fobj] == expr) {
-						refnos.add(obj);
-					}
-				}
-			}
-			gameData.localVariables.addVariable(
-					identifier.getName(),
-					NumberLiteralNode.builder()
-							.number(0)
-							.sourceLocation(sourceLocation)
-							.build());
-			for (Integer refno : refnos) {
-				try {
-					gameData.localVariables.setLocalVariableValue(identifier.getName(), refno);
-					statement.execute(gameData);
-				} catch (BreakException e) {
-					if (e.ignore(label)) {
-						throw e;
-					} else {
-						break;
-					}
-				} catch (ContinueException e) {
-					if (e.ignore(label)) {
-						throw e;
-					}
-					// Implicit continue
-				}
-			}
-		} finally {
-			gameData.localVariables.closeBlockScope();
-		}
+	public void generate(MethodVisitor mv, GameContext gameContext) {
+		gameContext.variableStore.newBlockScope();
+		Label beginLabel = new Label();
+		Label endLabel = new Label();
+
+		mv.visitLabel(beginLabel);
+		VariableContext variableContext = gameContext.variableStore.addVariable(
+				identifier.getName(),
+				VariableType.REFERENCE);
+
+		expression.generate(mv, gameContext);
+
+		// Need to know the type being iterated over.
+		variableContext.setIndex(((LocalVariablesSorter) mv).newLocal(Type.getObjectType("foo")));
+//				NumberLiteralNode.builder()
+//						.number(0)
+//						.sourceLocation(sourceLocation)
+//						.build());
+		List<Integer> refnos = new ArrayList<>();
+		// If exp is an object
+//		if (expr >= gameData.fobj && expr < gameData.lobj) {
+//			ObjectNode objectNode = gameData.objects[expr - gameData.fobj];
+//			for (String verb : objectNode.getCommands().keySet()) {
+//				if (gameData.gameNode.verbs.containsKey(verb)) {
+//					VocabularyNode vocabularyNode = gameData.gameNode.verbs.get(verb);
+//					refnos.add(((HasRefno) vocabularyNode).getRefno());
+//				}
+//			}
+//			// If expr is a place
+//		} else if (expr >= gameData.floc && expr < gameData.lloc) {
+//			for (int obj = gameData.fobj; obj < gameData.lobj; obj++) {
+//				if (gameData.locations[obj - gameData.fobj] == expr) {
+//					refnos.add(obj);
+//				}
+//			}
+//		}
+
+//		for (Integer refno : refnos) {
+//			try {
+//				gameData.localVariables.setLocalVariableValue(identifier.getName(), new ReferenceLiteral(refno));
+//				statement.execute(gameData);
+//			} catch (BreakException e) {
+//				if (e.ignore(label)) {
+//					throw e;
+//				} else {
+//					break;
+//				}
+//			} catch (ContinueException e) {
+//				if (e.ignore(label)) {
+//					throw e;
+//				}
+//				// Implicit continue
+//			}
+//		}
+
+		mv.visitLabel(endLabel);
+		gameContext.variableStore.closeBlockScope(mv, beginLabel, endLabel);
 	}
-
-/*
-ITOBJ varname [{placename|varname*}] [objflag]
-Execute the following code up to the matching FIN repeatedly, with
-the value of the nominated "loop variable" becoming a reference to
-objects satisfying the optional location and/of flag/state constraints (or
-all object, if no constraints specified) in the order of their declaration.
-
-ITPLACE varname [{placename1|varname1*}, {placename2|varname2*}]
-Execute the following code up to the matching FIN repeatedly, with
-the value of the nominated "loop variable" running through the
-specified range of locations (default all declared locations) in the
-order of their declaration.
-
-ITERATE varname, {entname1|varname1*|const1}, {entname2|varname2*|const2}
-Execute the following code up to the matching FIN repeatedly, with
-the value of the nominated "loop variable" running through all values
-from entname1 to entname2 inclusive. If either of the two range
-delimiting entnames is a variable, its value is used as the appropriate
-loop boundary (this may but need not be the reference number of
-some other entity). If either is a constant, the value of the constant is
-used. Otherwise, the reference number of the nominated entity is used.
-
-DOALL [{placename|varname*}] [objflag]
-DOALL starts off a do-all loop, in which the REPEAT cycle is
-repeated, but instead of querying the player for input, input is
-constructed out of the verb in ARG1 and the next object fitting the
-specified criteria. The loop is terminated either when no more objects
-fit the criteria or when the FLUSH directive is executed.
-
-FLUSH
-Abort the do-all loop if one executing and flush the command line buffer.
- */
 }

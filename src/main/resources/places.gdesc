@@ -6,9 +6,9 @@ place ninth_mississippi
     Southward, KU can be seen, a tattered flag waving over Fraser Hall.
     To the east are the remains of downtown Lawrence."""
 {
-    "south": { move(stadium); }
-    "east": { move(joes); }
-    "north": { quip(noDirection); }
+    action "south" { move(stadium); }
+    action "east" { move(joes); }
+    action "north" { quip(noDirection); }
 }
 place joes
     "You are outside Joe's Bakery."
@@ -17,9 +17,9 @@ place joes
     Above it a sign reads 'OES AKE'. The door is bolted but
     a large window is broken out."""
 {
-    "window": { move(in_joes); }
-    "west": { move(ninth_mississippi); }
-    "east": { move(dg_bank); }
+    action "window" { move(in_joes); }
+    action "west" { move(ninth_mississippi); }
+    action "east" { move(dg_bank); }
 }
 place in_joes
     "You are inside Joe's."
@@ -27,7 +27,7 @@ place in_joes
     You are inside Joe's.
     You find a display rack containing the petrified remains of donuts."""
 {
-    "exit": { move(joes); }
+    action "exit" { move(joes); }
 }
 place stadium
     "You are standing at the corner of 11th and Mississippi."
@@ -38,11 +38,11 @@ place stadium
     To the south, Spencer Art Museum remains standing, and flags (albeit
     tattered) still fly above Fraser Hall."""
 {
-    "north": { move(ninth_mississippi); }
-    "south": { move(mississippi); }
-    "east": { move(stadium_apartments); }
-    "southwest": { move(campanile); }
-    "up": { move(yellow_brick_road); }
+    action "north" { move(ninth_mississippi); }
+    action "south" { move(mississippi); }
+    action "east" { move(stadium_apartments); }
+    action "southwest" { move(campanile); }
+    action "up" { move(yellow_brick_road); }
 }
 place campanile
     "You are at the campanile."
@@ -54,11 +54,11 @@ place campanile
     sits to the north. A large mud puddle bubbles gently to the north west.
     A few intact buildings are just to the west."""
 {
-    "north": { move(stadium); }
-    "northwest": { move(potters); }
-    "east": { move(spencer); }
-    "west": { move(carruth_oleary); }
-    "down": { move(sewer); }
+    action "north" { move(stadium); }
+    action "northwest" { move(potters); }
+    action "east" { move(spencer); }
+    action "west" { move(carruth_oleary); }
+    action "down" { move(sewer); }
 }
 place potters
     """
@@ -67,16 +67,16 @@ place potters
     you can see a leaning tower. The rest of the scenery is obscured by
     hillside."""
 {
-    "swim": { move(campanile, "Swimming in mud is difficult, but possible."); }
-    "crawl": { move(campanile, "The mud just barely supports your weight."); }
-    "back": { quip("Back? You can't even go forward."); }
-    "down": { quip("That is really silly."); }
-    "float": { quip("You do that really well."); }
-    "jump": { quip("It didn't do the frogs any good."); }
-    "north": { quip("You can't walk through the mud any farther."); }
-    "south": { quip("You can't walk through the mud any farther."); }
-    "west": { quip("You can't walk through the mud any farther."); }
-    "east": { quip("You can't walk back to the bank."); }
+    action "swim" { move(campanile, "Swimming in mud is difficult, but possible."); }
+    action "crawl" { move(campanile, "The mud just barely supports your weight."); }
+    action "back" { quip("Back? You can't even go forward."); }
+    action "down" { quip("That is really silly."); }
+    action "float" { quip("You do that really well."); }
+    action "jump" { quip("It didn't do the frogs any good."); }
+    action "north" { quip("You can't walk through the mud any farther."); }
+    action "south" { quip("You can't walk through the mud any farther."); }
+    action "west" { quip("You can't walk through the mud any farther."); }
+    action "east" { quip("You can't walk back to the bank."); }
 }
 place carruth_oleary
     """
@@ -84,8 +84,8 @@ place carruth_oleary
     torn, spindled, and mutilated pieces of paper. You can see the
     campanile to the east and a path leads south."""
 {
-    "east": { move(campanile); }
-    "south": { move(fountain); }
+    action "east" { move(campanile); }
+    action "south" { move(fountain); }
 }
 place mississippi
     """
@@ -93,10 +93,10 @@ place mississippi
     To the north, smoke rises above 9th street.
     Campus is to the South, a large crater where Strong Hall once stood."""
 {
-    "north": { move(stadium); }
-    "south": { move(steel_door); }
-    "east": { move(union); }
-    "west": { move(spencer); }
+    action "north" { move(stadium); }
+    action "south" { move(steel_door); }
+    action "east" { move(union); }
+    action "west" { move(spencer); }
 }
 place steel_door
     """
@@ -104,30 +104,30 @@ place steel_door
     A square hole in the door emits an eerie light and faint noises
     can be heard, but a snarling German Shepherd keeps you from the door."""
 {
-    "south": { move(jayhawk_sunflower); }
-    "north": { move(mississippi); }
-    "pet": { move(entrance); }
-    "east": { quip("The dog growls aggressively and snaps at you."); }
-    "open": { quip("The dog snaps at your hand before you can open the door."); }
+    action "south" { move(jayhawk_sunflower); }
+    action "north" { move(mississippi); }
+    action "pet" { move(entrance); }
+    action "east" { quip("The dog growls aggressively and snaps at you."); }
+    action "open" { quip("The dog snaps at your hand before you can open the door."); }
 }
 place spencer
     """
     You are standing in front of Spencer Museum.
     The building remains remarkably intact."""
 {
-    "south": { move(jayhawk_sunflower); }
-    "west": { move(campanile); }
-    "east": { move(mississippi); }
-    "in": { move(in_spencer); }
-    "enter": { move(in_spencer); }
-    "north": { quip("The way is blocked by rubble."); }
+    action "south" { move(jayhawk_sunflower); }
+    action "west" { move(campanile); }
+    action "east" { move(mississippi); }
+    action "in" { move(in_spencer); }
+    action "enter" { move(in_spencer); }
+    action "north" { quip("The way is blocked by rubble."); }
 }
 place in_spencer
     """
     You are inside the main entrance of Spencer Art Museum.
     I can't remember the layout, so you'll have to leave."""
 {
-    "exit": { move(mississippi); }
+    action "exit" { move(mississippi); }
 }
 place pterodactyl
     """
@@ -137,10 +137,10 @@ place pterodactyl
     a large crater filled with debris. This was Strong Hall.
     To the south, Wescoe Hall remains, squat and sullen."""
 {
-    "south": { move(north_wescoe); }
-    "east": { move(jayhawk_sunflower); }
-    "west": { move(fountain); }
-    "north": { quip("You could get hurt down there."); }
+    action "south" { move(north_wescoe); }
+    action "east" { move(jayhawk_sunflower); }
+    action "west" { move(fountain); }
+    action "north" { quip("You could get hurt down there."); }
 }
 place north_wescoe
     """
@@ -149,10 +149,10 @@ place north_wescoe
     perhaps from a religious service. There is a stairway
     leading down a floor under the building."""
 {
-    "north": { move(pterodactyl); }
-    "east": { move(east_wescoe); }
-    "west": { move(fountain); }
-    "down": { move(south_wescoe); }
+    action "north" { move(pterodactyl); }
+    action "east" { move(east_wescoe); }
+    action "west" { move(fountain); }
+    action "down" { move(south_wescoe); }
 }
 place south_wescoe
     """
@@ -162,17 +162,17 @@ place south_wescoe
     To the south you can see Malott hall, and
     beyond that the Computing Center."""
 {
-    "south": { move(malott); }
-    "east": { move(east_wescoe); }
-    "west": { move(visual_arts); }
-    "up": { move(north_wescoe); }
-    "down": { move(acc); }
-    "enter": { beastCheck(guards, wescoe_cafeteria, "The guards prevent you from entering."); }
+    action "south" { move(malott); }
+    action "east" { move(east_wescoe); }
+    action "west" { move(visual_arts); }
+    action "up" { move(north_wescoe); }
+    action "down" { move(acc); }
+    action "enter" { beastCheck(guards, wescoe_cafeteria, "The guards prevent you from entering."); }
 }
 place wescoe_cafeteria
     "You are in the Wescoe Cafeteria."
 {
-    "exit": { move(south_wescoe); }
+    action "exit" { move(south_wescoe); }
 }
 place malott
     """
@@ -180,12 +180,12 @@ place malott
     The air smells terrible here. Possibly there are poisonous
     gasses escaping from their tanks."""
 {
-    "north": { move(south_wescoe); }
-    "south": { move(sunnyside); }
-    "east": { move(acc); }
-    "west": { move(murphy); }
-    "up": { move(south_wescoe); }
-    "down": { move(acc); }
+    action "north" { move(south_wescoe); }
+    action "south" { move(sunnyside); }
+    action "east" { move(acc); }
+    action "west" { move(murphy); }
+    action "up" { move(south_wescoe); }
+    action "down" { move(acc); }
 }
 place pu_soap_film
     """
@@ -194,15 +194,15 @@ place pu_soap_film
     of the bubble appear to warp and distort in a fantastically
     complex pattern."""
 {
-    "up": { move(pu_lsd); }
-    "down": { move(pu_mist); }
-    "left": { move(pu_shrooms); }
-    "right": { move(pu_space); }
-    "forward": { move(pu_vomit); }
-    "north": { quip(noDirection); }
-    "south": { quip(noDirection); }
-    "east": { quip(noDirection); }
-    "west": { quip(noDirection); }
+    action "up" { move(pu_lsd); }
+    action "down" { move(pu_mist); }
+    action "left" { move(pu_shrooms); }
+    action "right" { move(pu_space); }
+    action "forward" { move(pu_vomit); }
+    action "north" { quip(noDirection); }
+    action "south" { quip(noDirection); }
+    action "east" { quip(noDirection); }
+    action "west" { quip(noDirection); }
 }
 place pu_warm_fuzzy
     """
@@ -210,15 +210,15 @@ place pu_warm_fuzzy
     of warm fuzzy stuff, which floats around caressing you.
     It is difficult to see very far here."""
 {
-    "up": { move(pu_soap_film); }
-    "down": { move(pu_ms); }
-    "left": { move(pu_shrooms); }
-    "right": { move(pu_space); }
-    "forward": { move(pu_mist); }
-    "north": { quip(noDirection); }
-    "south": { quip(noDirection); }
-    "east": { quip(noDirection); }
-    "west": { quip(noDirection); }
+    action "up" { move(pu_soap_film); }
+    action "down" { move(pu_ms); }
+    action "left" { move(pu_shrooms); }
+    action "right" { move(pu_space); }
+    action "forward" { move(pu_mist); }
+    action "north" { quip(noDirection); }
+    action "south" { quip(noDirection); }
+    action "east" { quip(noDirection); }
+    action "west" { quip(noDirection); }
 }
 place pu_shrooms
     """
@@ -227,15 +227,15 @@ place pu_shrooms
     the stripes merge into a vortex-like funnel, with many
     craters."""
 {
-    "up": { move(pu_soap_film); }
-    "down": { move(pu_ms); }
-    "left": { move(pu_lsd); }
-    "right": { move(pu_mist); }
-    "forward": { move(pu_vomit); }
-    "north": { quip(noDirection); }
-    "south": { quip(noDirection); }
-    "east": { quip(noDirection); }
-    "west": { quip(noDirection); }
+    action "up" { move(pu_soap_film); }
+    action "down" { move(pu_ms); }
+    action "left" { move(pu_lsd); }
+    action "right" { move(pu_mist); }
+    action "forward" { move(pu_vomit); }
+    action "north" { quip(noDirection); }
+    action "south" { quip(noDirection); }
+    action "east" { quip(noDirection); }
+    action "west" { quip(noDirection); }
 }
 place pu_space
     """
@@ -243,15 +243,15 @@ place pu_space
     to determine distances here. Behind you, you can make
     out a large tan blob. To your left, you can see some mist."""
 {
-    "up": { move(pu_soap_film); }
-    "down": { move(pu_ms); }
-    "left": { move(pu_mist); }
-    "right": { move(pu_lsd); }
-    "forward": { move(pu_vomit); }
-    "north": { quip(noDirection); }
-    "south": { quip(noDirection); }
-    "east": { quip(noDirection); }
-    "west": { quip(noDirection); }
+    action "up" { move(pu_soap_film); }
+    action "down" { move(pu_ms); }
+    action "left" { move(pu_mist); }
+    action "right" { move(pu_lsd); }
+    action "forward" { move(pu_vomit); }
+    action "north" { quip(noDirection); }
+    action "south" { quip(noDirection); }
+    action "east" { quip(noDirection); }
+    action "west" { quip(noDirection); }
 }
 place pu_mist
     """
@@ -259,15 +259,15 @@ place pu_mist
     foggy and you can only see a few feet in any direction.
     Since there is nothing to see, this may not be a problem."""
 {
-    "up": { move(pu_soap_film); }
-    "down": { move(pu_core); }
-    "left": { move(pu_shrooms); }
-    "right": { move(pu_space); }
-    "forward": { move(pu_zen1); }
-    "north": { quip(noDirection); }
-    "south": { quip(noDirection); }
-    "east": { quip(noDirection); }
-    "west": { quip(noDirection); }
+    action "up" { move(pu_soap_film); }
+    action "down" { move(pu_core); }
+    action "left" { move(pu_shrooms); }
+    action "right" { move(pu_space); }
+    action "forward" { move(pu_zen1); }
+    action "north" { quip(noDirection); }
+    action "south" { quip(noDirection); }
+    action "east" { quip(noDirection); }
+    action "west" { quip(noDirection); }
 }
 place pu_zen1
     """
@@ -277,17 +277,17 @@ place pu_zen1
     may be misinterpreted, but you can't tell since you have
     completely lost track of that train of thought."""
 {
-    "fire": { move(pu_zen2, "What is \"Fire\"?"); }
-    "north": { quip(whatIsNorth); }
-    "south": { quip(whatIsSouth); }
-    "east": { quip(whatIsEast); }
-    "west": { quip(whatIsWest); }
-    "up": { quip(whatIsUp); }
-    "down": { quip(whatIsDown); }
-    "left": { quip(whatIsLeft); }
-    "right": { quip(whatIsRight); }
-    "forward": { quip(whatIsForward); }
-    "backward": { quip(whatIsBackward); }
+    action "fire" { move(pu_zen2, "What is \"Fire\"?"); }
+    action "north" { quip(whatIsNorth); }
+    action "south" { quip(whatIsSouth); }
+    action "east" { quip(whatIsEast); }
+    action "west" { quip(whatIsWest); }
+    action "up" { quip(whatIsUp); }
+    action "down" { quip(whatIsDown); }
+    action "left" { quip(whatIsLeft); }
+    action "right" { quip(whatIsRight); }
+    action "forward" { quip(whatIsForward); }
+    action "backward" { quip(whatIsBackward); }
 }
 place pu_zen2
     """
@@ -297,17 +297,17 @@ place pu_zen2
     may be misinterpreted, but you can't tell since you have
     completely lost track of that train of thought."""
 {
-    "is": { move(pu_zen3, "What is \"Fire\"?"); }
-    "north": { quip(whatIsNorth); }
-    "south": { quip(whatIsSouth); }
-    "east": { quip(whatIsEast); }
-    "west": { quip(whatIsWest); }
-    "up": { quip(whatIsUp); }
-    "down": { quip(whatIsDown); }
-    "left": { quip(whatIsLeft); }
-    "right": { quip(whatIsRight); }
-    "forward": { quip(whatIsForward); }
-    "backward": { quip(whatIsBackward); }
+    action "is" { move(pu_zen3, "What is \"Fire\"?"); }
+    action "north" { quip(whatIsNorth); }
+    action "south" { quip(whatIsSouth); }
+    action "east" { quip(whatIsEast); }
+    action "west" { quip(whatIsWest); }
+    action "up" { quip(whatIsUp); }
+    action "down" { quip(whatIsDown); }
+    action "left" { quip(whatIsLeft); }
+    action "right" { quip(whatIsRight); }
+    action "forward" { quip(whatIsForward); }
+    action "backward" { quip(whatIsBackward); }
 }
 place pu_zen3
     """
@@ -317,17 +317,17 @@ place pu_zen3
     may be misinterpreted, but you can't tell since you have
     completely lost track of that train of thought."""
 {
-    "the": { move(pu_zen4, "What is \"Fire\"?"); }
-    "north": { quip(whatIsNorth); }
-    "south": { quip(whatIsSouth); }
-    "east": { quip(whatIsEast); }
-    "west": { quip(whatIsWest); }
-    "up": { quip(whatIsUp); }
-    "down": { quip(whatIsDown); }
-    "left": { quip(whatIsLeft); }
-    "right": { quip(whatIsRight); }
-    "forward": { quip(whatIsForward); }
-    "backward": { quip(whatIsBackward); }
+    action "the" { move(pu_zen4, "What is \"Fire\"?"); }
+    action "north" { quip(whatIsNorth); }
+    action "south" { quip(whatIsSouth); }
+    action "east" { quip(whatIsEast); }
+    action "west" { quip(whatIsWest); }
+    action "up" { quip(whatIsUp); }
+    action "down" { quip(whatIsDown); }
+    action "left" { quip(whatIsLeft); }
+    action "right" { quip(whatIsRight); }
+    action "forward" { quip(whatIsForward); }
+    action "backward" { quip(whatIsBackward); }
 }
 place pu_zen4
     """
@@ -337,17 +337,17 @@ place pu_zen4
     may be misinterpreted, but you can't tell since you have
     completely lost track of that train of thought."""
 {
-    "poppy": { move(potters, "That is 'Fire'?\nYour stomach lurches and you fall.\nGlup, squish, splat."); }
-    "north": { quip(whatIsNorth); }
-    "south": { quip(whatIsSouth); }
-    "east": { quip(whatIsEast); }
-    "west": { quip(whatIsWest); }
-    "up": { quip(whatIsUp); }
-    "down": { quip(whatIsDown); }
-    "left": { quip(whatIsLeft); }
-    "right": { quip(whatIsRight); }
-    "forward": { quip(whatIsForward); }
-    "backward": { quip(whatIsBackward); }
+    action "poppy" { move(potters, "That is 'Fire'?\nYour stomach lurches and you fall.\nGlup, squish, splat."); }
+    action "north" { quip(whatIsNorth); }
+    action "south" { quip(whatIsSouth); }
+    action "east" { quip(whatIsEast); }
+    action "west" { quip(whatIsWest); }
+    action "up" { quip(whatIsUp); }
+    action "down" { quip(whatIsDown); }
+    action "left" { quip(whatIsLeft); }
+    action "right" { quip(whatIsRight); }
+    action "forward" { quip(whatIsForward); }
+    action "backward" { quip(whatIsBackward); }
 }
 place pu_lsd
     """
@@ -356,15 +356,15 @@ place pu_lsd
     to the left ahead of you. The funnel is pocked with numerous
     craters, some of which are big enough to swallow a hole."""
 {
-    "forward": { move(pu_ms); }
-    "down": { move(pu_soap_film); }
-    "left": { move(pu_shrooms); }
-    "right": { move(pu_space); }
-    "up": { move(pu_vomit); }
-    "north": { quip(noDirection); }
-    "south": { quip(noDirection); }
-    "east": { quip(noDirection); }
-    "west": { quip(noDirection); }
+    action "forward" { move(pu_ms); }
+    action "down" { move(pu_soap_film); }
+    action "left" { move(pu_shrooms); }
+    action "right" { move(pu_space); }
+    action "up" { move(pu_vomit); }
+    action "north" { quip(noDirection); }
+    action "south" { quip(noDirection); }
+    action "east" { quip(noDirection); }
+    action "west" { quip(noDirection); }
 }
 place pu_ms
     """
@@ -372,30 +372,30 @@ place pu_ms
     a narrow funnel. There are forces tugging at you from all
     directions. You begin feeling car-sick."""
 {
-    "up": { move(pu_mist); }
-    "down": { move(pu_lsd); }
-    "left": { move(pu_space); }
-    "right": { move(pu_shrooms); }
-    "forward": { move(pu_vomit); }
-    "north": { quip(noDirection); }
-    "south": { quip(noDirection); }
-    "east": { quip(noDirection); }
-    "west": { quip(noDirection); }
+    action "up" { move(pu_mist); }
+    action "down" { move(pu_lsd); }
+    action "left" { move(pu_space); }
+    action "right" { move(pu_shrooms); }
+    action "forward" { move(pu_vomit); }
+    action "north" { quip(noDirection); }
+    action "south" { quip(noDirection); }
+    action "east" { quip(noDirection); }
+    action "west" { quip(noDirection); }
 }
 place pu_vomit
     """
     You are in a small pocket universe. Floating around you are
     large blobs of vomit. The smell is nauseating."""
 {
-    "up": { move(pu_soap_film); }
-    "down": { move(pu_lsd); }
-    "left": { move(pu_shrooms); }
-    "right": { move(pu_space); }
-    "forward": { move(pu_mist); }
-    "north": { quip(noDirection); }
-    "south": { quip(noDirection); }
-    "east": { quip(noDirection); }
-    "west": { quip(noDirection); }
+    action "up" { move(pu_soap_film); }
+    action "down" { move(pu_lsd); }
+    action "left" { move(pu_shrooms); }
+    action "right" { move(pu_space); }
+    action "forward" { move(pu_mist); }
+    action "north" { quip(noDirection); }
+    action "south" { quip(noDirection); }
+    action "east" { quip(noDirection); }
+    action "west" { quip(noDirection); }
 }
 place pu_core
     """
@@ -404,15 +404,15 @@ place pu_core
     You appear to be looking down into the core of a nuclear
     fission reactor. But that's impossible, of course."""
 {
-    "up": { move(pu_core); }
-    "down": { move(pu_core); }
-    "left": { move(pu_core); }
-    "right": { move(pu_core); }
-    "forward": { move(pu_core); }
-    "north": { quip(noDirection); }
-    "south": { quip(noDirection); }
-    "east": { quip(noDirection); }
-    "west": { quip(noDirection); }
+    action "up" { move(pu_core); }
+    action "down" { move(pu_core); }
+    action "left" { move(pu_core); }
+    action "right" { move(pu_core); }
+    action "forward" { move(pu_core); }
+    action "north" { quip(noDirection); }
+    action "south" { quip(noDirection); }
+    action "east" { quip(noDirection); }
+    action "west" { quip(noDirection); }
 }
 place visual_arts
     """
@@ -420,10 +420,10 @@ place visual_arts
     Smashed canvases and statuary abound. None appears
     to be of any value."""
 {
-    "north": { move(fountain); }
-    "south": { move(murphy); }
-    "east": { move(south_wescoe); }
-    "west": { move(learned); }
+    action "north" { move(fountain); }
+    action "south" { move(murphy); }
+    action "east" { move(south_wescoe); }
+    action "west" { move(learned); }
 }
 place east_wescoe
     """
@@ -432,10 +432,10 @@ place east_wescoe
     you can see ruined Flint Hall, and beyond
     that the remains of the Computing Center."""
 {
-    "north": { move(jayhawk_sunflower); }
-    "east": { move(sunflower); }
-    "northwest": { move(north_wescoe); }
-    "southwest": { move(south_wescoe); }
+    action "north" { move(jayhawk_sunflower); }
+    action "east" { move(sunflower); }
+    action "northwest" { move(north_wescoe); }
+    action "southwest" { move(south_wescoe); }
 }
 place sunnyside
     """
@@ -446,17 +446,17 @@ place sunnyside
     what remains of the Computing Center,
     and to the west is a mangled 'OP' sign."""
 {
-    "north": { move(malott); }
-    "south": { move(o_zone); }
-    "east": { move(acc); }
-    "west": { move(sunnyside_naismith); }
+    action "north" { move(malott); }
+    action "south" { move(o_zone); }
+    action "east" { move(acc); }
+    action "west" { move(sunnyside_naismith); }
 }
 place sunnyside_naismith
     "You are at the intersection of Sunnyside and Naismith."
 {
-    "north": { move(murphy); }
-    "south": { move(o_zone); }
-    "east": { move(sunnyside); }
+    action "north" { move(murphy); }
+    action "south" { move(o_zone); }
+    action "east" { move(sunnyside); }
 }
 place murphy
     """
@@ -465,11 +465,11 @@ place murphy
     the ruins of the Visual Arts building. To the west,
     sits the crumbled Learned Hall."""
 {
-    "north": { move(visual_arts); }
-    "south": { move(sunnyside_naismith); }
-    "east": { move(malott); }
-    "west": { move(learned); }
-    "up": { move(south_wescoe); }
+    action "north" { move(visual_arts); }
+    action "south" { move(sunnyside_naismith); }
+    action "east" { move(malott); }
+    action "west" { move(learned); }
+    action "up" { move(south_wescoe); }
 }
 place learned
     """
@@ -477,13 +477,13 @@ place learned
     Paths lead north and south, but a large pit is to
     the west."""
 {
-    "north": { move(jayhawk_bookstore); }
-    "south": { move(sunnyside_naismith); }
-    "east": { move(visual_arts); }
-    "west": { move(reactor_pit1, "You trip and fall into the pit."); }
-    "up": { move(jayhawk_bookstore); }
-    "down": { quip("The sides of the pit are to steep to climb."); }
-    "jump": { move(reactor, "You leap across the pit."); }
+    action "north" { move(jayhawk_bookstore); }
+    action "south" { move(sunnyside_naismith); }
+    action "east" { move(visual_arts); }
+    action "west" { move(reactor_pit1, "You trip and fall into the pit."); }
+    action "up" { move(jayhawk_bookstore); }
+    action "down" { quip("The sides of the pit are to steep to climb."); }
+    action "jump" { move(reactor, "You leap across the pit."); }
 }
 place reactor
     """
@@ -491,17 +491,17 @@ place reactor
     A humming sound is coming from inside.
     A large pit blocks your way to the east."""
 {
-    "east": { move(reactor_pit1); }
-    "jump": { move(learned); }
-    "in": { move(in_reactor); }
+    action "east" { move(reactor_pit1); }
+    action "jump" { move(learned); }
+    action "in" { move(in_reactor); }
 }
 place in_reactor
     """
     You are inside the Reactor Center
     There is a large panel of switches and dials here."""
 {
-    "out": { move(reactor); }
-    "decontaminate": {
+    action "out" { move(reactor); }
+    action "decontaminate" {
         alterPower(true, 100, 1000, 1000,
         "You are bathed in a brilliant multi-colored light.\nAll radiation is leaving your body.",
         "You hear a whirring sound, but nothing seems to happen.");
@@ -514,12 +514,12 @@ place reactor_pit1
     unless you have claws. Littered around you are many
     broken bottles and tin cans."""
 {
-    "north": { move(reactor_pit2, "There is no way to go in that direction."); }
-    "south": { move(reactor_pit2, "There is no way to go in that direction."); }
-    "east": { move(reactor_pit2, "There is no way to go in that direction."); }
-    "west": { move(reactor_pit2, "There is no way to go in that direction."); }
-    "up": { move(reactor_pit2, "There is no way to go in that direction."); }
-    "down": { move(reactor_pit2, "There is no way to go in that direction."); }
+    action "north" { move(reactor_pit2, "There is no way to go in that direction."); }
+    action "south" { move(reactor_pit2, "There is no way to go in that direction."); }
+    action "east" { move(reactor_pit2, "There is no way to go in that direction."); }
+    action "west" { move(reactor_pit2, "There is no way to go in that direction."); }
+    action "up" { move(reactor_pit2, "There is no way to go in that direction."); }
+    action "down" { move(reactor_pit2, "There is no way to go in that direction."); }
 }
 place reactor_pit2
     """
@@ -528,12 +528,12 @@ place reactor_pit2
     unless you have claws. Littered around you are many
     broken bottles and tin cans."""
 {
-    "north": { move(reactor_pit3, "There is no way to go in that direction."); }
-    "south": { move(reactor_pit3, "There is no way to go in that direction."); }
-    "east": { move(reactor_pit3, "There is no way to go in that direction."); }
-    "west": { move(reactor_pit3, "There is no way to go in that direction."); }
-    "up": { move(reactor_pit3, "There is no way to go in that direction."); }
-    "down": { move(reactor_pit3, "There is no way to go in that direction."); }
+    action "north" { move(reactor_pit3, "There is no way to go in that direction."); }
+    action "south" { move(reactor_pit3, "There is no way to go in that direction."); }
+    action "east" { move(reactor_pit3, "There is no way to go in that direction."); }
+    action "west" { move(reactor_pit3, "There is no way to go in that direction."); }
+    action "up" { move(reactor_pit3, "There is no way to go in that direction."); }
+    action "down" { move(reactor_pit3, "There is no way to go in that direction."); }
 }
 place reactor_pit3
     """
@@ -542,12 +542,12 @@ place reactor_pit3
     unless you have claws. Littered around you are many
     broken bottles and tin cans."""
 {
-    "north": { move(fissure, "There is no way to go in that direction."); }
-    "south": { move(fissure, "There is no way to go in that direction."); }
-    "east": { move(fissure, "There is no way to go in that direction."); }
-    "west": { move(fissure, "There is no way to go in that direction."); }
-    "up": { move(reactor, "You finally find purchase and climb up."); }
-    "down": { move(fissure, "There is no way to go in that direction."); }
+    action "north" { move(fissure, "There is no way to go in that direction."); }
+    action "south" { move(fissure, "There is no way to go in that direction."); }
+    action "east" { move(fissure, "There is no way to go in that direction."); }
+    action "west" { move(fissure, "There is no way to go in that direction."); }
+    action "up" { move(reactor, "You finally find purchase and climb up."); }
+    action "down" { move(fissure, "There is no way to go in that direction."); }
 }
 place fissure
     """
@@ -557,9 +557,9 @@ place fissure
     to be passages out to the north and south, and a
     crude set of stairs leads further down the fissure."""
 {
-    "north": { move(under_learned); }
-    "south": { move(twisty_corridor); }
-    "down": { move(underground_river); }
+    action "north" { move(under_learned); }
+    action "south" { move(twisty_corridor); }
+    action "down" { move(underground_river); }
 }
 place under_learned
     """
@@ -568,14 +568,14 @@ place under_learned
     To the south there is a very narrow crevice.
     Overhead you can see light."""
 {
-    "south": { move(fissure); }
-    "up": { move(learned); }
+    action "south" { move(fissure); }
+    action "up" { move(learned); }
 }
 place twisty_corridor
     "You are in a twisty corridor."
 {
-    "north": { move(fissure); }
-    "up": { move(sunnyside_naismith); }
+    action "north" { move(fissure); }
+    action "up" { move(sunnyside_naismith); }
 }
 place underground_river
     """
@@ -585,8 +585,8 @@ place underground_river
     The moss on the walls glows with a dim green light
     permitting you to see. The walls look very slimy."""
 {
-    "east": { move(waterfall); }
-    "west": { move(river_bend); }
+    action "east" { move(waterfall); }
+    action "west" { move(river_bend); }
 }
 place river_bend
     """
@@ -595,8 +595,8 @@ place river_bend
     narrows, and you could not pass. To the east, there is
     some light."""
 {
-    "east": { move(underground_river); }
-    "north": { quip("The way is too narrow to pass."); }
+    action "east" { move(underground_river); }
+    action "north" { quip("The way is too narrow to pass."); }
 }
 place waterfall
     """
@@ -604,8 +604,8 @@ place waterfall
     The river falls over five hundred feet into darkness. Crude, slippery
     steps are cut into the side of the canyon, leading down."""
 {
-    "west": { move(underground_river); }
-    "down": { move(sandy_beach); }
+    action "west" { move(underground_river); }
+    action "down" { move(sandy_beach); }
 }
 place side_passage
     """
@@ -613,9 +613,9 @@ place side_passage
     It may be possible to reach if you are careful.
     If you miss, you will fall into the gorge."""
 {
-    "up": { move(waterfall); }
-    "down": { move(sandy_beach); }
-    "jump": { move(small_opening); }
+    action "up" { move(waterfall); }
+    action "down" { move(sandy_beach); }
+    action "jump" { move(small_opening); }
 }
 place sandy_beach
     """
@@ -623,8 +623,8 @@ place sandy_beach
     The beach is at the foot of a long waterfall. The river
     goes downstream to the north."""
 {
-    "up": { move(side_passage); }
-    "north": { move(rivers_end); }
+    action "up" { move(side_passage); }
+    action "north" { move(rivers_end); }
 }
 place rivers_end
     """
@@ -633,17 +633,17 @@ place rivers_end
     The entire scene is dimly lit by glowing moss, hanging down from
     the roof of the cave."""
 {
-    "south": { move(sandy_beach); }
-    "east": { quip("I haven't written that part yet..."); }
-    "west": { quip("I haven't written that part yet..."); }
+    action "south" { move(sandy_beach); }
+    action "east" { quip("I haven't written that part yet..."); }
+    action "west" { quip("I haven't written that part yet..."); }
 }
 place small_opening
     """
     You are in a small opening underneath the waterfall. There is
     nothing of interest here. Why did you do that?"""
 {
-    "back": { move(side_passage); }
-    "jump": {
+    action "back" { move(side_passage); }
+    action "jump" {
         alterPower(true, 80, -10, -10,
         "Aaaaaiiiiiiiieeeeeeee!!!!!!\nSplat.",
         "You must be crazy!");
@@ -655,9 +655,9 @@ place jayhawk_bookstore
     The glass front has been shattered and the store
     appears to be completely gutted."""
 {
-    "south": { move(learned); }
-    "east": { move(fountain); }
-    "down": { move(learned); }
+    action "south" { move(learned); }
+    action "east" { move(fountain); }
+    action "down" { move(learned); }
 }
 place fountain
     """
@@ -665,10 +665,10 @@ place fountain
     The water is not running for obvious reasons,
     but that's okay."""
 {
-    "north": { move(carrutho_leary); }
-    "south": { move(visual_arts); }
-    "east": { move(pterodactyl); }
-    "west": { move(jayhawk_bookstore); }
+    action "north" { move(carrutho_leary); }
+    action "south" { move(visual_arts); }
+    action "east" { move(pterodactyl); }
+    action "west" { move(jayhawk_bookstore); }
 }
 place o_zone
     """
@@ -676,35 +676,35 @@ place o_zone
     cars can be seen strewn about like used toys. The smell of smoke
     is near, that's the signpost up ahead. You're in the O ZONE!"""
 {
-    "north": { move(sunnyside); }
-    "south": { move(naismith); }
+    action "north" { move(sunnyside); }
+    action "south" { move(naismith); }
 }
 place twenty_third
     """
     To the north is a fairly intact building. The smell of burnt pizza
     is everywhere. This is the infamous West 23rd street."""
 {
-    "north": { move(hut); }
-    "east": { move(krogers); }
-    "south": { quip("There is nothing but desert out there."); }
+    action "north" { move(hut); }
+    action "east" { move(krogers); }
+    action "south" { quip("There is nothing but desert out there."); }
 }
 place hut
     """
     You are standing in what was the pizza hut. Pepperoni is splashed on
     the walls and anchovies swim merrily in spilled coke."""
 {
-    "east": { move(naismith); }
-    "south": { move(twenty_third); }
+    action "east" { move(naismith); }
+    action "south" { move(twenty_third); }
 }
 place krogers
     """
     What remained of this store has since been looted. Only the stains
     of lima beans and liver remain."""
 {
-    "north": { move(naismith); }
-    "east": { move(lot); }
-    "west": { move(twenty_third); }
-    "south": { quip("There is only sand out there."); }
+    action "north" { move(naismith); }
+    action "east" { move(lot); }
+    action "west" { move(twenty_third); }
+    action "south" { quip("There is only sand out there."); }
 }
 place lot
     """
@@ -712,27 +712,27 @@ place lot
     lot. Not a brick is left of what once was here. Rotten food can
     be smelled from every direction."""
 {
-    "east": { move(rustys); }
-    "west": { move(krogers); }
+    action "east" { move(rustys); }
+    action "west" { move(krogers); }
 }
 place naismith
     """
     You are on Naismith Drive.
     You are knee deep in radioactive slime."""
 {
-    "north": { move(sunnyside_naismith); }
-    "south": { move(krogers); }
-    "east": { move(lhs); }
-    "west": { quip("The slime will soon go above your head."); }
+    action "north" { move(sunnyside_naismith); }
+    action "south" { move(krogers); }
+    action "east" { move(lhs); }
+    action "west" { quip("The slime will soon go above your head."); }
 }
 place lhs
     """
     This is the ruin of Lawrence High School, home of the Chesty Lions,
     which is a strange mascot."""
 {
-    "north": { move(acc); }
-    "south": { move(rustys); }
-    "west": { move(naismith); }
+    action "north" { move(acc); }
+    action "south" { move(rustys); }
+    action "west" { move(naismith); }
 }
 place rustys
     """
@@ -740,10 +740,10 @@ place rustys
     to improve its appearance. Certainly the service is better. To
     the north can be seen the remains of a brick building."""
 {
-    "north": { move(lhs); }
-    "west": { move(lot); }
-    "south": { quip("You really don't want to go there!"); }
-    "east": { quip("A brick wall blocks your way."); }
+    action "north" { move(lhs); }
+    action "west" { move(lot); }
+    action "south" { quip("You really don't want to go there!"); }
+    action "east" { quip("A brick wall blocks your way."); }
 }
 place acc
     """
@@ -751,11 +751,11 @@ place acc
     you can see a bubbling pool. Smoke drifts lazily over the hill to
     your north."""
 {
-    "south": { move(lhs); }
-    "east": { move(sunflower); }
-    "west": { move(sunnyside); }
-    "up": { move(malott); }
-    "north": { quip("The way is blocked by the slag of Facilities-Operations."); }
+    action "south" { move(lhs); }
+    action "east" { move(sunflower); }
+    action "west" { move(sunnyside); }
+    action "up" { move(malott); }
+    action "north" { quip("The way is blocked by the slag of Facilities-Operations."); }
 }
 place sunflower
     """
@@ -763,32 +763,32 @@ place sunflower
     To the south you can see the Computing Center. Note - the
     ground here seems somewhat unstable."""
 {
-    "south": { move(acc); }
-    "east": { move(south_watson); }
-    "west": { move(jayhawk_sunflower); }
-    "north": { quip("You can't get up the hill."); }
-    "up": { quip("You can't get up the hill."); }
+    action "south" { move(acc); }
+    action "east" { move(south_watson); }
+    action "west" { move(jayhawk_sunflower); }
+    action "north" { quip("You can't get up the hill."); }
+    action "up" { quip("You can't get up the hill."); }
 }
 place north_watson
     "You are standing in front of Watson Library."
 {
-    "north": { move(lippincott); }
-    "west": { move(sunflower); }
-    "in": { move(watson_entrance); }
+    action "north" { move(lippincott); }
+    action "west" { move(sunflower); }
+    action "in" { move(watson_entrance); }
 }
 place south_watson
     "You are standing behind Watson Library."
 {
-    "west": { move(sunflower); }
-    "in": { move(stacks); }
+    action "west" { move(sunflower); }
+    action "in" { move(stacks); }
 }
-place reference
+place reference_desk
     """
     You are standing in front of the reference desk. Fallen card
     catalogs block your way."""
 {
-    "back": { move(watson_entrance); }
-    "climb": { move(reference); }
+    action "back" { move(watson_entrance); }
+    action "climb" { move(reference_desk); }
 }
 place watson_entrance
     """
@@ -797,19 +797,19 @@ place watson_entrance
     To the east is the reference section, south are the entrances to
     the stacks."""
 {
-    "east": { move(reference); }
-    "south": { move(stack_entrance); }
-    "out": { move(north_watson); }
+    action "east" { move(reference_desk); }
+    action "south" { move(stack_entrance); }
+    action "out" { move(north_watson); }
 }
 place stack_entrance
     """
     You are standing between the two stack entrances, one to the east
     and one to the west."""
 {
-    "east": { move(stacks); }
-    "west": { move(stacks); }
-    "south": { move(south_watson); }
-    "north": { move(watson_entrance); }
+    action "east" { move(stacks); }
+    action "west" { move(stacks); }
+    action "south" { move(south_watson); }
+    action "north" { move(watson_entrance); }
 }
 place stacks
     """
@@ -817,26 +817,26 @@ place stacks
     a thick layer of dust where the books used to be. There do not
     appear to be any books."""
 {
-    "in": { move(reference); }
-    "out": { move(stack_warned); }
-    "north": { quip("There is no way OUT!"); }
-    "south": { quip("There is no way OUT!"); }
-    "east": { quip("There is no way OUT!"); }
-    "west": { quip("There is no way OUT!"); }
-    "back": { quip("You seem to have forgotten which way you came in."); }
-    "help": { quip("Don't go OUT."); }
+    action "in" { move(reference_desk); }
+    action "out" { move(stack_warned); }
+    action "north" { quip("There is no way OUT!"); }
+    action "south" { quip("There is no way OUT!"); }
+    action "east" { quip("There is no way OUT!"); }
+    action "west" { quip("There is no way OUT!"); }
+    action "back" { quip("You seem to have forgotten which way you came in."); }
+    action "help" { quip("Don't go OUT."); }
 }
 place stack_warned
     """
     You are even deeper in the stacks. You will just have to help
     yourself this time."""
 {
-    "help": { move(stacks); }
-    "north": { quip("There is no way out!"); }
-    "south": { quip("There is no way out!"); }
-    "east": { quip("There is no way out!"); }
-    "west": { quip("There is no way out!"); }
-    "back": { quip("You can't back out now."); }
+    action "help" { move(stacks); }
+    action "north" { quip("There is no way out!"); }
+    action "south" { quip("There is no way out!"); }
+    action "east" { quip("There is no way out!"); }
+    action "west" { quip("There is no way out!"); }
+    action "back" { quip("You can't back out now."); }
 }
 place jayhawk_sunflower
     """
@@ -846,10 +846,10 @@ place jayhawk_sunflower
     23rd Street. To the west, the buildings on Jayhawk Blvd.
     are mostly destroyed, except for Wescoe across the street."""
 {
-    "north": { move(steel_door); }
-    "south": { move(acc); }
-    "east": { move(lippincott); }
-    "west": { move(pterodactyl); }
+    action "north" { move(steel_door); }
+    action "south" { move(acc); }
+    action "east" { move(lippincott); }
+    action "west" { move(pterodactyl); }
 }
 place lippincott
     """
@@ -858,19 +858,19 @@ place lippincott
     rises over downtown Lawrence. To the west, there is a
     crater where Strong and Bailey Halls used to be."""
 {
-    "south": { move(north_watson); }
-    "east": { move(dyche); }
-    "west": { move(jayhawk_sunflower); }
+    action "south" { move(north_watson); }
+    action "east" { move(dyche); }
+    action "west" { move(jayhawk_sunflower); }
 }
 place dyche
     """
     This museum sustained several direct hits. All that remains of
     this boring building lies in smouldering ruins."""
 {
-    "north": { move(union); }
-    "south": { move(lippincott); }
-    "east": { move(schol_halls); }
-    "west": { move(steel_door); }
+    action "north" { move(union); }
+    action "south" { move(lippincott); }
+    action "east" { move(schol_halls); }
+    action "west" { move(steel_door); }
 }
 place schol_halls
     """
@@ -879,19 +879,19 @@ place schol_halls
     out for the strange caped person who whistles loudly and
     carries a sword. He will talk you to death."""
 {
-    "north": { move(slums); }
-    "west": { move(dyche); }
+    action "north" { move(slums); }
+    action "west" { move(dyche); }
 }
 place union
     """
     Steamy plants infest the once proud Student Union. The whole place seems
     covered in noxious weeds."""
 {
-    "north": { move(crossfish); }
-    "south": { move(dyche); }
-    "east": { move(slums); }
-    "west": { move(mississippi); }
-    "down": { move(slums); }
+    action "north" { move(crossfish); }
+    action "south" { move(dyche); }
+    action "east" { move(slums); }
+    action "west" { move(mississippi); }
+    action "down" { move(slums); }
 }
 place crossfish
     """
@@ -899,9 +899,9 @@ place crossfish
     The Hawk's Crossing still stands, although it
     appears that business has fallen off sharply."""
 {
-    "south": { move(union); }
-    "east": { move(slums); }
-    "west": { move(stadium_apartments); }
+    action "south" { move(union); }
+    action "east" { move(slums); }
+    action "west" { move(stadium_apartments); }
 }
 place stadium_apartments
     """
@@ -909,10 +909,10 @@ place stadium_apartments
     The stadium apartments are to the west, a Fraternity house
     to the east. Up the hill to the east is the GSP-Corbin"""
 {
-    "north": { move(joes); }
-    "south": { move(crossfish); }
-    "east": { move(gsp_corbin); }
-    "west": { move(stadium); }
+    action "north" { move(joes); }
+    action "south" { move(crossfish); }
+    action "east" { move(gsp_corbin); }
+    action "west" { move(stadium); }
 }
 place gsp_corbin
     """
@@ -920,13 +920,13 @@ place gsp_corbin
     Many leather-jacketed bikers cluster about the entrance.
     The structure seems fairly intact."""
 {
-    "south": { move(crossfish); }
-    "east": { move(slums); }
-    "west": { move(stadium_apartments); }
-    "north": { quip("The bikers let no one pass."); }
-    "pet": { quip("Petting only works with dogs, stupid."); }
-    "shoot": { quip("You shouldn't make trouble around bikers."); }
-    "fire": { quip("You shouldn't make trouble around bikers."); }
+    action "south" { move(crossfish); }
+    action "east" { move(slums); }
+    action "west" { move(stadium_apartments); }
+    action "north" { quip("The bikers let no one pass."); }
+    action "pet" { quip("Petting only works with dogs, stupid."); }
+    action "shoot" { quip("You shouldn't make trouble around bikers."); }
+    action "fire" { quip("You shouldn't make trouble around bikers."); }
 }
 place scums
     """
@@ -934,30 +934,30 @@ place scums
     Skeletons with hands clutched to their bellies lie
     everywhere. A sign hanging askew says SCUMS deli."""
 {
-    "north": { quip("You seem to be locked in!"); }
-    "south": { quip("You seem to be locked in!"); }
-    "east": { quip("You seem to be locked in!"); }
-    "west": { quip("You seem to be locked in!"); }
-    "sign": { move(slums); }
-    "help": { quip("The exit is probably blocked by something."); }
+    action "north" { quip("You seem to be locked in!"); }
+    action "south" { quip("You seem to be locked in!"); }
+    action "east" { quip("You seem to be locked in!"); }
+    action "west" { quip("You seem to be locked in!"); }
+    action "sign" { move(slums); }
+    action "help" { quip("The exit is probably blocked by something."); }
 }
 place slums
     """
     These are the slummiest slums around. Cockroaches lie lazily
     in hammocks and staph germs wallow in puddles."""
 {
-    "north": { move(dg_bank); }
-    "east": { move(scums); }
-    "west": { move(union); }
-    "up": { move(union); }
+    action "north" { move(dg_bank); }
+    action "east" { move(scums); }
+    action "west" { move(union); }
+    action "up" { move(union); }
 }
 place dg_bank
     """
     You are at the corner of Ninth and Kentucky.
     The remains of the Douglas County Bank are here."""
 {
-    "south": { move(slums); }
-    "west": { move(joes); }
+    action "south" { move(slums); }
+    action "west" { move(joes); }
 }
 place entrance
     """
@@ -965,20 +965,20 @@ place entrance
     The only light comes from a bare bulb overhead. There are
     exits in many directions."""
 {
-    "north": { move(steel_door); }
-    "out": { move(steel_door); }
-    "east": { move(branch); }
-    "west": { move(demon); }
-    "south": { move(puddle); }
+    action "north" { move(steel_door); }
+    action "out" { move(steel_door); }
+    action "east" { move(branch); }
+    action "west" { move(demon); }
+    action "south" { move(puddle); }
 }
 place branch
     """
     You are at a branch in the steamy tunnel. The tunnel continues
     down and south from here."""
 {
-    "south": { move(rubbish); }
-    "west": { move(entrance); }
-    "down": { move(pit); }
+    action "south" { move(rubbish); }
+    action "west" { move(entrance); }
+    action "down" { move(pit); }
 }
 place pit
     """
@@ -986,13 +986,13 @@ place pit
     drips past you and splats on the floor some 20' below you. The room is
     so musty, it literally exudes yuck!"""
 {
-    "north": { quip("Can you fly?"); }
-    "south": { quip("Can you fly?"); }
-    "east": { quip("Can you fly?"); }
-    "west": { quip("Can you fly?"); }
-    "up": { quip("You fall back down."); }
-    "down": { move(scums); }
-    "fly": { move(scums, "Being unaccustomed to flying you soon fall."); }
+    action "north" { quip("Can you fly?"); }
+    action "south" { quip("Can you fly?"); }
+    action "east" { quip("Can you fly?"); }
+    action "west" { quip("Can you fly?"); }
+    action "up" { quip("You fall back down."); }
+    action "down" { move(scums); }
+    action "fly" { move(scums, "Being unaccustomed to flying you soon fall."); }
 }
 place rubbish
     """
@@ -1000,46 +1000,46 @@ place rubbish
     a scholarship hall halloween dinner (and about as appetizing).
     Well worn paths lead north, south, east, and west."""
 {
-    "north": { move(branch); }
-    "south": { move(demon); }
-    "east": { move(dark); }
-    "west": { move(puddle); }
+    action "north" { move(branch); }
+    action "south" { move(demon); }
+    action "east" { move(dark); }
+    action "west" { move(puddle); }
 }
 place dark
     "This room is quite dark and it its very hard to make out details."
 {
-    "north": { move(darker); }
-    "south": { move(darker); }
-    "east": { move(darker); }
-    "west": { quip("RATS! Right where You started."); }
-    "up": { quip("Ouch! Your head probably doesn't feel very good."); }
-    "down": { move(darker); }
+    action "north" { move(darker); }
+    action "south" { move(darker); }
+    action "east" { move(darker); }
+    action "west" { quip("RATS! Right where You started."); }
+    action "up" { quip("Ouch! Your head probably doesn't feel very good."); }
+    action "down" { move(darker); }
 }
 place darker
     """
     This room is even darker than the dark room. This room is soooo dark,
     glow worms have it posted as a hazarous area."""
 {
-    "north": { move(darkest); }
-    "south": { move(darkest); }
-    "east": { move(darkest); }
-    "up": { quip("You climb up only to slide back down."); }
-    "down": { move(darkest); }
+    action "north" { move(darkest); }
+    action "south" { move(darkest); }
+    action "east" { move(darkest); }
+    action "up" { quip("You climb up only to slide back down."); }
+    action "down" { move(darkest); }
 }
 place darkest
     """
     You thought you'd seen dark before. This has got to be the darkest
     room yet. Look on the bright side. Maybe you're just going blind!"""
 {
-    "north": { move(darker); }
-    "south": { move(darker); }
-    "east": { quip("There is no way east."); }
-    "west": { move(darker); }
-    "up": { move(rubbish); }
-    "down": { quip("You don't want to go farther down."); }
-    "nuclear": { move(in_reactor); }
-    "read": { quip("It's too dark to read anything."); }
-    "help": { quip("You're in this one pretty deep."); }
+    action "north" { move(darker); }
+    action "south" { move(darker); }
+    action "east" { quip("There is no way east."); }
+    action "west" { move(darker); }
+    action "up" { move(rubbish); }
+    action "down" { quip("You don't want to go farther down."); }
+    action "nuclear" { move(in_reactor); }
+    action "read" { quip("It's too dark to read anything."); }
+    action "help" { quip("You're in this one pretty deep."); }
 }
 place puddle
     """
@@ -1047,10 +1047,10 @@ place puddle
     look very good for drinking. This seems evident by ring of skeletons
     around it."""
 {
-    "north": { move(entrance); }
-    "south": { quip("There is no south."); }
-    "east": { move(rubbish); }
-    "west": { move(ladder); }
+    action "north" { move(entrance); }
+    action "south" { quip("There is no south."); }
+    action "east" { move(rubbish); }
+    action "west" { move(ladder); }
 }
 place ladder
     """
@@ -1058,12 +1058,12 @@ place ladder
     the street above. Light filters in through the hole. Tunnels lead away
     in four directions."""
 {
-    "north": { move(demon); }
-    "south": { move(sauna); }
-    "east": { move(puddle); }
-    "west": { move(batroom); }
-    "climb": { move(jayhawk_sunflower); }
-    "up": { move(jayhawk_sunflower); }
+    action "north" { move(demon); }
+    action "south" { move(sauna); }
+    action "east" { move(puddle); }
+    action "west" { move(batroom); }
+    action "climb" { move(jayhawk_sunflower); }
+    action "up" { move(jayhawk_sunflower); }
 }
 place demon
     """
@@ -1071,9 +1071,9 @@ place demon
     partially illuminated vapor looks like demons playing in the air.
     It is quite difficult to see any way out of the room."""
 {
-    "north": { quip("A really curvy passage leads you to a room."); }
-    "south": { move(ladder); }
-    "east": { move(entrance); }
+    action "north" { quip("A really curvy passage leads you to a room."); }
+    action "south" { move(ladder); }
+    action "east" { move(entrance); }
 }
 place sauna
     """
@@ -1081,9 +1081,9 @@ place sauna
     passages). A small, waist-high break in the steam pipe blocks your way.
     It seems obvious you would burn your chest if you continue."""
 {
-    "north": { move(ladder); }
-    "south": { quip("Walking this way is suicide."); }
-    "crawl": { move(cave); }
+    action "north" { move(ladder); }
+    action "south" { quip("Walking this way is suicide."); }
+    action "crawl" { move(cave); }
 }
 place bat_room
     """
@@ -1092,19 +1092,19 @@ place bat_room
     thing has a bat monogrammed on it. The main passage runs east-west
     small hole leading north."""
 {
-    "north": { move(dead_end); }
-    "south": { quip("Sorry, no bat-cracks in the wall."); }
-    "east": { move(ladder); }
-    "west": { move(steps); }
+    action "north" { move(dead_end); }
+    action "south" { quip("Sorry, no bat-cracks in the wall."); }
+    action "east" { move(ladder); }
+    action "west" { move(steps); }
 }
 place dead_end
     "This end is quite dead. The only exit is the way you came."
 {
-    "north": { quip("This is really a dead end."); }
-    "south": { quip("You seem to have lost your sense of direction."); }
-    "east": { quip("This is quite obviously a dead end."); }
-    "west": { quip("Walking into wall is masochistic."); }
-    "back": { move(batroom); }
+    action "north" { quip("This is really a dead end."); }
+    action "south" { quip("You seem to have lost your sense of direction."); }
+    action "east" { quip("This is quite obviously a dead end."); }
+    action "west" { quip("Walking into wall is masochistic."); }
+    action "back" { move(batroom); }
 }
 place steps
     """
@@ -1112,20 +1112,20 @@ place steps
     sky. The ground outside looks somewhat familiar. The tunnel you
     are following continues west from here."""
 {
-    "north": { move(pterodactyl); }
-    "east": { move(bat_room); }
-    "south": { move(dank); }
-    "up": { move(pterodactyl); }
-    "climb": { move(pterodactyl); }
+    action "north" { move(pterodactyl); }
+    action "east" { move(bat_room); }
+    action "south" { move(dank); }
+    action "up" { move(pterodactyl); }
+    action "climb" { move(pterodactyl); }
 }
 place dank
     """
     You are walking along a dank north/south tunnel. Moss hangs from
     the ceiling obscuring your way. A grimy crack splits the west wall."""
 {
-    "north": { move(bat_room); }
-    "south": { move(military_science); }
-    "west": { move(maze_b); }
+    action "north" { move(bat_room); }
+    action "south" { move(military_science); }
+    action "west" { move(maze_b); }
 }
 place military_science
     """
@@ -1134,10 +1134,10 @@ place military_science
     to move north, west, or south. There also seems to be a patch of light
     overhead."""
 {
-    "north": { move(dank); }
-    "west": { move(sewer); }
-    "south": { move(sunnyside); }
-    "up": { move(malott); }
+    action "north" { move(dank); }
+    action "west" { move(sewer); }
+    action "south" { move(sunnyside); }
+    action "up" { move(malott); }
 }
 place sewer
     """
@@ -1145,8 +1145,8 @@ place sewer
     there seems to a way out to the west. The main path leads back east
     through the putrid water."""
 {
-    "east": { move(military_science); }
-    "west": { move(under_learned); }
+    action "east" { move(military_science); }
+    action "west" { move(under_learned); }
 }
 place cave
     """
@@ -1154,10 +1154,10 @@ place cave
     form. The room is filled with sparkling quartz and silica. The passage
     continues straight ahead with a dark tunnel leading right."""
 {
-    "north": { quip("Steam blocks your way."); }
-    "crawl": { move(sauna); }
-    "south": { move(button); }
-    "east": { move(cave_in); }
+    action "north" { quip("Steam blocks your way."); }
+    action "crawl" { move(sauna); }
+    action "south" { move(button); }
+    action "east" { move(cave_in); }
 }
 place button
     """
@@ -1166,171 +1166,171 @@ place button
     is a strange cherry-colored button placed in the exact center of the
     south wall."""
 {
-    "north": { move(cave); }
-    "push": { quip("Nothing happens....strange."); }
+    action "north" { move(cave); }
+    action "push" { quip("Nothing happens....strange."); }
 }
 place cave_in
     """
     You are deeper in the cave. Rocks and pieces of the ceiling are jumbled
     all over this room. All exits except west are blocked by debris."""
 {
-    "west": { move(cave); }
+    action "west" { move(cave); }
 }
 place maze_l
     "You are lost in a mazelike sewer system."
 {
-    "north": { move(maze_k); }
-    "south": { move(maze_f); }
-    "east": { move(maze_l); }
-    "west": { move(maze_l); }
-    "up": { move(maze_b); }
-    "down": { move(maze_f); }
+    action "north" { move(maze_k); }
+    action "south" { move(maze_f); }
+    action "east" { move(maze_l); }
+    action "west" { move(maze_l); }
+    action "up" { move(maze_b); }
+    action "down" { move(maze_f); }
 }
 place maze_k
     "You are lost in a mazelike sewer system."
 {
-    "north": { move(maze_l); }
-    "south": { move(maze_k); }
-    "east": { move(maze_f); }
-    "west": { move(maze_k); }
-    "up": { move(maze_j); }
-    "down": { move(maze_k); }
+    action "north" { move(maze_l); }
+    action "south" { move(maze_k); }
+    action "east" { move(maze_f); }
+    action "west" { move(maze_k); }
+    action "up" { move(maze_j); }
+    action "down" { move(maze_k); }
 }
 place maze_f
     "You are lost in a mazelike sewer system."
 {
-    "north": { move(maze_l); }
-    "south": { move(maze_f); }
-    "east": { move(maze_g); }
-    "west": { move(maze_k); }
-    "up": { move(maze_f); }
-    "down": { move(maze_k); }
+    action "north" { move(maze_l); }
+    action "south" { move(maze_f); }
+    action "east" { move(maze_g); }
+    action "west" { move(maze_k); }
+    action "up" { move(maze_f); }
+    action "down" { move(maze_k); }
 }
 place maze_j
     "You are lost in a mazelike sewer system."
 {
-    "north": { move(maze_b); }
-    "south": { move(maze_l); }
-    "east": { move(maze_k); }
-    "west": { move(maze_j); }
-    "up": { move(maze_b); }
-    "down": { move(maze_l); }
+    action "north" { move(maze_b); }
+    action "south" { move(maze_l); }
+    action "east" { move(maze_k); }
+    action "west" { move(maze_j); }
+    action "up" { move(maze_b); }
+    action "down" { move(maze_l); }
 }
 place maze_b
     "You are lost in a mazelike sewer system."
 {
-    "north": { move(maze_i); }
-    "south": { move(maze_b); }
-    "east": { move(maze_j); }
-    "west": { move(maze_g); }
-    "up": { move(maze_f); }
-    "down": { move(maze_g); }
+    action "north" { move(maze_i); }
+    action "south" { move(maze_b); }
+    action "east" { move(maze_j); }
+    action "west" { move(maze_g); }
+    action "up" { move(maze_f); }
+    action "down" { move(maze_g); }
 }
 place maze_g
     "You are lost in a mazelike sewer system."
 {
-    "north": { move(maze_l); }
-    "south": { move(maze_i); }
-    "east": { move(maze_j); }
-    "west": { move(maze_a); }
-    "up": { move(maze_i); }
-    "down": { move(maze_b); }
+    action "north" { move(maze_l); }
+    action "south" { move(maze_i); }
+    action "east" { move(maze_j); }
+    action "west" { move(maze_a); }
+    action "up" { move(maze_i); }
+    action "down" { move(maze_b); }
 }
 place maze_i
     "You are lost in a mazelike sewer system."
 {
-    "north": { move(maze_i); }
-    "south": { move(maze_i); }
-    "east": { move(maze_b); }
-    "west": { move(maze_a); }
-    "up": { move(maze_c); }
-    "down": { move(maze_c); }
+    action "north" { move(maze_i); }
+    action "south" { move(maze_i); }
+    action "east" { move(maze_b); }
+    action "west" { move(maze_a); }
+    action "up" { move(maze_c); }
+    action "down" { move(maze_c); }
 }
 place maze_c
     "You are lost in a mazelike sewer system."
 {
-    "north": { move(maze_g); }
-    "south": { move(maze_h); }
-    "east": { move(maze_b); }
-    "west": { move(maze_l); }
-    "up": { move(maze_h); }
-    "down": { move(maze_i); }
+    action "north" { move(maze_g); }
+    action "south" { move(maze_h); }
+    action "east" { move(maze_b); }
+    action "west" { move(maze_l); }
+    action "up" { move(maze_h); }
+    action "down" { move(maze_i); }
 }
 place maze_h
     "You are lost in a mazelike sewer system."
 {
-    "north": { move(maze_a); }
-    "south": { move(maze_i); }
-    "east": { move(maze); }
-    "west": { move(maze_c); }
-    "up": { move(maze_g); }
-    "down": { move(maze_b); }
+    action "north" { move(maze_a); }
+    action "south" { move(maze_i); }
+    action "east" { move(maze); }
+    action "west" { move(maze_c); }
+    action "up" { move(maze_g); }
+    action "down" { move(maze_b); }
 }
 place maze_a
     "You are lost in a mazelike sewer system."
 {
-    "north": { move(maze_h); }
-    "south": { move(maze_d); }
-    "east": { move(maze_j); }
-    "west": { move(maze_a); }
-    "up": { move(maze_a); }
-    "down": { move(maze_c); }
+    action "north" { move(maze_h); }
+    action "south" { move(maze_d); }
+    action "east" { move(maze_j); }
+    action "west" { move(maze_a); }
+    action "up" { move(maze_a); }
+    action "down" { move(maze_c); }
 }
 place maze_e
     "You are lost in a mazelike sewer system."
 {
-    "north": { move(maze); }
-    "south": { move(maze_d); }
-    "east": { move(maze_a); }
-    "west": { move(maze_h); }
-    "up": { move(maze_l); }
-    "down": { move(maze_o); }
+    action "north" { move(maze); }
+    action "south" { move(maze_d); }
+    action "east" { move(maze_a); }
+    action "west" { move(maze_h); }
+    action "up" { move(maze_l); }
+    action "down" { move(maze_o); }
 }
 place maze_d
     "You are lost in a mazelike sewer system."
 {
-    "north": { move(maze_m); }
-    "south": { move(maze_l); }
-    "east": { move(maze_h); }
-    "west": { move(maze_d); }
-    "up": { move(maze_o); }
-    "down": { move(maze_n); }
+    action "north" { move(maze_m); }
+    action "south" { move(maze_l); }
+    action "east" { move(maze_h); }
+    action "west" { move(maze_d); }
+    action "up" { move(maze_o); }
+    action "down" { move(maze_n); }
 }
 place maze_o
     "You are lost in a mazelike sewer system."
 {
-    "north": { move(maze_d); }
-    "south": { move(maze_m); }
-    "east": { move(maze_o); }
-    "west": { move(maze_i); }
-    "up": { move(maze); }
-    "down": { move(maze_m); }
+    action "north" { move(maze_d); }
+    action "south" { move(maze_m); }
+    action "east" { move(maze_o); }
+    action "west" { move(maze_i); }
+    action "up" { move(maze); }
+    action "down" { move(maze_m); }
 }
 place maze_m
     "You are lost in a mazelike sewer system."
 {
-    "north": { move(maze_a); }
-    "south": { move(maze_a); }
-    "east": { move(maze_m); }
-    "west": { move(maze_n); }
-    "up": { move(maze_m); }
-    "down": { move(maze_n); }
+    action "north" { move(maze_a); }
+    action "south" { move(maze_a); }
+    action "east" { move(maze_m); }
+    action "west" { move(maze_n); }
+    action "up" { move(maze_m); }
+    action "down" { move(maze_n); }
 }
 place maze_n
     "You are lost in a mazelike sewer system."
 {
-    "north": { move(maze_m); }
-    "south": { move(maze_d); }
-    "east": { move(sewer); }
-    "west": { move(sewer); }
-    "up": { move(maze_o); }
-    "down": { move(maze_n); }
+    action "north" { move(maze_m); }
+    action "south" { move(maze_d); }
+    action "east" { move(sewer); }
+    action "west" { move(sewer); }
+    action "up" { move(maze_o); }
+    action "down" { move(maze_n); }
 }
 place wizard_source
     "You are in the directory .Wizard.Source. The only exit is up."
 {
-    "up": { move(wizard); }
-    "boot": { die(); }
+    action "up" { move(wizard); }
+    action "boot" { die(); }
 }
 place wizard
     """
@@ -1338,18 +1338,18 @@ place wizard
     There are exits marked 'Source' and 'Etc' here as well
     as the path leading up."""
 {
-    "up": { move(wizard); }
-    "source": { move(wizard_source); }
-    "etc": { move(wizard_etc); }
-    "boot": { die(); }
+    action "up" { move(wizard); }
+    action "source" { move(wizard_source); }
+    action "etc" { move(wizard_etc); }
+    action "boot" { die(); }
 }
 place wizard_etc
     """
     You are in the directory .Wizard.Etc. The only exit is up.
     There is a file here named 'Hints'"""
 {
-    "boot": { move(ninth_mississippi, "The lights dim and ..."); }
-    "open": { quip(tryBoot); }
+    action "boot" { move(ninth_mississippi, "The lights dim and ..."); }
+    action "open" { quip(tryBoot); }
 }
 place yellow_brick_road
     """
@@ -1358,22 +1358,22 @@ place yellow_brick_road
     the road leads. Nearby is a large house canted at a strange
     angle. There seems to be the body of a witch under the house."""
 {
-    "follow": { move(follow_the_yellow_brick_road); }
+    action "follow" { move(follow_the_yellow_brick_road); }
 }
 place follow_the_yellow_brick_road
     "The yellow brick road continues in front of you."
 {
-    "back": { move(yellow_brick_road); }
-    "follow": { move(emerald_city); }
+    action "back" { move(yellow_brick_road); }
+    action "follow" { move(emerald_city); }
 }
 place emerald_city
     """
     You are at the gates of a large emerald city.
     There is a pair of ruby slippers here."""
 {
-    "tap": { countAndMove(&emeraldCityCount, 3, "There's no place like home.", ninth_mississippi, brightFlashAnd); }
-    "north": { quip("There is no way to go in that direction."); }
-    "south": { quip("There is no way to go in that direction."); }
-    "east": { quip("There is no way to go in that direction."); }
-    "west": { quip("There is no way to go in that direction."); }
+    action "tap" { countAndMove(&emeraldCityCount, 3, "There's no place like home.", ninth_mississippi, brightFlashAnd); }
+    action "north" { quip("There is no way to go in that direction."); }
+    action "south" { quip("There is no way to go in that direction."); }
+    action "east" { quip("There is no way to go in that direction."); }
+    action "west" { quip("There is no way to go in that direction."); }
 }

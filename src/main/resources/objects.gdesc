@@ -2,35 +2,35 @@ object axe
     "small axe"
     "There is a small axe here."
 {
-    "swing": { useweapon(this, false, 1, 40, 100, 0); }
-    "throw": { useweapon(this, true, 1, 25, 75, 0); }
+    action "swing" { useweapon(this, false, 1, 40, 100, 0); }
+    action "throw" { useweapon(this, true, 1, 25, 75, 0); }
 }
 object hatchet
     "small hatchet"
     "There is a small hatchet here."
 {
-    "swing": { useweapon(this, false, 1, 40, 100, 0); }
-    "throw": { useweapon(this, true, 1, 25, 75, 0); }
+    action "swing" { useweapon(this, false, 1, 40, 100, 0); }
+    action "throw" { useweapon(this, true, 1, 25, 75, 0); }
 }
 object banana
     "slightly brown banana"
     "There is a slightly brown banana here."
 {
-    "eat": { consume(false, 1, -2, -10, "That tasted HORRIBLE; what a bellyache!", "slightly brown banana peel"); }
+    action "eat" { consume(false, 1, -2, -10, "That tasted HORRIBLE; what a bellyache!", "slightly brown banana peel"); }
 }
 object book
     "book"
     "There is a book here."
 {
-    "open": { quip("The pages are fused together."); }
-    "read": { quip("The book is closed. The cover reads \"How to Survive a Nuclear War.\""); }
+    action "open" { quip("The pages are fused together."); }
+    action "read" { quip("The book is closed. The cover reads \"How to Survive a Nuclear War.\""); }
 }
 object box
     "box"
     "There is a locked box here."
 {
-    "throw": { useweapon(this, true, 1, 50, 25, 0); }
-    "open": {
+    action "throw" { useweapon(this, true, 1, 50, 25, 0); }
+    action "open" {
         alterpower(0, 100, 2000, 2000,
         "Congratulations! You have found the treasure.\nYou are hereby awarded with 200% life force.",
         "The interior is filled with meters and other strange appurtenances,\nbut nothing seems to happen.");
@@ -40,73 +40,73 @@ object chain
     "chain"
     "There is a length of chain here."
 {
-    "belt": { useweapon(this, false, 3, 50, 75, 0); }
+    action "belt" { useweapon(this, false, 3, 50, 75, 0); }
 }
 object coke
     "coke can"
     "There is a can of coke here."
 {
-    "drink": { consume(this, false, 1, 2, 50, "Things go better with coke, but only a little better.", "an empty coke can"); }
-    "throw": { useweapon(this, true, 1, 50, 25, 0); }
+    action "drink" { consume(this, false, 1, 2, 50, "Things go better with coke, but only a little better.", "an empty coke can"); }
+    action "throw" { useweapon(this, true, 1, 50, 25, 0); }
 }
 object dagger
     "dagger"
     "There is a dagger here."
 {
-    "swing": { useweapon(this, false, 1, 45, 50, 0); }
-    "stab": { useweapon(this, false, 1, 45, 50, 0); }
-    "throw": { useweapon(this, true, 1, 20, 50, 0); }
+    action "swing" { useweapon(this, false, 1, 45, 50, 0); }
+    action "stab" { useweapon(this, false, 1, 45, 50, 0); }
+    action "throw" { useweapon(this, true, 1, 20, 50, 0); }
 }
 object glove
     "silk glove"
     "There is a silk glove here."
 {
-    "pickpocket": { stealSomething(50, 40); }
+    action "pickpocket" { stealSomething(50, 40); }
 }
 object opera_glove
     "silk opera glove"
     "There is a silk opera glove here."
 {
-    "pickpocket": { stealSomething(50, 40); }
+    action "pickpocket" { stealSomething(50, 40); }
 }
 object grenade
     "grenade"
     "There is a grenade here."
     "A grenade, which does not actually appear anywhere"
 {
-    "throw": { useweapon(this, true, 9, 50, 200, 0); }
-    "hurl": { useweapon(this, true, 9, 50, 200, 0); }
+    action "throw" { useweapon(this, true, 9, 50, 200, 0); }
+    action "hurl" { useweapon(this, true, 9, 50, 200, 0); }
 }
 object gun
     "gun"
     "There is a gun here."
 {
-    "shoot": { useweapon(this, false, 1, 30, 200, 0); }
-    "fire": { useweapon(this, false, 1, 30, 200, 0); }
+    action "shoot" { useweapon(this, false, 1, 30, 200, 0); }
+    action "fire" { useweapon(this, false, 1, 30, 200, 0); }
 }
 object pistol
     "pistol"
     "There is a pistol here."
 {
-    "shoot": { useweapon(this, false, 1, 30, 200, 0); }
-    "fire": { useweapon(this, false, 1, 30, 200, 0); }
+    action "shoot" { useweapon(this, false, 1, 30, 200, 0); }
+    action "fire" { useweapon(this, false, 1, 30, 200, 0); }
 }
 object revolver
     "revolver"
     "There is a revolver here."
 {
-    "shoot": { useweapon(this, false, 1, 30, 200, 0); }
-    "fire": { useweapon(this, false, 1, 30, 200, 0); }
+    action "shoot" { useweapon(this, false, 1, 30, 200, 0); }
+    action "fire" { useweapon(this, false, 1, 30, 200, 0); }
 }
 object hole
     "small hole"
     "There is a small hole here."
 {
-    "open": {
+    action "open" {
         say("The hole opens and sucks you in.");
         move(open, pu_soapfilm);
     }
-    "take": {
+    action "take" {
         say("The hole opens and sucks you in...Sucker!");
         move(open, pu_soapfilm);
     }
@@ -115,70 +115,70 @@ object meter
     "life-force meter"
     "There is a life-force meter here. Cannot be dropped."
 {
-    "read": { quip("You have $ life force.", playerPower); }
+    action "read" { quip("You have $ life force.", playerPower); }
 }
 object meteroid         // For wizard players
     "life-force meteroid"
     "There is a life-force meteroid here. Cannot be dropped."
 {
-    "read": { readmeter(); }
-    //    "xsbar": { extendedcommand("xsbar"); }
-    //    "xnusers": { extendedcommand("xnusers"); }
-    //    "xdie": { extendedcommand("xdie"); }
-    //    "xwho": { extendedcommand("xwho"); }
-    //    "xbst": { extendedcommand("xbst"); }
-    //    "xvocabulary": { extendedcommand("xvocabulary"); }
+    action "read" { readmeter(); }
+    //    action "xsbar" { extendedcommand("xsbar"); }
+    //    action "xnusers" { extendedcommand("xnusers"); }
+    //    action "xdie" { extendedcommand("xdie"); }
+    //    action "xwho" { extendedcommand("xwho"); }
+    //    action "xbst" { extendedcommand("xbst"); }
+    //    action "xvocabulary" { extendedcommand("xvocabulary"); }
 }
 object rifle
     "rifle"
     "There is a rifle here."
 {
-    "shoot": { useweapon(this, false, 1, 50, 300, 0); }
-    "fire": { useweapon(this, false, 1, 50, 300, 0); }
+    action "shoot" { useweapon(this, false, 1, 50, 300, 0); }
+    action "fire" { useweapon(this, false, 1, 50, 300, 0); }
 }
 object sandwich
     "sandwich"
     "There is a tasty looking sandwich here."
 {
-    "eat": { consume(this, false, 1, 30, 50, "That tasted good. You were hungry.", "a sandwich wrapper"); }
+    action "eat" { consume(this, false, 1, 30, 50, "That tasted good. You were hungry.", "a sandwich wrapper"); }
 }
 object chicken_sandwich
     "chicken sandwich"
     "There is a chicken sandwich here."
 {
-    "eat": { consume(this, true, 1, 30, 50, "That tasted good. You were hungry.", ""); }
+    action "eat" { consume(this, true, 1, 30, 50, "That tasted good. You were hungry.", ""); }
 }
 object bagel
     "bagel"
     "There is a tasty looking bagel here."
 {
-    "eat": { consume(this, true, 1, 30, 50, "That tasted good. You were hungry.", ""); }
+    action "eat" { consume(this, true, 1, 30, 50, "That tasted good. You were hungry.", ""); }
 }
 object sword
     "sword"
     "There is a sword here."
 {
-    "swing": { useweapon(this, false, 1, 40, 100, 0); }
-    "stab": { useweapon(this, false, 1, 40, 100, 0); }
+    action "swing" { useweapon(this, false, 1, 40, 100, 0); }
+    action "stab" { useweapon(this, false, 1, 40, 100, 0); }
 }
 object truncheon
     "truncheon"
     "There is a truncheon here."
 {
-    "swing": { useweapon(this, false, 1, 40, 100, 0); }
+    action "swing" { useweapon(this, false, 1, 40, 100, 0); }
 }
 object token
     "bus token"
     "There is a melted bus token here."
 {
-    "ride": { warp(true, 50, 100); }
+    action "ride" { warp(true, 50, 100); }
 }
 object udk
     "UDK"
     "There is a faded UDK here."
     "a faded copy of the university newspaper, the \"University Daily Kansan\""
 {
-    "read": {
+    action "read" {
         sayrandom(
         10, "The UDK says, 'US declares war on Rusia'.",
         5, "The UDK says, 'Radiation victims should go to the Reactor Center'.",
@@ -195,7 +195,7 @@ object newspaper
     "There is a faded newspaper here."
     "a faded copy of the university newspaper, the \"University Daily Kansan\""
 {
-    "read": {
+    action "read" {
         sayrandom(
         10, "The UDK says, 'US declares war on Rusia'.",
         5, "The UDK says, 'Radiation victims should go to the Reactor Center'.",
@@ -211,9 +211,9 @@ object zapgun
     "zapgun"
     "There is a toy zapgun here."
 {
-    "terminate": { terminateWithPrejudice(); }
-    "warp": { warp(true, 50, 0); }
-    "zap": { warp(false, 25, 0); }
+    action "terminate" { terminateWithPrejudice(); }
+    action "warp" { warp(true, 50, 0); }
+    action "zap" { warp(false, 25, 0); }
 }
     // NPC objects
 object guards

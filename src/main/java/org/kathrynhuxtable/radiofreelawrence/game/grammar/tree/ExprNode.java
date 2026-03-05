@@ -1,7 +1,10 @@
 package org.kathrynhuxtable.radiofreelawrence.game.grammar.tree;
 
-import org.kathrynhuxtable.radiofreelawrence.game.GameData;
+import org.objectweb.asm.MethodVisitor;
+
+import org.kathrynhuxtable.radiofreelawrence.game.GameContext;
 
 public interface ExprNode extends BaseNode {
-	int evaluate(GameData gameData);
+
+	void generate(MethodVisitor mv, GameContext gameContext);
 }

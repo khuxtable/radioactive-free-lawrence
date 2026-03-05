@@ -4,10 +4,10 @@ import java.util.Objects;
 
 import lombok.Getter;
 
+import org.kathrynhuxtable.radiofreelawrence.game.grammar.ControlType;
+
 @Getter
 public class LoopControlException extends RuntimeException {
-
-	public enum ControlType { CODE, PROC, REPEAT }
 
 	private final String label;
 	private final ControlType controlType;

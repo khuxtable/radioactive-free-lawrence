@@ -4,12 +4,14 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.objectweb.asm.Label;
+import org.objectweb.asm.MethodVisitor;
 
-import org.kathrynhuxtable.radiofreelawrence.game.GameData;
-import org.kathrynhuxtable.radiofreelawrence.game.exception.BreakException;
-import org.kathrynhuxtable.radiofreelawrence.game.exception.ContinueException;
-import org.kathrynhuxtable.radiofreelawrence.game.exception.GameRuntimeException;
+import org.kathrynhuxtable.radiofreelawrence.game.GameContext;
 import org.kathrynhuxtable.radiofreelawrence.game.grammar.SourceLocation;
+
+import static org.objectweb.asm.Opcodes.GOTO;
+import static org.objectweb.asm.Opcodes.IFEQ;
 
 @Data
 @Builder
@@ -23,34 +25,30 @@ public class WhileStatementNode implements StatementNode {
 	private SourceLocation sourceLocation;
 
 	@Override
-	public void execute(GameData gameData) throws GameRuntimeException {
+	public void generate(MethodVisitor mv, GameContext gameContext) {
 		if (postTest) {
-			do {
-				if (executeStatement(gameData)) break;
-				// Note that this is repeat until, not do while so test is reversed.
-			} while (expression.evaluate(gameData) == 0);
+			Label topLabel = new Label();
+			Label continueLabel = new Label();
+			Label endLabel = new Label();
+			gameContext.variableStore.newLoopScope(label, endLabel, continueLabel);
+			mv.visitLabel(topLabel);
+			statement.generate(mv, gameContext);
+			mv.visitLabel(continueLabel);
+			expression.generate(mv, gameContext);
+			mv.visitJumpInsn(IFEQ, topLabel);
+			mv.visitLabel(endLabel);
+			gameContext.variableStore.closeLoopScope();
 		} else {
-			while (expression.evaluate(gameData) != 0) {
-				if (executeStatement(gameData)) break;
-			}
+			Label topLabel = new Label();
+			Label endLabel = new Label();
+			gameContext.variableStore.newLoopScope(label, endLabel, topLabel);
+			mv.visitLabel(topLabel);
+			expression.generate(mv, gameContext);
+			mv.visitJumpInsn(IFEQ, endLabel);
+			statement.generate(mv, gameContext);
+			mv.visitJumpInsn(GOTO, topLabel);
+			mv.visitLabel(endLabel);
+			gameContext.variableStore.closeLoopScope();
 		}
-	}
-
-	private boolean executeStatement(GameData gameData) {
-		try {
-			statement.execute(gameData);
-		} catch (BreakException e) {
-			if (e.ignore(label)) {
-				throw e;
-			} else {
-				return true;
-			}
-		} catch (ContinueException e) {
-			if (e.ignore(label)) {
-				throw e;
-			}
-			// Implicit continue
-		}
-		return false;
 	}
 }

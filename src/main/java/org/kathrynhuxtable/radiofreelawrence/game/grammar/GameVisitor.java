@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
 import lombok.NonNull;
@@ -23,21 +24,19 @@ import org.kathrynhuxtable.gdesc.parser.GameLexer;
 import org.kathrynhuxtable.gdesc.parser.GameParser;
 import org.kathrynhuxtable.gdesc.parser.GameParser.*;
 import org.kathrynhuxtable.gdesc.parser.GameParserBaseVisitor;
-import org.kathrynhuxtable.radiofreelawrence.game.GameData.IdentifierType;
-import org.kathrynhuxtable.radiofreelawrence.game.exception.LoopControlException.ControlType;
+import org.kathrynhuxtable.radiofreelawrence.game.TextMethod;
+import org.kathrynhuxtable.radiofreelawrence.game.grammar.VariableContext.VariableType;
 import org.kathrynhuxtable.radiofreelawrence.game.grammar.tree.*;
 import org.kathrynhuxtable.radiofreelawrence.game.grammar.tree.ActionNode.ActionCode;
 import org.kathrynhuxtable.radiofreelawrence.game.grammar.tree.AssignmentNode.AssignmentOperator;
 import org.kathrynhuxtable.radiofreelawrence.game.grammar.tree.BinaryNode.Operator;
 import org.kathrynhuxtable.radiofreelawrence.game.grammar.tree.FlagNode.FlagType;
-import org.kathrynhuxtable.radiofreelawrence.game.grammar.tree.TextNode.TextMethod;
 import org.kathrynhuxtable.radiofreelawrence.game.grammar.tree.UnaryNode.UnaryOperator;
 
 @RequiredArgsConstructor
 public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 	private final GameNode root;
 	private final ErrorReporter errorReporter;
-
 
 	public void readFile(String filePath, boolean optional) throws IOException {
 		try (InputStream inputStream = GameVisitor.class.getResourceAsStream("/" + filePath)) {
@@ -72,7 +71,7 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 
 	// directive+ EOF
 	@Override
-	public GameNode visitGame(GameParser.GameContext ctx) {
+	public GameNode visitGame(GameContext ctx) {
 		visitChildren(ctx);
 		return root;
 	}
@@ -122,7 +121,7 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 		FlagType type = FlagType.valueOf(ctx.getChild(1).getText().toUpperCase());
 		FlagNode node = FlagNode.builder()
 				.type(type)
-				.flags(ctx.flagClause().stream()
+				.flags(ctx.flagDeclarator().stream()
 						.map(c -> c.getText().toLowerCase())
 						.collect(Collectors.toList()))
 				.sourceLocation(new SourceLocation(ctx))
@@ -140,7 +139,7 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 
 	// VERB verb (verb)* SEMI
 	@Override
-	public VerbNode visitVerbDirective(GameParser.VerbDirectiveContext ctx) {
+	public VerbNode visitVerbDirective(VerbDirectiveContext ctx) {
 		VerbNode node = VerbNode.builder()
 				.name(TextUtils.cleanStringLiteral(ctx.verb(0).getText()).toLowerCase())
 				.verbs(ctx.verb().stream()
@@ -164,7 +163,7 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 
 	// NOISE verb (verb)* SEMI
 	@Override
-	public VerbNode visitNoiseDirective(GameParser.NoiseDirectiveContext ctx) {
+	public VerbNode visitNoiseDirective(NoiseDirectiveContext ctx) {
 		VerbNode node = VerbNode.builder()
 				.verbs(ctx.verb().stream()
 						.map(n -> TextUtils.cleanStringLiteral(n.STRING_LITERAL().getText()).toLowerCase())
@@ -178,13 +177,14 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 
 	// TEXT method? IDENTIFIER textElement+ SEMI
 	@Override
-	public TextNode visitTextDirective(GameParser.TextDirectiveContext ctx) {
-		List<String> texts = ctx.textElement().stream()
-				.map(c -> ((TextElementNode) visit(c)).getText())
+	public TextNode visitTextDirective(TextDirectiveContext ctx) {
+		List<TextElementNode> textNodes = ctx.textElement().stream()
+				.map(c -> ((TextElementNode) visit(c)))
+				.peek(t -> t.setText(t.getText() + "\n"))
 				.collect(Collectors.toList());
 		TextNode node = TextNode.builder()
 				.name(ctx.IDENTIFIER() == null ? null : ctx.IDENTIFIER().getText().toLowerCase())
-				.texts(texts)
+				.textNodes(textNodes)
 				.method(ctx.method() == null ? null : TextMethod.valueOf(ctx.method().getText().toUpperCase()))
 				.fragment(false)
 				.sourceLocation(new SourceLocation(ctx))
@@ -201,13 +201,13 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 
 	// FRAGMENT method? IDENTIFIER textElement+ SEMI
 	@Override
-	public TextNode visitFragmentDirective(GameParser.FragmentDirectiveContext ctx) {
-		List<String> texts = ctx.textElement().stream()
-				.map(c -> ((TextElementNode) visit(c)).getText())
+	public TextNode visitFragmentDirective(FragmentDirectiveContext ctx) {
+		List<TextElementNode> texts = ctx.textElement().stream()
+				.map(c -> ((TextElementNode) visit(c)))
 				.collect(Collectors.toList());
 		TextNode node = TextNode.builder()
 				.name(ctx.IDENTIFIER() == null ? null : ctx.IDENTIFIER().getText().toLowerCase())
-				.texts(texts)
+				.textNodes(texts)
 				.method(ctx.method() == null ? null : TextMethod.valueOf(ctx.method().getText().toUpperCase()))
 				.fragment(true)
 				.sourceLocation(new SourceLocation(ctx))
@@ -225,12 +225,14 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 	// ACTION arg1=verb (arg2=verb)? block
 	@Override
 	public ActionNode visitActionDirective(ActionDirectiveContext ctx) {
-		String name = TextUtils.cleanStringLiteral(ctx.arg1.getText()).toLowerCase();
-		ActionNode node = root.getActions().computeIfAbsent(name, k -> new ActionNode());
+		String arg1 = TextUtils.cleanStringLiteral(ctx.arg1.getText()).toLowerCase();
+		ActionNode node = root.getActions().computeIfAbsent(arg1, k -> new ActionNode());
 		node.setSourceLocation(new SourceLocation(ctx));
-		node.setArg1(name);
+		node.setArg1(arg1);
+		String arg2 = ctx.arg2 == null ? null : TextUtils.cleanStringLiteral(ctx.arg2.getText()).toLowerCase();
 		node.getActionCodes().add(ActionCode.builder()
-				.arg2(ctx.arg2 == null ? null : TextUtils.cleanStringLiteral(ctx.arg2.getText()).toLowerCase())
+				.arg2(arg2)
+				.name(ActionNode.makeName(arg1, arg2))
 				.code((BlockNode) visit(ctx.block()))
 				.sourceLocation(new SourceLocation(ctx.block()))
 				.build());
@@ -241,16 +243,20 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 	@Override
 	public ProcNode visitProcDirective(ProcDirectiveContext ctx) {
 		List<String> parameterNames;
+		List<VariableType> parameterTypes;
 		if (ctx.optionalParameterList() == null) {
 			parameterNames = Collections.emptyList();
+			parameterTypes = Collections.emptyList();
 		} else {
 			OptionalParameterListNode parameterListNode = (OptionalParameterListNode) visitOptionalParameterList(ctx.optionalParameterList());
 			parameterNames = parameterListNode.getParameterNames();
+			parameterTypes = parameterListNode.getParameterTypes();
 		}
 
 		ProcNode node = ProcNode.builder()
 				.name(ctx.name.getText().toLowerCase())
 				.args(parameterNames)
+				.parameterTypes(parameterTypes)
 				.code((BlockNode) visit(ctx.block()))
 				.sourceLocation(new SourceLocation(ctx.block()))
 				.build();
@@ -270,9 +276,14 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 	// LPAREN IDENTIFIER (COMMA IDENTIFIER)* RPAREN
 	@Override
 	public BaseNode visitOptionalParameterList(OptionalParameterListContext ctx) {
+		List<String> parameterNames = new ArrayList<>();
+		List<VariableType> parameterTypes = new ArrayList<>();
 		return OptionalParameterListNode.builder()
 				.parameterNames(ctx.IDENTIFIER().stream()
 						.map(i -> i.getText().toLowerCase())
+						.collect(Collectors.toList()))
+				.parameterTypes(ctx.parameterType().stream()
+						.map(t -> getVariableType(t.getText()))
 						.collect(Collectors.toList()))
 				.sourceLocation(new SourceLocation(ctx))
 				.build();
@@ -282,6 +293,7 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 	@Override
 	public InitialNode visitInitialDirective(InitialDirectiveContext ctx) {
 		InitialNode node = InitialNode.builder()
+				.index(root.getInits().size())
 				.code((BlockNode) visit(ctx.block()))
 				.sourceLocation(new SourceLocation(ctx))
 				.build();
@@ -293,6 +305,7 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 	@Override
 	public RepeatNode visitRepeatDirective(RepeatDirectiveContext ctx) {
 		RepeatNode node = RepeatNode.builder()
+				.index(root.getRepeats().size())
 				.code((BlockNode) visit(ctx.block()))
 				.sourceLocation(new SourceLocation(ctx))
 				.build();
@@ -300,14 +313,14 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 		return node;
 	}
 
-	// STATE stateClause (COMMA stateClause)* SEMI
+	// STATE stateDeclarator (COMMA stateDeclarator)* SEMI
 	@Override
 	public StateNode visitStateDirective(StateDirectiveContext ctx) {
 		StateNode node = new StateNode();
 		node.setSourceLocation(new SourceLocation(ctx));
 
 		boolean first = true;
-		for (StateClauseContext childCtx : ctx.stateClause()) {
+		for (StateDeclaratorContext childCtx : ctx.stateDeclarator()) {
 			StateClauseNode clause = (StateClauseNode) visit(childCtx);
 			if (first) {
 				first = false;
@@ -320,7 +333,7 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 			}
 			node.getStates().put(clause.getState(), clause);
 		}
-		for (Map.Entry<String, StateClauseNode> entry : node.getStates().entrySet()) {
+		for (Entry<String, StateClauseNode> entry : node.getStates().entrySet()) {
 			if (root.getIdentifiers().containsKey(entry.getKey())) {
 				errorReporter.reportError(ctx, "Duplicate identifier \"" + entry.getKey() + "\"");
 			}
@@ -332,7 +345,7 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 
 	// IDENTIFIER (EQUAL expression)?
 	@Override
-	public StateClauseNode visitStateClause(StateClauseContext ctx) {
+	public StateClauseNode visitStateDeclarator(StateDeclaratorContext ctx) {
 		return new StateClauseNode(
 				ctx.IDENTIFIER().getText().toLowerCase(),
 				ctx.expression() == null ? null : (ExprNode) visit(ctx.expression()),
@@ -375,7 +388,7 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 
 	// PLACE IDENTIFIER (EQUAL verb)* textElement? textElement? optionalBlock
 	@Override
-	public PlaceNode visitPlaceDirective(GameParser.PlaceDirectiveContext ctx) {
+	public PlaceNode visitPlaceDirective(PlaceDirectiveContext ctx) {
 		String briefDescription = ((TextElementNode) visit(ctx.textElement(0))).getText();
 		String longDescription = ctx.textElement(1) == null ? null : ((TextElementNode) visit(ctx.textElement(1))).getText();
 		PlaceNode node = PlaceNode.builder()
@@ -385,8 +398,8 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 						.collect(Collectors.toList()))
 				.briefDescription(briefDescription)
 				.longDescription(longDescription)
-				.commands(ctx.verbCommand().stream()
-						.map(vc -> (VerbCommandNode) visitVerbCommand(vc))
+				.commands(ctx.objectCommand().stream()
+						.map(vc -> (VerbCommandNode) visitObjectCommand(vc))
 						.collect(Collectors.toMap(VerbCommandNode::getVerb, VerbCommandNode::getBlock)))
 				.sourceLocation(new SourceLocation(ctx))
 				.build();
@@ -411,10 +424,18 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 
 	// OBJECT SUB? IDENTIFIER (EQUAL verb)* textElement textElement? textElement? optionalBlock
 	@Override
-	public ObjectNode visitObjectDirective(GameParser.ObjectDirectiveContext ctx) {
+	public ObjectNode visitObjectDirective(ObjectDirectiveContext ctx) {
 		String inventoryDescription = ((TextElementNode) visit(ctx.textElement(0))).getText();
 		String briefDescription = ctx.textElement(1) == null ? null : ((TextElementNode) visit(ctx.textElement(1))).getText();
 		String longDescription = ctx.textElement(2) == null ? null : ((TextElementNode) visit(ctx.textElement(2))).getText();
+		Map<String, VerbCommandNode> commands = ctx.objectCommand().stream()
+				.filter (oc -> oc.actionDirective() != null)
+				.map(vc -> (VerbCommandNode) visitObjectCommand(vc))
+				.collect(Collectors.toMap(VerbCommandNode::getVerb, t -> t));
+		List<VariableNode> variables = ctx.objectCommand().stream()
+				.filter(oc -> oc.variableDirective() != null)
+				.map(vc -> (VariableNode) visitObjectCommand(vc))
+				.collect(Collectors.toList());
 		ObjectNode node = ObjectNode.builder()
 				.name(ctx.IDENTIFIER().getText().toLowerCase())
 				.verbs(ctx.verb().stream()
@@ -424,9 +445,8 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 				.inventoryDescription(inventoryDescription)
 				.briefDescription(briefDescription)
 				.longDescription(longDescription)
-				.commands(ctx.verbCommand().stream()
-						.map(vc -> (VerbCommandNode) visitVerbCommand(vc))
-						.collect(Collectors.toMap(VerbCommandNode::getVerb, VerbCommandNode::getBlock)))
+				.variables(variables)
+				.commands(commands)
 				.sourceLocation(new SourceLocation(ctx))
 				.build();
 		if (root.getIdentifiers().containsKey(node.getName())) {
@@ -450,14 +470,31 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 		return node;
 	}
 
-	// verb COLON block
+	// variableDirective
+    // referenceDirective
+    // procDirective
+    // actionDirective
+
 	@Override
-	public BaseNode visitVerbCommand(VerbCommandContext ctx) {
-		return VerbCommandNode.builder()
-				.verb(TextUtils.cleanStringLiteral(ctx.verb().getText()).toLowerCase())
-				.block(visitBlock(ctx.block()))
-				.sourceLocation(new SourceLocation(ctx))
-				.build();
+	public BaseNode visitObjectCommand(ObjectCommandContext ctx) {
+		if (ctx.variableDirective() != null) {
+			return VariableNode.builder()
+					.variable(ctx.variableDirective().globalDeclarator().get(0).IDENTIFIER().getText().toLowerCase())
+					.sourceLocation(new SourceLocation(ctx))
+					.build();
+		} else if (ctx.referenceDirective() != null) {
+			return null;
+		} else if (ctx.actionDirective() != null) {
+			return VerbCommandNode.builder()
+					.verb(TextUtils.cleanStringLiteral(ctx.actionDirective().arg1.getText()).toLowerCase())
+					.block(visitBlock(ctx.actionDirective().block()))
+					.sourceLocation(new SourceLocation(ctx))
+					.build();
+		} else if (ctx.procDirective() != null) {
+			return null;
+		} else {
+			return null;
+		}
 	}
 
 	// LBRACE statement* RBRACE
@@ -725,7 +762,7 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 	public BaseNode visitAssignment(AssignmentContext ctx) {
 		return AssignmentNode.builder()
 				.assignmentOperator(AssignmentOperator.findOperator(ctx.assignmentOperator().getText()))
-				.left((ExprNode) visit(ctx.lvalue()))
+				.left((LValueNode) visit(ctx.lvalue()))
 				.right((ExprNode) visit(ctx.expression()))
 				.sourceLocation(new SourceLocation(ctx))
 				.build();
@@ -750,7 +787,7 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 			return visit(ctx.getChild(0));
 		} else {
 			return BinaryNode.builder()
-					.operator(BinaryNode.Operator.OR)
+					.operator(Operator.OR)
 					.left((ExprNode) visit(ctx.conditionalOrExpression()))
 					.right((ExprNode) visit(ctx.conditionalAndExpression()))
 					.sourceLocation(new SourceLocation(ctx))
@@ -766,7 +803,7 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 			return visit(ctx.getChild(0));
 		} else {
 			return BinaryNode.builder()
-					.operator(BinaryNode.Operator.AND)
+					.operator(Operator.AND)
 					.left((ExprNode) visit(ctx.conditionalAndExpression()))
 					.right((ExprNode) visit(ctx.inclusiveOrExpression()))
 					.sourceLocation(new SourceLocation(ctx))
@@ -782,7 +819,7 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 			return visit(ctx.getChild(0));
 		} else {
 			return BinaryNode.builder()
-					.operator(BinaryNode.Operator.BITOR)
+					.operator(Operator.BITOR)
 					.left((ExprNode) visit(ctx.inclusiveOrExpression()))
 					.right((ExprNode) visit(ctx.exclusiveOrExpression()))
 					.sourceLocation(new SourceLocation(ctx))
@@ -798,7 +835,7 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 			return visit(ctx.getChild(0));
 		} else {
 			return BinaryNode.builder()
-					.operator(BinaryNode.Operator.XOR)
+					.operator(Operator.XOR)
 					.left((ExprNode) visit(ctx.exclusiveOrExpression()))
 					.right((ExprNode) visit(ctx.andExpression()))
 					.sourceLocation(new SourceLocation(ctx))
@@ -814,7 +851,7 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 			return visit(ctx.getChild(0));
 		} else {
 			return BinaryNode.builder()
-					.operator(BinaryNode.Operator.BITOR)
+					.operator(Operator.BITOR)
 					.left((ExprNode) visit(ctx.andExpression()))
 					.right((ExprNode) visit(ctx.relationalExpression()))
 					.sourceLocation(new SourceLocation(ctx))
@@ -1026,6 +1063,14 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 		}
 	}
 
+	@Override
+	public BaseNode visitLvalue(LvalueContext ctx) {
+		return LValueNode.builder()
+				.expr((ExprNode) visit(ctx.getChild(0)))
+				.sourceLocation(new SourceLocation(ctx))
+				.build();
+	}
+
 	// IDENTIFIER
 	@Override
 	public BaseNode visitIdentifierReference(IdentifierReferenceContext ctx) {
@@ -1036,9 +1081,19 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 		return new IdentifierNode(identifier.getText().toLowerCase(), sourceLocation);
 	}
 
+	private VariableType getVariableType(String keyword) {
+		return switch (keyword) {
+			case "var" -> VariableType.NUMBER;
+			case "text" -> VariableType.TEXT;
+			case "ref" -> VariableType.REFERENCE;
+			default -> throw new IllegalStateException("Unexpected value: " + keyword);
+		};
+	}
+
 	private @NonNull TextElementNode getTextLiteralNode(TerminalNode ctx) {
 		TextElementNode node = TextElementNode.builder()
 				.text(TextUtils.cleanStringLiteral(ctx.getText()))
+				.index(root.getTextElements().size())
 				.sourceLocation(getSourceLocation(ctx))
 				.build();
 		root.getTextElements().add(node);
@@ -1048,6 +1103,7 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 	private @NonNull TextElementNode getTextBlockNode(TerminalNode ctx) {
 		TextElementNode node = TextElementNode.builder()
 				.text(TextUtils.cleanTextBlock(ctx.getText()))
+				.index(root.getTextElements().size())
 				.sourceLocation(getSourceLocation(ctx))
 				.build();
 		root.getTextElements().add(node);
