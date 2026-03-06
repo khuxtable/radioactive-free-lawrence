@@ -1090,22 +1090,22 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 	}
 
 	private @NonNull TextElementNode getTextLiteralNode(TerminalNode ctx) {
-		TextElementNode node = TextElementNode.builder()
-				.text(TextUtils.cleanStringLiteral(ctx.getText()))
-				.index(root.getTextElements().size())
-				.sourceLocation(getSourceLocation(ctx))
-				.build();
-		root.getTextElements().add(node);
-		return node;
+		return getTextElementNode(ctx, TextUtils.cleanStringLiteral(ctx.getText()));
 	}
 
 	private @NonNull TextElementNode getTextBlockNode(TerminalNode ctx) {
+		return getTextElementNode(ctx, TextUtils.cleanTextBlock(ctx.getText()));
+	}
+
+	private TextElementNode getTextElementNode(TerminalNode ctx, String text) {
 		TextElementNode node = TextElementNode.builder()
-				.text(TextUtils.cleanTextBlock(ctx.getText()))
-				.index(root.getTextElements().size())
+				.text(text)
+				.index(root.getTextElementIndex(text))
 				.sourceLocation(getSourceLocation(ctx))
 				.build();
+
 		root.getTextElements().add(node);
+
 		return node;
 	}
 

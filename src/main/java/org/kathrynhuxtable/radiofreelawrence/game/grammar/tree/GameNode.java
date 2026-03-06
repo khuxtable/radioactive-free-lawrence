@@ -1,9 +1,6 @@
 package org.kathrynhuxtable.radiofreelawrence.game.grammar.tree;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import lombok.Data;
 import org.objectweb.asm.ClassVisitor;
@@ -29,6 +26,7 @@ public class GameNode implements BaseNode {
 	Map<String, VocabularyNode> verbs = new LinkedHashMap<>();
 	Map<String, BaseNode> identifiers = new LinkedHashMap<>();
 	List<TextElementNode> textElements = new ArrayList<>();
+	Map<String, Integer> textElementIndexes = new LinkedHashMap<>();
 	List<String> noise = new ArrayList<>();
 	List<VariableNode> variables = new ArrayList<>();
 	List<FlagNode> flags = new ArrayList<>();
@@ -47,8 +45,12 @@ public class GameNode implements BaseNode {
 
 		cv.visitField(ACC_PUBLIC, "internalFunctions", Type.getDescriptor(InternalFunctions.class), null, null).visitEnd();
 
+		Set<Integer> seenTextElement =  new HashSet<>();
 		for (TextElementNode textElement : textElements) {
-			textElement.generate(cv, gameContext);
+			if (!seenTextElement.contains(textElement.getIndex())) {
+				textElement.generate(cv, gameContext);
+				seenTextElement.add(textElement.getIndex());
+			}
 		}
 
 		for (TextNode textNode : texts) {
@@ -121,11 +123,15 @@ public class GameNode implements BaseNode {
 	}
 
 	private void generateTextElements(MethodVisitor mv) {
+		Set<Integer> seenTextElement =  new HashSet<>();
 		for (TextElementNode textElementNode : textElements) {
-			String name = "textElement" + textElementNode.getIndex();
-			mv.visitVarInsn(ALOAD, 0);
-			mv.visitLdcInsn(textElementNode.getText());
-			mv.visitFieldInsn(PUTFIELD, GameContext.GAME_CLASS_NAME, name, Type.getDescriptor(String.class));
+			if (!seenTextElement.contains(textElementNode.getIndex())) {
+				String name = "textElement" + textElementNode.getIndex();
+				mv.visitVarInsn(ALOAD, 0);
+				mv.visitLdcInsn(textElementNode.getText());
+				mv.visitFieldInsn(PUTFIELD, GameContext.GAME_CLASS_NAME, name, Type.getDescriptor(String.class));
+				seenTextElement.add(textElementNode.getIndex());
+			}
 		}
 	}
 
@@ -202,5 +208,16 @@ public class GameNode implements BaseNode {
 			mv.visitInsn(ICONST_0);
 			mv.visitFieldInsn(PUTFIELD, GameContext.GAME_CLASS_NAME, variableNode.getVariable(), "I");
 		}
+	}
+
+	public int getTextElementIndex(String text) {
+		int index;
+		if (textElementIndexes.containsKey(text)) {
+			index = textElementIndexes.get(text);
+		} else {
+			index = textElementIndexes.size();
+			textElementIndexes.put(text, index);
+		}
+		return index;
 	}
 }
