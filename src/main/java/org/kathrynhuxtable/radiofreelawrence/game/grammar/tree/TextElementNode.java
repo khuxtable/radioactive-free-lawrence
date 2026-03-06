@@ -10,6 +10,7 @@ import org.objectweb.asm.Type;
 
 import org.kathrynhuxtable.radiofreelawrence.game.GameContext;
 import org.kathrynhuxtable.radiofreelawrence.game.grammar.SourceLocation;
+import org.kathrynhuxtable.radiofreelawrence.game.grammar.VariableType;
 
 import static org.objectweb.asm.Opcodes.*;
 
@@ -43,5 +44,10 @@ public class TextElementNode implements DeclaratorNode, ExprNode, HasRefno {
 					GameContext.GAME_CLASS_DESCRIPTOR);
 		}
 		mv.visitFieldInsn(GETFIELD, GameContext.GAME_CLASS_NAME, name, Type.getDescriptor(String.class));
+	}
+
+	@Override
+	public VariableType getVariableType(GameContext gameContext) {
+		return VariableType.TEXT;
 	}
 }

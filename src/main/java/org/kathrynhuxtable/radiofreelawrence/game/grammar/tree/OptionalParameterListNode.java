@@ -8,7 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import org.kathrynhuxtable.radiofreelawrence.game.grammar.SourceLocation;
-import org.kathrynhuxtable.radiofreelawrence.game.grammar.VariableContext.VariableType;
+import org.kathrynhuxtable.radiofreelawrence.game.grammar.VariableType;
 
 @Data
 @Builder

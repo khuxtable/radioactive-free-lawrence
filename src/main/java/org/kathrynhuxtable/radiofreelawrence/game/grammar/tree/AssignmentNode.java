@@ -8,6 +8,7 @@ import org.objectweb.asm.MethodVisitor;
 
 import org.kathrynhuxtable.radiofreelawrence.game.GameContext;
 import org.kathrynhuxtable.radiofreelawrence.game.grammar.SourceLocation;
+import org.kathrynhuxtable.radiofreelawrence.game.grammar.VariableType;
 
 import static org.objectweb.asm.Opcodes.*;
 
@@ -79,5 +80,10 @@ public class AssignmentNode implements ExprNode {
 
 		mv.visitInsn(DUP);
 		left.generate(mv, gameContext);
+	}
+
+	@Override
+	public VariableType getVariableType(GameContext gameContext) {
+		return right.getVariableType(gameContext);
 	}
 }

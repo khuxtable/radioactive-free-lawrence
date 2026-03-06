@@ -11,7 +11,8 @@ import org.kathrynhuxtable.radiofreelawrence.game.GameContext;
 import org.kathrynhuxtable.radiofreelawrence.game.exception.GameRuntimeException;
 import org.kathrynhuxtable.radiofreelawrence.game.grammar.SourceLocation;
 import org.kathrynhuxtable.radiofreelawrence.game.grammar.VariableContext;
-import org.kathrynhuxtable.radiofreelawrence.game.grammar.VariableContext.VariableScope;
+import org.kathrynhuxtable.radiofreelawrence.game.grammar.VariableScope;
+import org.kathrynhuxtable.radiofreelawrence.game.grammar.VariableType;
 
 import static org.objectweb.asm.Opcodes.*;
 
@@ -101,5 +102,10 @@ public class UnaryNode implements ExprNode {
 		} else {
 			throw new GameRuntimeException("unsupported unary operand type: " + expression.getClass());
 		}
+	}
+
+	@Override
+	public VariableType getVariableType(GameContext gameContext) {
+		return VariableType.NUMBER;
 	}
 }

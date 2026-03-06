@@ -9,6 +9,7 @@ import org.objectweb.asm.MethodVisitor;
 
 import org.kathrynhuxtable.radiofreelawrence.game.GameContext;
 import org.kathrynhuxtable.radiofreelawrence.game.grammar.SourceLocation;
+import org.kathrynhuxtable.radiofreelawrence.game.grammar.VariableType;
 
 import static org.objectweb.asm.Opcodes.*;
 
@@ -111,5 +112,10 @@ public class BinaryNode implements ExprNode {
 		mv.visitLabel(thenLabel);
 		mv.visitInsn(ICONST_1);
 		mv.visitLabel(endLabel);
+	}
+
+	@Override
+	public VariableType getVariableType(GameContext gameContext) {
+		return left.getVariableType(gameContext);
 	}
 }

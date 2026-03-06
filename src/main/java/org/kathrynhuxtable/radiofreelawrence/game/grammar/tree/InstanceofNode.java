@@ -9,6 +9,7 @@ import org.objectweb.asm.MethodVisitor;
 import org.kathrynhuxtable.radiofreelawrence.game.GameContext;
 import org.kathrynhuxtable.radiofreelawrence.game.grammar.IdentifierType;
 import org.kathrynhuxtable.radiofreelawrence.game.grammar.SourceLocation;
+import org.kathrynhuxtable.radiofreelawrence.game.grammar.VariableType;
 
 @Data
 @Builder
@@ -32,5 +33,10 @@ public class InstanceofNode implements ExprNode {
 //			}
 //		}
 //		return identifierType == idType ? 1 : 0;
+	}
+
+	@Override
+	public VariableType getVariableType(GameContext gameContext) {
+		return VariableType.NUMBER;
 	}
 }

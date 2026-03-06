@@ -25,7 +25,6 @@ import org.kathrynhuxtable.gdesc.parser.GameParser;
 import org.kathrynhuxtable.gdesc.parser.GameParser.*;
 import org.kathrynhuxtable.gdesc.parser.GameParserBaseVisitor;
 import org.kathrynhuxtable.radiofreelawrence.game.TextMethod;
-import org.kathrynhuxtable.radiofreelawrence.game.grammar.VariableContext.VariableType;
 import org.kathrynhuxtable.radiofreelawrence.game.grammar.tree.*;
 import org.kathrynhuxtable.radiofreelawrence.game.grammar.tree.ActionNode.ActionCode;
 import org.kathrynhuxtable.radiofreelawrence.game.grammar.tree.AssignmentNode.AssignmentOperator;

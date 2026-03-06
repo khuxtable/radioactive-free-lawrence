@@ -9,6 +9,7 @@ import org.objectweb.asm.MethodVisitor;
 
 import org.kathrynhuxtable.radiofreelawrence.game.GameContext;
 import org.kathrynhuxtable.radiofreelawrence.game.grammar.SourceLocation;
+import org.kathrynhuxtable.radiofreelawrence.game.grammar.VariableType;
 
 import static org.objectweb.asm.Opcodes.GOTO;
 import static org.objectweb.asm.Opcodes.IFEQ;
@@ -35,5 +36,10 @@ public class QueryNode implements ExprNode {
 		mv.visitLabel(falseLabel);
 		falseExpression.generate(mv, gameContext);
 		mv.visitLabel(endLabel);
+	}
+
+	@Override
+	public VariableType getVariableType(GameContext gameContext) {
+		return VariableType.NUMBER;
 	}
 }

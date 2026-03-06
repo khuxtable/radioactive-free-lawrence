@@ -15,7 +15,7 @@ import org.objectweb.asm.commons.LocalVariablesSorter;
 import org.kathrynhuxtable.radiofreelawrence.game.GameContext;
 import org.kathrynhuxtable.radiofreelawrence.game.grammar.SourceLocation;
 import org.kathrynhuxtable.radiofreelawrence.game.grammar.VariableContext;
-import org.kathrynhuxtable.radiofreelawrence.game.grammar.VariableContext.VariableType;
+import org.kathrynhuxtable.radiofreelawrence.game.grammar.VariableType;
 
 import static org.objectweb.asm.Opcodes.*;
 
@@ -36,7 +36,6 @@ public class ProcNode implements DeclaratorNode {
 		gameContext.variableStore.newFunctionScope();
 		StringBuilder descriptor = new StringBuilder("(");
 		for (int i = 0; i < args.size(); i++) {
-
 			descriptor.append(switch (parameterTypes.get(i)) {
 				case NUMBER -> Type.INT_TYPE.getDescriptor();
 				case TEXT -> Type.getDescriptor(String.class);

@@ -5,12 +5,11 @@ import java.util.*;
 import lombok.Getter;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
-import org.objectweb.asm.Type;
 import org.springframework.stereotype.Component;
 
 import org.kathrynhuxtable.radiofreelawrence.game.grammar.VariableContext;
-import org.kathrynhuxtable.radiofreelawrence.game.grammar.VariableContext.VariableScope;
-import org.kathrynhuxtable.radiofreelawrence.game.grammar.VariableContext.VariableType;
+import org.kathrynhuxtable.radiofreelawrence.game.grammar.VariableScope;
+import org.kathrynhuxtable.radiofreelawrence.game.grammar.VariableType;
 
 @Component
 public class VariableStore {
@@ -76,14 +75,7 @@ public class VariableStore {
 	public void closeBlockScope(MethodVisitor mv, Label startLabel, Label endLabel) {
 		Collection<VariableContext> vars = functionContext.remove(functionContext.size() - 1).values();
 		for (VariableContext var : vars) {
-			String type = switch (var.getVariableType()) {
-				case FLAG, STATE, NUMBER -> Type.INT_TYPE.getDescriptor();
-				case TEXT -> Type.getDescriptor(String.class);
-				case TEXT_NODE ->  Type.getDescriptor(Text.class);
-				case REFERENCE -> Type.getDescriptor(Object.class);
-				case LABEL, METHOD -> null;
-			};
-			mv.visitLocalVariable(var.getName(), type, null, startLabel, endLabel, var.getIndex());
+			mv.visitLocalVariable(var.getName(), var.getVariableType().getDescriptor(), null, startLabel, endLabel, var.getIndex());
 		}
 	}
 

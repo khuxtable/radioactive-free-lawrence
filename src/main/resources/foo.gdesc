@@ -24,6 +24,7 @@ proc testMeNow(var myArg) {
     say("The arg is $", myArg);
     say("this is {you_do}, so there!", missouri);
     say("[There are no/There is one/There are $] thing[s//s] here", 15);
+    argSample("This is a test", 21);
     var beans = 1;
     for (var iter = 0, j = 5; iter < 4; iter++, j++) {
         say("iter is $", iter);

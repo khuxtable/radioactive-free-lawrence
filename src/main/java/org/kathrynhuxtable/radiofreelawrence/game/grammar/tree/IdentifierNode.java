@@ -10,8 +10,8 @@ import org.kathrynhuxtable.radiofreelawrence.game.Text;
 import org.kathrynhuxtable.radiofreelawrence.game.exception.GameRuntimeException;
 import org.kathrynhuxtable.radiofreelawrence.game.grammar.SourceLocation;
 import org.kathrynhuxtable.radiofreelawrence.game.grammar.VariableContext;
-import org.kathrynhuxtable.radiofreelawrence.game.grammar.VariableContext.VariableScope;
-import org.kathrynhuxtable.radiofreelawrence.game.grammar.VariableContext.VariableType;
+import org.kathrynhuxtable.radiofreelawrence.game.grammar.VariableScope;
+import org.kathrynhuxtable.radiofreelawrence.game.grammar.VariableType;
 
 import static org.objectweb.asm.Opcodes.*;
 
@@ -38,13 +38,6 @@ public class IdentifierNode implements ExprNode {
 			if (variableContext.getVariableScope() == VariableScope.CLASS) {
 				className = variableContext.getParentClass();
 			}
-			String type = switch (variableContext.getVariableType()) {
-				case FLAG, STATE, NUMBER -> Type.INT_TYPE.getDescriptor();
-				case TEXT -> Type.getDescriptor(String.class);
-				case TEXT_NODE -> Type.getDescriptor(Text.class);
-				case REFERENCE -> Type.getDescriptor(Object.class);
-				case METHOD, LABEL -> null;
-			};
 			mv.visitVarInsn(ALOAD, 0); // inner class "this"
 			if (gameContext.variableStore.getCurrentClass() != null && variableContext.getVariableScope() == VariableScope.GLOBAL) {
 				// Need to reference instance variable in outer class
@@ -54,7 +47,7 @@ public class IdentifierNode implements ExprNode {
 						"this$0", // outer class "this"
 						GameContext.GAME_CLASS_DESCRIPTOR);
 			}
-			mv.visitFieldInsn(GETFIELD, className, variableContext.getName(), type);
+			mv.visitFieldInsn(GETFIELD, className, variableContext.getName(), variableContext.getVariableType().getDescriptor());
 
 			if (variableContext.getVariableType() == VariableType.TEXT_NODE) {
 				mv.visitMethodInsn(
@@ -64,6 +57,16 @@ public class IdentifierNode implements ExprNode {
 						"()" + Type.getDescriptor(String.class),
 						false);
 			}
+		}
+	}
+
+	@Override
+	public VariableType getVariableType(GameContext gameContext) {
+		VariableContext variableContext = gameContext.variableStore.getVariable(name);
+		if (variableContext == null) {
+			throw new GameRuntimeException("undefined variable: " + name);
+		} else {
+			return variableContext.getVariableType();
 		}
 	}
 }

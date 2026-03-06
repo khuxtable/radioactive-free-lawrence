@@ -10,7 +10,8 @@ import org.kathrynhuxtable.radiofreelawrence.game.GameContext;
 import org.kathrynhuxtable.radiofreelawrence.game.exception.GameRuntimeException;
 import org.kathrynhuxtable.radiofreelawrence.game.grammar.SourceLocation;
 import org.kathrynhuxtable.radiofreelawrence.game.grammar.VariableContext;
-import org.kathrynhuxtable.radiofreelawrence.game.grammar.VariableContext.VariableScope;
+import org.kathrynhuxtable.radiofreelawrence.game.grammar.VariableScope;
+import org.kathrynhuxtable.radiofreelawrence.game.grammar.VariableType;
 
 import static org.objectweb.asm.Opcodes.*;
 
@@ -50,6 +51,19 @@ public class LValueNode implements ExprNode {
 		} else {
 			throw new GameRuntimeException("unsupported unary operand type: " + expr.getClass());
 		}
+	}
 
+	@Override
+	public VariableType getVariableType(GameContext gameContext) {
+		if (expr instanceof IdentifierNode identifierNode) {
+			VariableContext variableContext = gameContext.variableStore.getVariable(identifierNode.getName());
+			if (variableContext == null) {
+				throw new GameRuntimeException("Unknown variable: " + identifierNode.getName());
+			} else {
+				return variableContext.getVariableType();
+			}
+		} else {
+			throw new GameRuntimeException("unsupported unary operand type: " + expr.getClass());
+		}
 	}
 }

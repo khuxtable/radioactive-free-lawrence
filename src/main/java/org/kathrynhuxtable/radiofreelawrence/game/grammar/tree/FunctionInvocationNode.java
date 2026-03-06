@@ -14,7 +14,7 @@ import org.kathrynhuxtable.radiofreelawrence.game.InternalFunctions;
 import org.kathrynhuxtable.radiofreelawrence.game.exception.GameRuntimeException;
 import org.kathrynhuxtable.radiofreelawrence.game.grammar.SourceLocation;
 import org.kathrynhuxtable.radiofreelawrence.game.grammar.VariableContext;
-import org.kathrynhuxtable.radiofreelawrence.game.grammar.VariableContext.VariableType;
+import org.kathrynhuxtable.radiofreelawrence.game.grammar.VariableType;
 
 import static org.objectweb.asm.Opcodes.*;
 
@@ -44,7 +44,7 @@ public class FunctionInvocationNode implements ExprNode {
 			StringBuilder descriptor = new StringBuilder("(");
 			for (ExprNode parameter : parameters) {
 				parameter.generate(mv, gameContext);
-				descriptor.append("I");
+				descriptor.append(parameter.getVariableType(gameContext).getDescriptor());
 			}
 			descriptor.append(")I");
 
@@ -99,5 +99,10 @@ public class FunctionInvocationNode implements ExprNode {
 		} else {
 			throw new GameRuntimeException("Unknown function invocation");
 		}
+	}
+
+	@Override
+	public VariableType getVariableType(GameContext gameContext) {
+		return VariableType.NUMBER;
 	}
 }

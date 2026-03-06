@@ -12,10 +12,6 @@ import org.objectweb.asm.Label;
 @AllArgsConstructor
 public class VariableContext {
 
-	public enum VariableType { FLAG, STATE, NUMBER, TEXT, TEXT_NODE, REFERENCE, METHOD, LABEL }
-
-	public enum VariableScope { GLOBAL, CLASS, LOCAL }
-
 	private VariableType variableType;
 	private VariableScope variableScope;
 

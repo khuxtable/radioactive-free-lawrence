@@ -156,7 +156,7 @@ public class GameNode implements BaseNode {
 					INVOKESPECIAL,
 					Type.getInternalName(Text.class),
 					"<init>",
-					"(" + Type.getDescriptor(TextMethod.class) + "[Ljava/lang/String;)V",
+					"(" + Type.getDescriptor(TextMethod.class) + Type.getDescriptor(String[].class) + ")V",
 					false);
 
 			mv.visitFieldInsn(PUTFIELD, GameContext.GAME_CLASS_NAME, textNode.getName(), Type.getDescriptor(Text.class));;

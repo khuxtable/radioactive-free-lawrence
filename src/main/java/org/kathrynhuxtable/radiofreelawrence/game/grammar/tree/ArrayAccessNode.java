@@ -8,6 +8,7 @@ import org.objectweb.asm.MethodVisitor;
 
 import org.kathrynhuxtable.radiofreelawrence.game.GameContext;
 import org.kathrynhuxtable.radiofreelawrence.game.grammar.SourceLocation;
+import org.kathrynhuxtable.radiofreelawrence.game.grammar.VariableType;
 
 @Data
 @Builder
@@ -21,5 +22,10 @@ public class ArrayAccessNode implements ExprNode {
 	@Override
 	public void generate(MethodVisitor cw, GameContext gameContext) {
 
+	}
+
+	@Override
+	public VariableType getVariableType(GameContext gameContext) {
+		return VariableType.NUMBER;
 	}
 }
