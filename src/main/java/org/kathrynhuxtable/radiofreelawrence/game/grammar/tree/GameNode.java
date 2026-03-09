@@ -74,14 +74,6 @@ public class GameNode implements BaseNode {
 			action.generate(cv, gameContext);
 		}
 
-		for (InitialNode init : inits) {
-			init.generate(cv, gameContext);
-		}
-
-		for (RepeatNode repeat : repeats) {
-			repeat.generate(cv, gameContext);
-		}
-
 		for (ObjectNode objectNode : objects) {
 			cv.visitNestMember(GameContext.GAME_CLASS_NAME + "$" + objectNode.getName());
 			cv.visitInnerClass(
@@ -104,6 +96,14 @@ public class GameNode implements BaseNode {
 					GameContext.GAME_CLASS_NAME,
 					placeNode.getName(),
 					ACC_PUBLIC);
+		}
+
+		for (InitialNode init : inits) {
+			init.generate(cv, gameContext);
+		}
+
+		for (RepeatNode repeat : repeats) {
+			repeat.generate(cv, gameContext);
 		}
 
 		generateConstructor(cv, gameContext);
@@ -238,11 +238,12 @@ public class GameNode implements BaseNode {
 			mv.visitLdcInsn(placeNode.getName());
 			mv.visitTypeInsn(NEW, GameContext.GAME_CLASS_NAME + "$" + placeNode.getName());
 			mv.visitInsn(DUP);
+			mv.visitVarInsn(ALOAD, 0);
 			mv.visitMethodInsn(
 					INVOKESPECIAL,
 					GameContext.GAME_CLASS_NAME + "$" + placeNode.getName(),
 					"<init>",
-					"()V",
+					"(" + GameContext.GAME_CLASS_DESCRIPTOR + ")V",
 					false);
 			mv.visitMethodInsn(
 					INVOKEINTERFACE,

@@ -13,6 +13,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 
 import org.kathrynhuxtable.radiofreelawrence.game.grammar.GameVisitor;
+import org.kathrynhuxtable.radiofreelawrence.game.grammar.VariableType;
 import org.kathrynhuxtable.radiofreelawrence.game.grammar.tree.ObjectNode;
 import org.kathrynhuxtable.radiofreelawrence.game.grammar.tree.PlaceNode;
 
@@ -42,6 +43,11 @@ public class RadioactiveFreeLawrenceApplication {
 
 			GameVisitor visitor = new GameVisitor(gameContext.gameNode, gameContext.errorReporter);
 			visitor.readFile("foo.gdesc", false);
+
+			// Since places exist once, create variables for them.
+			for (PlaceNode placeNode : gameContext.gameNode.getPlaces()) {
+				gameContext.variableStore.addVariable(placeNode.getName(), VariableType.PLACE);
+			}
 
 			// Generate main Game class
 			MyClassVisitor cw = new MyClassVisitor(ClassWriter.COMPUTE_FRAMES | ClassWriter.COMPUTE_MAXS);

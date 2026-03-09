@@ -115,7 +115,7 @@ initial {
     say("Something");
     say(1066);
     say("mytest is ", mytest);
-
+    say(ninth_mississippi);
 }
 
 text noDirection

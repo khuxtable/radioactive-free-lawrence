@@ -42,7 +42,6 @@ public class PlaceNode implements DeclaratorNode, HasRefno, VocabularyNode {
 		cv.visitNestHost(GameContext.GAME_CLASS_NAME);
 		cv.visitInnerClass(innerClassInternalName, GameContext.GAME_CLASS_NAME, name, ACC_PUBLIC);
 		cv.createField(ACC_FINAL | ACC_SYNTHETIC, "this$0", GameContext.GAME_CLASS_DESCRIPTOR);
-		gameContext.variableStore.addVariable(name, VariableType.PLACE);
 		gameContext.variableStore.newClassScope(innerClassInternalName);
 
 		for (VariableNode variableNode : variables) {
@@ -67,7 +66,7 @@ public class PlaceNode implements DeclaratorNode, HasRefno, VocabularyNode {
 		String innerClassInternalName = GameContext.GAME_CLASS_NAME + "$" + name;
 
 		// standard constructor, accepting InternalFunctions parameter
-		MethodVisitor mv = cv.visitMethod(ACC_PUBLIC, "<init>", "()V", null, null);
+		MethodVisitor mv = cv.visitMethod(ACC_PUBLIC, "<init>", "(" + GameContext.GAME_CLASS_DESCRIPTOR + ")V", null, null);
 		mv.visitParameter("this$0", ACC_FINAL | ACC_MANDATED);
 		mv.visitCode();
 		mv.visitVarInsn(ALOAD, 0); //load the first local variable: this
