@@ -4,9 +4,9 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import lombok.Data;
-import org.objectweb.asm.ClassVisitor;
 
 import org.kathrynhuxtable.radiofreelawrence.game.GameContext;
+import org.kathrynhuxtable.radiofreelawrence.game.MyClassVisitor;
 import org.kathrynhuxtable.radiofreelawrence.game.grammar.SourceLocation;
 
 @Data
@@ -16,7 +16,7 @@ public class StateNode implements DeclaratorNode {
 	private SourceLocation sourceLocation;
 
 	@Override
-	public void generate(ClassVisitor cv, GameContext gameContext) {
+	public void generate(MyClassVisitor cv, GameContext gameContext) {
 
 	}
 }

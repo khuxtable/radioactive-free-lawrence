@@ -241,6 +241,20 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 	// PROC name=IDENTIFIER (IDENTIFIER)* block
 	@Override
 	public ProcNode visitProcDirective(ProcDirectiveContext ctx) {
+		ProcNode node = buildProcNode(ctx);
+
+		if (node.getName() != null) {
+			if (root.getIdentifiers().containsKey(node.getName())) {
+				errorReporter.reportError(ctx, "Duplicate identifier \"" + node.getName() + "\"");
+			}
+			root.getIdentifiers().put(node.getName(), node);
+		}
+
+		root.getProcs().put(ctx.name.getText().toLowerCase(), node);
+		return node;
+	}
+
+	private ProcNode buildProcNode(ProcDirectiveContext ctx) {
 		List<String> parameterNames;
 		List<VariableType> parameterTypes;
 		if (ctx.optionalParameterList() == null) {
@@ -259,15 +273,6 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 				.code((BlockNode) visit(ctx.block()))
 				.sourceLocation(new SourceLocation(ctx.block()))
 				.build();
-
-		if (node.getName() != null) {
-			if (root.getIdentifiers().containsKey(node.getName())) {
-				errorReporter.reportError(ctx, "Duplicate identifier \"" + node.getName() + "\"");
-			}
-			root.getIdentifiers().put(node.getName(), node);
-		}
-
-		root.getProcs().put(ctx.name.getText().toLowerCase(), node);
 		return node;
 	}
 
@@ -390,6 +395,18 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 	public PlaceNode visitPlaceDirective(PlaceDirectiveContext ctx) {
 		String briefDescription = ((TextElementNode) visit(ctx.textElement(0))).getText();
 		String longDescription = ctx.textElement(1) == null ? null : ((TextElementNode) visit(ctx.textElement(1))).getText();
+		Map<String, VerbCommandNode> commands = ctx.objectCommand().stream()
+				.filter (oc -> oc.actionDirective() != null)
+				.map(vc -> (VerbCommandNode) visitObjectCommand(vc))
+				.collect(Collectors.toMap(VerbCommandNode::getVerb, t -> t));
+		Map<String, ProcNode> procs = ctx.objectCommand().stream()
+				.filter (oc -> oc.procDirective() != null)
+				.map(vc -> (ProcNode) visitObjectCommand(vc))
+				.collect(Collectors.toMap(ProcNode::getName, t -> t));
+		List<VariableNode> variables = ctx.objectCommand().stream()
+				.filter(oc -> oc.variableDirective() != null)
+				.map(vc -> (VariableNode) visitObjectCommand(vc))
+				.collect(Collectors.toList());
 		PlaceNode node = PlaceNode.builder()
 				.name(ctx.IDENTIFIER().getText().toLowerCase())
 				.verbs(ctx.verb().stream()
@@ -397,9 +414,9 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 						.collect(Collectors.toList()))
 				.briefDescription(briefDescription)
 				.longDescription(longDescription)
-				.commands(ctx.objectCommand().stream()
-						.map(vc -> (VerbCommandNode) visitObjectCommand(vc))
-						.collect(Collectors.toMap(VerbCommandNode::getVerb, VerbCommandNode::getBlock)))
+				.variables(variables)
+				.commands(commands)
+				.procs(procs)
 				.sourceLocation(new SourceLocation(ctx))
 				.build();
 		if (root.getIdentifiers().containsKey(node.getName())) {
@@ -431,6 +448,10 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 				.filter (oc -> oc.actionDirective() != null)
 				.map(vc -> (VerbCommandNode) visitObjectCommand(vc))
 				.collect(Collectors.toMap(VerbCommandNode::getVerb, t -> t));
+		Map<String, ProcNode> procs = ctx.objectCommand().stream()
+				.filter (oc -> oc.procDirective() != null)
+				.map(vc -> (ProcNode) visitObjectCommand(vc))
+				.collect(Collectors.toMap(ProcNode::getName, t -> t));
 		List<VariableNode> variables = ctx.objectCommand().stream()
 				.filter(oc -> oc.variableDirective() != null)
 				.map(vc -> (VariableNode) visitObjectCommand(vc))
@@ -446,6 +467,7 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 				.longDescription(longDescription)
 				.variables(variables)
 				.commands(commands)
+				.procs(procs)
 				.sourceLocation(new SourceLocation(ctx))
 				.build();
 		if (root.getIdentifiers().containsKey(node.getName())) {
@@ -490,7 +512,7 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 					.sourceLocation(new SourceLocation(ctx))
 					.build();
 		} else if (ctx.procDirective() != null) {
-			return null;
+			return buildProcNode(ctx.procDirective());
 		} else {
 			return null;
 		}

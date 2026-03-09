@@ -12,10 +12,9 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 
-import org.kathrynhuxtable.radiofreelawrence.game.exception.GameRuntimeException;
-import org.kathrynhuxtable.radiofreelawrence.game.grammar.GameGenerator;
 import org.kathrynhuxtable.radiofreelawrence.game.grammar.GameVisitor;
 import org.kathrynhuxtable.radiofreelawrence.game.grammar.tree.ObjectNode;
+import org.kathrynhuxtable.radiofreelawrence.game.grammar.tree.PlaceNode;
 
 @RequiredArgsConstructor
 @SpringBootApplication
@@ -23,7 +22,6 @@ import org.kathrynhuxtable.radiofreelawrence.game.grammar.tree.ObjectNode;
 @Slf4j
 public class RadioactiveFreeLawrenceApplication {
 
-	private final GameGenerator gameGenerator;
 	private final GameContext gameContext = new GameContext();
 
 	public static void main(String[] args) {
@@ -46,7 +44,7 @@ public class RadioactiveFreeLawrenceApplication {
 			visitor.readFile("foo.gdesc", false);
 
 			// Generate main Game class
-			ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_FRAMES | ClassWriter.COMPUTE_MAXS);
+			MyClassVisitor cw = new MyClassVisitor(ClassWriter.COMPUTE_FRAMES | ClassWriter.COMPUTE_MAXS);
 			gameContext.gameNode.generate(cw, gameContext);
 
 			byte[] bytes = cw.toByteArray();
@@ -56,11 +54,22 @@ public class RadioactiveFreeLawrenceApplication {
 
 			// Generate object inner classes
 			for (ObjectNode objectNode : gameContext.gameNode.getObjects()) {
-				ClassWriter innerCw = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
+				MyClassVisitor innerCw = new MyClassVisitor(ClassWriter.COMPUTE_FRAMES);
 				objectNode.generate(innerCw, gameContext);
 				byte[] innerBytes = innerCw.toByteArray();
 				FileOutputStream innerOut = new FileOutputStream(
 						"target/classes/" + GameContext.GAME_CLASS_NAME + "$" + objectNode.getName() + ".class");
+				innerOut.write(innerBytes);
+				innerOut.close();
+			}
+
+			// Generate place inner classes
+			for (PlaceNode placeNode : gameContext.gameNode.getPlaces()) {
+				MyClassVisitor innerCw = new MyClassVisitor(ClassWriter.COMPUTE_FRAMES);
+				placeNode.generate(innerCw, gameContext);
+				byte[] innerBytes = innerCw.toByteArray();
+				FileOutputStream innerOut = new FileOutputStream(
+						"target/classes/" + GameContext.GAME_CLASS_NAME + "$" + placeNode.getName() + ".class");
 				innerOut.write(innerBytes);
 				innerOut.close();
 			}

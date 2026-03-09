@@ -7,17 +7,18 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.commons.LocalVariablesSorter;
 
 import org.kathrynhuxtable.radiofreelawrence.game.GameContext;
+import org.kathrynhuxtable.radiofreelawrence.game.MyClassVisitor;
 import org.kathrynhuxtable.radiofreelawrence.game.grammar.SourceLocation;
 import org.kathrynhuxtable.radiofreelawrence.game.grammar.VariableType;
 
-import static org.objectweb.asm.Opcodes.*;
+import static org.objectweb.asm.Opcodes.ACC_PUBLIC;
+import static org.objectweb.asm.Opcodes.RETURN;
 
 
 @Data
@@ -38,7 +39,7 @@ public class ActionNode implements DeclaratorNode {
 	}
 
 	@Override
-	public void generate(ClassVisitor cw, GameContext gameContext) {
+	public void generate(MyClassVisitor cw, GameContext gameContext) {
 		for (ActionCode actionCode : actionCodes) {
 			actionCode.generate(cw, gameContext);
 		}
@@ -55,7 +56,7 @@ public class ActionNode implements DeclaratorNode {
 		private String name;
 
 		@Override
-		public void generate(ClassVisitor cv, GameContext gameContext) {
+		public void generate(MyClassVisitor cv, GameContext gameContext) {
 			gameContext.variableStore.addVariable(name, VariableType.METHOD);
 			gameContext.variableStore.newFunctionScope();
 			MethodVisitor mv2 = cv.visitMethod(ACC_PUBLIC, name, "()V", null, null);

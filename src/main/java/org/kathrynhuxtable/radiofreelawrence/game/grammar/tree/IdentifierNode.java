@@ -1,5 +1,7 @@
 package org.kathrynhuxtable.radiofreelawrence.game.grammar.tree;
 
+import java.util.Map;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.objectweb.asm.MethodVisitor;
@@ -33,6 +35,25 @@ public class IdentifierNode implements ExprNode {
 			} else {
 				mv.visitVarInsn(ALOAD, variableContext.getIndex());
 			}
+		} else if (variableContext.getVariableType() == VariableType.PLACE) {
+			mv.visitVarInsn(ALOAD, 0);
+			if (gameContext.variableStore.getCurrentClass() != null) {
+				// Need to reference instance variable in outer class
+				mv.visitFieldInsn(
+						GETFIELD,
+						gameContext.variableStore.getCurrentClass(),
+						"this$0", // outer class "this"
+						GameContext.GAME_CLASS_DESCRIPTOR);
+			}
+			mv.visitFieldInsn(GETFIELD, GameContext.GAME_CLASS_NAME, "places", Type.getDescriptor(Map.class));
+			mv.visitLdcInsn(variableContext.getName());
+			mv.visitMethodInsn(
+					INVOKEINTERFACE,
+					Type.getInternalName(Map.class),
+					"get",
+					"(" + Type.getDescriptor(Object.class) + ")" + Type.getDescriptor(Object.class),
+					true);
+//			mv.visitTypeInsn(CHECKCAST, Type.getInternalName(GamePlace.class));
 		} else {
 			String className = GameContext.GAME_CLASS_NAME;
 			if (variableContext.getVariableScope() == VariableScope.CLASS) {

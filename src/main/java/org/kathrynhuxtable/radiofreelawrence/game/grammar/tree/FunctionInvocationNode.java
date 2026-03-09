@@ -55,6 +55,13 @@ public class FunctionInvocationNode implements ExprNode {
 					false);
 		} else if (internalFunction != null) {
 			mv.visitVarInsn(ALOAD, 0);
+			if (gameContext.variableStore.getCurrentClass() != null) {
+				mv.visitFieldInsn(
+						GETFIELD,
+						gameContext.variableStore.getCurrentClass(),
+						"this$0",
+						GameContext.GAME_CLASS_DESCRIPTOR);
+			}
 			mv.visitFieldInsn(
 					GETFIELD,
 					GameContext.GAME_CLASS_NAME,
@@ -95,7 +102,28 @@ public class FunctionInvocationNode implements ExprNode {
 					"([Ljava/lang/Object;)I",
 					false);
 		} else if (verbFunction != null) {
-			throw new GameRuntimeException("Verb function not supported: " + verbFunction);
+			// FIXME Need to find the action desired.
+			VariableContext variableContext = gameContext.variableStore.getVariable(verbFunction);
+			if (variableContext == null) {
+				throw new GameRuntimeException("Unknown method name: " + identifier.getName());
+			} else if (variableContext.getVariableType() != VariableType.METHOD) {
+				throw new GameRuntimeException("Invalid method name: " + identifier.getName());
+			}
+
+			mv.visitVarInsn(ALOAD, 0);
+
+			StringBuilder descriptor = new StringBuilder("(");
+			for (ExprNode parameter : parameters) {
+				parameter.generate(mv, gameContext);
+				descriptor.append(parameter.getVariableType(gameContext).getDescriptor());
+			}
+			descriptor.append(")I");
+
+			mv.visitMethodInsn(INVOKEVIRTUAL,
+					GameContext.GAME_CLASS_NAME,
+					variableContext.getName(),
+					descriptor.toString(),
+					false);
 		} else {
 			throw new GameRuntimeException("Unknown function invocation");
 		}

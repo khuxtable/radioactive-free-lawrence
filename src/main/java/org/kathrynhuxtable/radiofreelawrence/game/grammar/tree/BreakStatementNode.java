@@ -39,7 +39,6 @@ public class BreakStatementNode implements StatementNode {
 
 		mv.visitTypeInsn(NEW, exceptionTypeName);
 		mv.visitInsn(DUP);
-		mv.visitLdcInsn("Invalid control type. Should not happen");
 		mv.visitFieldInsn(GETSTATIC, controlTypeName, controlType.name(), controlTypeDescriptor);
 		mv.visitMethodInsn(
 				INVOKESPECIAL,

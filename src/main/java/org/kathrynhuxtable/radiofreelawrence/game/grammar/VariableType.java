@@ -6,7 +6,7 @@ import org.springframework.lang.Nullable;
 import org.kathrynhuxtable.radiofreelawrence.game.Text;
 
 public enum VariableType {
-	FLAG, STATE, NUMBER, TEXT, TEXT_NODE, REFERENCE, METHOD, LABEL;
+	FLAG, STATE, NUMBER, TEXT, TEXT_NODE, REFERENCE, METHOD, LABEL, OBJECT, PLACE;
 
 	@Nullable
 	public String getDescriptor() {
@@ -14,7 +14,7 @@ public enum VariableType {
 			case FLAG, STATE, NUMBER -> Type.INT_TYPE.getDescriptor();
 			case TEXT -> Type.getDescriptor(String.class);
 			case TEXT_NODE -> Type.getDescriptor(Text.class);
-			case REFERENCE -> Type.getDescriptor(Object.class);
+			case REFERENCE, OBJECT, PLACE -> Type.getDescriptor(Object.class);
 			case LABEL, METHOD -> null;
 		};
 	}

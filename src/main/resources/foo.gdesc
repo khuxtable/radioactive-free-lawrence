@@ -65,12 +65,57 @@ object axe
         say("I throw at you");
         first = hits;
     }
+
+    proc fixme(var beans) {
+        say("beans is $", beans);
+    }
 }
+
+place ninth_mississippi
+    "You are standing at the corner of 9th and Mississippi."
+    """
+    You are standing at the corner of 9th and Mississippi.
+    To the north are singed trees and devastated buildings.
+    Southward, KU can be seen, a tattered flag waving over Fraser Hall.
+    To the east are the remains of downtown Lawrence."""
+{
+//    action "south" { move(ninth_mississippi); }
+    action "east" { say(ninth_mississippi); }
+    action "north" { say("Foo"); break repeat; }
+}
+
+//place emerald_city
+//    "You are at the gates of the Emerald City."
+//    """
+//    You are at the gates of a large Emerald City.
+//    There is a pair of ruby slippers here."""
+//{
+//    variable count;
+//
+//    action "tap" { countAndMove(); }
+//    action "north" { quip("There is no way to go in that direction."); }
+//    action "south" { quip("There is no way to go in that direction."); }
+//    action "east" { quip("There is no way to go in that direction."); }
+//    action "west" { quip("There is no way to go in that direction."); }
+//
+//    proc countAndMove() {
+//        if (count <= 0) {
+//            count = 3;
+//        }
+//        if (--count > 0) {
+//            quip("There's no place like home.");
+//        } else {
+//            say(brightFlashAnd);
+//            move(ninth_mississippi);
+//        }
+//    }
+//}
 
 initial {
     say("Something");
     say(1066);
     say("mytest is ", mytest);
+
 }
 
 text noDirection
@@ -80,3 +125,9 @@ text noDirection
 
 fragment you_do
     "You #";
+
+text brightFlashAnd
+    """
+    There's no place like home.
+
+    There is a bright flash and ...""";

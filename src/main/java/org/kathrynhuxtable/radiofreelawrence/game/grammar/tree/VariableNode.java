@@ -4,9 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.objectweb.asm.ClassVisitor;
 
 import org.kathrynhuxtable.radiofreelawrence.game.GameContext;
+import org.kathrynhuxtable.radiofreelawrence.game.MyClassVisitor;
 import org.kathrynhuxtable.radiofreelawrence.game.grammar.SourceLocation;
 import org.kathrynhuxtable.radiofreelawrence.game.grammar.VariableType;
 
@@ -22,9 +22,9 @@ public class VariableNode implements DeclaratorNode {
 	private SourceLocation sourceLocation;
 
 	@Override
-	public void generate(ClassVisitor cv, GameContext gameContext) {
+	public void generate(MyClassVisitor cv, GameContext gameContext) {
 		gameContext.variableStore.addVariable(variable, VariableType.NUMBER);
 
-		cv.visitField(ACC_PUBLIC, variable, "I", null, null).visitEnd();
+		cv.createField(ACC_PUBLIC, variable, "I");
 	}
 }

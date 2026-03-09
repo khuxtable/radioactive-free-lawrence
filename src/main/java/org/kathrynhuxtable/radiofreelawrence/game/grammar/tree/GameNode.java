@@ -7,10 +7,7 @@ import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Type;
 
-import org.kathrynhuxtable.radiofreelawrence.game.GameContext;
-import org.kathrynhuxtable.radiofreelawrence.game.InternalFunctions;
-import org.kathrynhuxtable.radiofreelawrence.game.Text;
-import org.kathrynhuxtable.radiofreelawrence.game.TextMethod;
+import org.kathrynhuxtable.radiofreelawrence.game.*;
 import org.kathrynhuxtable.radiofreelawrence.game.grammar.SourceLocation;
 
 import static org.objectweb.asm.Opcodes.*;
@@ -31,7 +28,7 @@ public class GameNode implements BaseNode {
 	List<VariableNode> variables = new ArrayList<>();
 	List<FlagNode> flags = new ArrayList<>();
 	List<ArrayNode> arrays = new ArrayList<>();
-	List<ObjectNode> objects = new ArrayList<>(); // TODO Generate these
+	List<ObjectNode> objects = new ArrayList<>();
 	List<PlaceNode> places = new ArrayList<>(); // TODO Generate these
 	List<TextNode> texts = new ArrayList<>();
 	Map<String, ActionNode> actions = new LinkedHashMap<>();
@@ -40,10 +37,10 @@ public class GameNode implements BaseNode {
 	List<RepeatNode> repeats = new ArrayList<>();
 	Map<String, StateClauseNode> states = new LinkedHashMap<>();
 
-	public void generate(ClassVisitor cv, GameContext gameContext) {
+	public void generate(MyClassVisitor cv, GameContext gameContext) {
 		cv.visit(V17, ACC_PUBLIC | ACC_SUPER, GameContext.GAME_CLASS_NAME, null, Type.getInternalName(Object.class), null);
 
-		cv.visitField(ACC_PUBLIC, "internalFunctions", Type.getDescriptor(InternalFunctions.class), null, null).visitEnd();
+		cv.createField(ACC_PUBLIC, "internalFunctions", Type.getDescriptor(InternalFunctions.class));
 
 		Set<Integer> seenTextElement =  new HashSet<>();
 		for (TextElementNode textElement : textElements) {
@@ -94,6 +91,21 @@ public class GameNode implements BaseNode {
 					ACC_PUBLIC);
 		}
 
+		cv.createField(
+				ACC_PUBLIC,
+				"places",
+				"Ljava/util/Map;",
+				"Ljava/util/Map<" + Type.getDescriptor(String.class) + Type.getDescriptor(GamePlace.class) + ">;");
+
+		for (PlaceNode placeNode : places) {
+			cv.visitNestMember(GameContext.GAME_CLASS_NAME + "$" + placeNode.getName());
+			cv.visitInnerClass(
+					GameContext.GAME_CLASS_NAME + "$" + placeNode.getName(),
+					GameContext.GAME_CLASS_NAME,
+					placeNode.getName(),
+					ACC_PUBLIC);
+		}
+
 		generateConstructor(cv, gameContext);
 
 		cv.visitEnd();
@@ -116,6 +128,8 @@ public class GameNode implements BaseNode {
 		generateFlags(mv);
 		generateStates(gameContext, mv);
 		generateVariables(mv);
+
+		generatePlaceAssignments(mv);
 
 		mv.visitInsn(RETURN);
 		mv.visitMaxs(1, 1);
@@ -165,7 +179,7 @@ public class GameNode implements BaseNode {
 					"(" + Type.getDescriptor(TextMethod.class) + Type.getDescriptor(String[].class) + ")V",
 					false);
 
-			mv.visitFieldInsn(PUTFIELD, GameContext.GAME_CLASS_NAME, textNode.getName(), Type.getDescriptor(Text.class));;
+			mv.visitFieldInsn(PUTFIELD, GameContext.GAME_CLASS_NAME, textNode.getName(), Type.getDescriptor(Text.class));
 		}
 	}
 
@@ -207,6 +221,36 @@ public class GameNode implements BaseNode {
 			mv.visitVarInsn(ALOAD, 0);
 			mv.visitInsn(ICONST_0);
 			mv.visitFieldInsn(PUTFIELD, GameContext.GAME_CLASS_NAME, variableNode.getVariable(), "I");
+		}
+	}
+
+	private void generatePlaceAssignments(MethodVisitor mv) {
+		// Construct places hashmap
+		mv.visitVarInsn(ALOAD, 0);
+		mv.visitTypeInsn(NEW, Type.getInternalName(HashMap.class));
+		mv.visitInsn(DUP);
+		mv.visitMethodInsn(INVOKESPECIAL, Type.getInternalName(HashMap.class), "<init>", "()V", false);
+		mv.visitFieldInsn(PUTFIELD, GameContext.GAME_CLASS_NAME, "places", Type.getDescriptor(Map.class));
+
+		for (PlaceNode placeNode : places) {
+			mv.visitVarInsn(ALOAD, 0);
+			mv.visitFieldInsn(GETFIELD, GameContext.GAME_CLASS_NAME, "places", Type.getDescriptor(Map.class));
+			mv.visitLdcInsn(placeNode.getName());
+			mv.visitTypeInsn(NEW, GameContext.GAME_CLASS_NAME + "$" + placeNode.getName());
+			mv.visitInsn(DUP);
+			mv.visitMethodInsn(
+					INVOKESPECIAL,
+					GameContext.GAME_CLASS_NAME + "$" + placeNode.getName(),
+					"<init>",
+					"()V",
+					false);
+			mv.visitMethodInsn(
+					INVOKEINTERFACE,
+					Type.getInternalName(Map.class),
+					"put",
+					"(" + Type.getDescriptor(Object.class) + Type.getDescriptor(Object.class) + ")" + Type.getDescriptor(Object.class),
+					true);
+			mv.visitInsn(POP);
 		}
 	}
 
