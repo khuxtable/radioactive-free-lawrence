@@ -1,6 +1,9 @@
 package org.kathrynhuxtable.radiofreelawrence.game;
 
 import java.io.FileOutputStream;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,9 +16,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 
 import org.kathrynhuxtable.radiofreelawrence.game.grammar.GameVisitor;
+import org.kathrynhuxtable.radiofreelawrence.game.grammar.SourceLocation;
 import org.kathrynhuxtable.radiofreelawrence.game.grammar.VariableType;
-import org.kathrynhuxtable.radiofreelawrence.game.grammar.tree.ObjectNode;
-import org.kathrynhuxtable.radiofreelawrence.game.grammar.tree.PlaceNode;
+import org.kathrynhuxtable.radiofreelawrence.game.grammar.tree.*;
 
 @RequiredArgsConstructor
 @SpringBootApplication
@@ -40,6 +43,8 @@ public class RadioactiveFreeLawrenceApplication {
 //			for (String beanName : beanNames) {
 //				System.out.println(beanName);
 //			}
+
+			createDefaultElements();
 
 			GameVisitor visitor = new GameVisitor(gameContext.gameNode, gameContext.errorReporter);
 			visitor.readFile("foo.gdesc", false);
@@ -86,4 +91,54 @@ public class RadioactiveFreeLawrenceApplication {
 		};
 	}
 
+	private void createDefaultElements() {
+		createState("badword", -2);
+		createState("ambigword", -3);
+		createState("badsyntax", -1);
+
+		createVariable("arg1");
+		createVariable("arg2");
+		createVariable("status");
+		createVariable("here");
+		createVariable("there");
+
+		createPlace("inhand", "inventory", "Inventory");
+		createPlace("ylem", "ylem", "Ylem");
+	}
+
+	private void createState(String name, int value) {
+		StateClauseNode node = new StateClauseNode(name, NumberLiteralNode.builder()
+				.number(value)
+				.sourceLocation(new SourceLocation(null, 0, 0))
+				.build(),
+				new SourceLocation(null, 0, 0));
+		gameContext.gameNode.getStates().put(name, node);
+		gameContext.gameNode.getIdentifiers().put(name, node);
+	}
+
+	private void createVariable(String name) {
+		VariableNode node = VariableNode.builder()
+				.variable(name)
+				.sourceLocation(new SourceLocation(null, 0, 0))
+				.build();
+		gameContext.gameNode.getVariables().add(node);
+		gameContext.gameNode.getIdentifiers().put(name, node);
+	}
+
+	private void createPlace(String name, String briefDescription, String longDescription) {
+		PlaceNode node = PlaceNode.builder()
+				.name(name)
+				.verbs(new HashSet<>())
+				.briefDescription(briefDescription)
+				.longDescription(longDescription)
+				.variables(new ArrayList<>())
+				.commands(new LinkedHashMap<>())
+				.procs(new LinkedHashMap<>())
+				.sourceLocation(new SourceLocation(null, 0, 0))
+				.build();
+		// Add name to vocabulary.
+		gameContext.gameNode.getVerbs().put(node.getName(), node);
+		gameContext.gameNode.getIdentifiers().put(node.getName(), node);
+		gameContext.gameNode.getPlaces().add(node);
+	}
 }
