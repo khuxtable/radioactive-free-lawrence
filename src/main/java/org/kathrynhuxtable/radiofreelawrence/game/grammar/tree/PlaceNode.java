@@ -48,9 +48,7 @@ public class PlaceNode implements DeclaratorNode, HasRefno, VocabularyNode {
 			variableNode.generate(cv, gameContext);
 		}
 
-		for (VerbCommandNode vcn : commands.values()) {
-			vcn.generate(cv, gameContext);
-		}
+		VerbCommandNode.generateActions(cv, gameContext, commands);
 
 		for (ProcNode proc : procs.values()) {
 			proc.generate(cv, gameContext);
