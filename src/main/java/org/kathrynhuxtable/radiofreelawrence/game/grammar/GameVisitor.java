@@ -231,7 +231,6 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 		String arg2 = ctx.arg2 == null ? null : TextUtils.cleanStringLiteral(ctx.arg2.getText()).toLowerCase();
 		node.getActionCodes().add(ActionCode.builder()
 				.arg2(arg2)
-				.name(ActionNode.makeName(arg1, arg2))
 				.code((BlockNode) visit(ctx.block()))
 				.sourceLocation(new SourceLocation(ctx.block()))
 				.build());
@@ -740,7 +739,14 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 	// | internalFunction LPAREN optionalExpressionList RPAREN
 	@Override
 	public BaseNode visitFunctionInvocation(FunctionInvocationContext ctx) {
-		if (ctx.IDENTIFIER() != null) {
+		if (ctx.IDENTIFIER() != null && ctx.STRING_LITERAL() != null) {
+			return FunctionInvocationNode.builder()
+					.identifier(getIdentifierNode(ctx.IDENTIFIER(), getSourceLocation(ctx.IDENTIFIER())))
+					.verbFunction(TextUtils.cleanStringLiteral(ctx.STRING_LITERAL().getText()).toLowerCase())
+					.parameters(((ExprListNode) visit(ctx.optionalExpressionList())).getExprNodes())
+					.sourceLocation(new SourceLocation(ctx))
+					.build();
+		} else if (ctx.IDENTIFIER() != null) {
 			return FunctionInvocationNode.builder()
 					.identifier(getIdentifierNode(ctx.IDENTIFIER(), getSourceLocation(ctx.IDENTIFIER())))
 					.parameters(((ExprListNode) visit(ctx.optionalExpressionList())).getExprNodes())

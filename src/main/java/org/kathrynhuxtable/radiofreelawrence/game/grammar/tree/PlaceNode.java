@@ -8,14 +8,13 @@ import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Type;
 
+import org.kathrynhuxtable.radiofreelawrence.game.GameAction;
 import org.kathrynhuxtable.radiofreelawrence.game.GameContext;
 import org.kathrynhuxtable.radiofreelawrence.game.GamePlace;
 import org.kathrynhuxtable.radiofreelawrence.game.MyClassVisitor;
 import org.kathrynhuxtable.radiofreelawrence.game.grammar.SourceLocation;
-import org.kathrynhuxtable.radiofreelawrence.game.grammar.VariableType;
 
 import static org.objectweb.asm.Opcodes.*;
-import static org.objectweb.asm.Opcodes.ACC_SYNTHETIC;
 
 @Data
 @Builder
@@ -38,7 +37,8 @@ public class PlaceNode implements DeclaratorNode, HasRefno, VocabularyNode {
 	@Override
 	public void generate(MyClassVisitor cv, GameContext gameContext) {
 		String innerClassInternalName = GameContext.GAME_CLASS_NAME + "$" + name;
-		cv.visit(V17, ACC_PUBLIC, innerClassInternalName, null, Type.getInternalName(Object.class), new String[] { Type.getInternalName(GamePlace.class) });
+		cv.visit(V17, ACC_PUBLIC, innerClassInternalName, null, Type.getInternalName(Object.class),
+				new String[] { Type.getInternalName(GamePlace.class), Type.getInternalName(GameAction.class) });
 		cv.visitNestHost(GameContext.GAME_CLASS_NAME);
 		cv.visitInnerClass(innerClassInternalName, GameContext.GAME_CLASS_NAME, name, ACC_PUBLIC);
 		cv.createField(ACC_FINAL | ACC_SYNTHETIC, "this$0", GameContext.GAME_CLASS_DESCRIPTOR);
@@ -67,6 +67,11 @@ public class PlaceNode implements DeclaratorNode, HasRefno, VocabularyNode {
 		MethodVisitor mv = cv.visitMethod(ACC_PUBLIC, "<init>", "(" + GameContext.GAME_CLASS_DESCRIPTOR + ")V", null, null);
 		mv.visitParameter("this$0", ACC_FINAL | ACC_MANDATED);
 		mv.visitCode();
+
+		mv.visitVarInsn(ALOAD, 0);
+		mv.visitVarInsn(ALOAD, 1);
+		mv.visitFieldInsn(PUTFIELD, innerClassInternalName, "this$0", GameContext.GAME_CLASS_DESCRIPTOR);
+
 		mv.visitVarInsn(ALOAD, 0); //load the first local variable: this
 		mv.visitMethodInsn(INVOKESPECIAL, "java/lang/Object", "<init>", "()V", false);
 

@@ -1,9 +1,6 @@
 package org.kathrynhuxtable.radiofreelawrence.game;
 
 import java.io.FileOutputStream;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,9 +13,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 
 import org.kathrynhuxtable.radiofreelawrence.game.grammar.GameVisitor;
-import org.kathrynhuxtable.radiofreelawrence.game.grammar.SourceLocation;
 import org.kathrynhuxtable.radiofreelawrence.game.grammar.VariableType;
-import org.kathrynhuxtable.radiofreelawrence.game.grammar.tree.*;
+import org.kathrynhuxtable.radiofreelawrence.game.grammar.tree.ObjectNode;
+import org.kathrynhuxtable.radiofreelawrence.game.grammar.tree.PlaceNode;
 
 @RequiredArgsConstructor
 @SpringBootApplication

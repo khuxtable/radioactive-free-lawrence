@@ -47,7 +47,7 @@ proc testMeNow(var myArg) {
 
 action "take" "inventory" {
     say("take inventory here");
-//    "inventory"();     // Execute code associated with the INVENTORY command
+    //    "inventory"();     // Execute code associated with the INVENTORY command
 }
 
 object axe
@@ -56,17 +56,19 @@ object axe
 {
     variable hits = 5;
     action "swing" {
-//        useweapon(this, false, 1, 40, 100, 0);
+        var beam = 2;
+        //        useweapon(this, false, 1, 40, 100, 0);
         say("I swing at you");
-        hits = hits + 2;
+        hits = hits + beam;
     }
     action "throw" {
-//        useweapon(this, true, 1, 25, 75, 0);
+        //        useweapon(this, true, 1, 25, 75, 0);
         say("I throw at you");
         first = hits;
     }
 
     proc fixme(var beans) {
+        ninth_mississippi("east");
         say("beans is $", beans);
     }
 }
@@ -79,42 +81,45 @@ place ninth_mississippi
     Southward, KU can be seen, a tattered flag waving over Fraser Hall.
     To the east are the remains of downtown Lawrence."""
 {
-//    action "south" { move(ninth_mississippi); }
+    //    action "south" { move(ninth_mississippi); }
     action "east" { say(ninth_mississippi); }
     action "north" { say("Foo"); break repeat; }
 }
 
-//place emerald_city
-//    "You are at the gates of the Emerald City."
-//    """
-//    You are at the gates of a large Emerald City.
-//    There is a pair of ruby slippers here."""
-//{
-//    variable count;
-//
-//    action "tap" { countAndMove(); }
-//    action "north" { quip("There is no way to go in that direction."); }
-//    action "south" { quip("There is no way to go in that direction."); }
-//    action "east" { quip("There is no way to go in that direction."); }
-//    action "west" { quip("There is no way to go in that direction."); }
-//
-//    proc countAndMove() {
-//        if (count <= 0) {
-//            count = 3;
-//        }
-//        if (--count > 0) {
-//            quip("There's no place like home.");
-//        } else {
-//            say(brightFlashAnd);
-//            move(ninth_mississippi);
-//        }
-//    }
-//}
+    //place emerald_city
+    //    "You are at the gates of the Emerald City."
+    //    """
+    //    You are at the gates of a large Emerald City.
+    //    There is a pair of ruby slippers here."""
+    //{
+    //    variable count;
+    //
+    //    action "tap" { countAndMove(); }
+    //    action "north" { quip("There is no way to go in that direction."); }
+    //    action "south" { quip("There is no way to go in that direction."); }
+    //    action "east" { quip("There is no way to go in that direction."); }
+    //    action "west" { quip("There is no way to go in that direction."); }
+    //
+    //    proc countAndMove() {
+    //        if (count <= 0) {
+    //            count = 3;
+    //        }
+    //        if (--count > 0) {
+    //            quip("There's no place like home.");
+    //        } else {
+    //            say(brightFlashAnd);
+    //            move(ninth_mississippi);
+    //        }
+    //    }
+    //}
 
 initial {
     say("Something");
     say(1066);
     say("mytest is ", mytest);
+    "inventory"("");
+    ninth_mississippi("east");
+    "take"("inventory");
     say(ninth_mississippi);
 }
 
@@ -131,3 +136,8 @@ text brightFlashAnd
     There's no place like home.
 
     There is a bright flash and ...""";
+
+action "inventory" {
+    say("In inventory");
+    break repeat;              // Command fully handled, so terminate the REPEAT loop
+}

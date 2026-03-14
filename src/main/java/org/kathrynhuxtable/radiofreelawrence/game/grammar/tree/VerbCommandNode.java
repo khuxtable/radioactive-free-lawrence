@@ -32,13 +32,6 @@ public class VerbCommandNode implements StatementNode {
 	private BlockNode block;
 	private SourceLocation sourceLocation;
 
-	public static String makeName(String verb) {
-		StringBuilder sb = new StringBuilder("action");
-		sb.append(verb.substring(0, 1).toUpperCase());
-		sb.append(verb.substring(1));
-		return sb.toString();
-	}
-
 	public static void generateActions(MyClassVisitor cv, GameContext gameContext, Map<String, VerbCommandNode> actions) {
 		gameContext.variableStore.addVariable("doAction", VariableType.METHOD);
 		gameContext.variableStore.newFunctionScope();
@@ -87,14 +80,12 @@ public class VerbCommandNode implements StatementNode {
 
 	@Override
 	public void generate(MethodVisitor mv, GameContext gameContext) {
-		String name = makeName(verb);
 		gameContext.variableStore.newBlockScope();
 		Label startLabel = new Label();
 		mv.visitLabel(startLabel);
 		block.generate(mv, gameContext);
 		Label endLabel = new Label();
 		mv.visitLabel(endLabel);
-		mv.visitInsn(RETURN);
 		gameContext.variableStore.closeBlockScope(mv, startLabel, endLabel);
 	}
 }

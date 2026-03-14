@@ -38,11 +38,15 @@ public class GameRunner {
 			try {
 				Method method = myClass.getDeclaredMethod(name);
 				method.invoke(instance);
-			} catch (BreakException e) {
-				break;
-			} catch (ContinueException e) {
-				// Implicit continue
-			} catch (InvocationTargetException | NoSuchMethodException | IllegalAccessException e) {
+			} catch (InvocationTargetException e) {
+				if (e.getCause() instanceof BreakException) {
+					break;
+				} else if (e.getCause() instanceof ContinueException) {
+					// Implicit continue
+				} else {
+					throw new RuntimeException(e);
+				}
+			} catch (NoSuchMethodException | IllegalAccessException e) {
 				throw new RuntimeException(e);
 			}
 		}
@@ -55,14 +59,18 @@ public class GameRunner {
 				try {
 					Method method = myClass.getDeclaredMethod(name);
 					method.invoke(instance);
-				} catch (BreakException e) {
-					if (e.getControlType() == ControlType.REPEAT) {
+				} catch (InvocationTargetException e) {
+					if (e.getCause() instanceof BreakException breakException) {
+						if (breakException.getControlType() == ControlType.REPEAT) {
+							break;
+						}
+					} else if (e.getCause() instanceof ContinueException) {
+						// Restart from the beginning
 						break;
+					}  else {
+						throw new RuntimeException(e);
 					}
-				} catch (ContinueException e) {
-					// Restart from the beginning
-					break;
-				} catch (InvocationTargetException | NoSuchMethodException | IllegalAccessException e) {
+				} catch (NoSuchMethodException | IllegalAccessException e) {
 					throw new RuntimeException(e);
 				}
 			}

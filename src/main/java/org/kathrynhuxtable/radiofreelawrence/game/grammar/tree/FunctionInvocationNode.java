@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Type;
 
+import org.kathrynhuxtable.radiofreelawrence.game.GameAction;
 import org.kathrynhuxtable.radiofreelawrence.game.GameContext;
 import org.kathrynhuxtable.radiofreelawrence.game.InternalFunctions;
 import org.kathrynhuxtable.radiofreelawrence.game.exception.GameRuntimeException;
@@ -31,29 +32,7 @@ public class FunctionInvocationNode implements ExprNode {
 
 	@Override
 	public void generate(MethodVisitor mv, GameContext gameContext) {
-		if (identifier != null) {
-			VariableContext variableContext = gameContext.variableStore.getVariable(identifier.getName());
-			if (variableContext == null) {
-				throw new GameRuntimeException("Unknown method name: " + identifier.getName());
-			} else if (variableContext.getVariableType() != VariableType.METHOD) {
-				throw new GameRuntimeException("Invalid method name: " + identifier.getName());
-			}
-
-			mv.visitVarInsn(ALOAD, 0);
-
-			StringBuilder descriptor = new StringBuilder("(");
-			for (ExprNode parameter : parameters) {
-				parameter.generate(mv, gameContext);
-				descriptor.append(parameter.getVariableType(gameContext).getDescriptor());
-			}
-			descriptor.append(")I");
-
-			mv.visitMethodInsn(INVOKEVIRTUAL,
-					GameContext.GAME_CLASS_NAME,
-					variableContext.getName(),
-					descriptor.toString(),
-					false);
-		} else if (internalFunction != null) {
+		if (internalFunction != null) {
 			mv.visitVarInsn(ALOAD, 0);
 			if (gameContext.variableStore.getCurrentClass() != null) {
 				mv.visitFieldInsn(
@@ -80,10 +59,10 @@ public class FunctionInvocationNode implements ExprNode {
 							"java/lang/Integer",
 							"valueOf",
 							"(I)Ljava/lang/Integer;",
-					false);
+							false);
 				} else if (parameters.get(index) instanceof IdentifierNode identifierNode) {
 					VariableContext variableContext = gameContext.variableStore.getVariable(identifierNode.getName());
-					if (variableContext != null &&  variableContext.getVariableType() == VariableType.NUMBER) {
+					if (variableContext != null && variableContext.getVariableType() == VariableType.NUMBER) {
 						mv.visitMethodInsn(
 								INVOKESTATIC,
 								"java/lang/Integer",
@@ -101,29 +80,73 @@ public class FunctionInvocationNode implements ExprNode {
 					gameContext.getInternalFunctions().getInternalFunction(internalFunction),
 					"([Ljava/lang/Object;)I",
 					false);
-		} else if (verbFunction != null) {
-			// FIXME Need to find the action desired.
-			VariableContext variableContext = gameContext.variableStore.getVariable(verbFunction);
+		} else if (identifier != null) {
+			VariableContext variableContext = gameContext.variableStore.getVariable(identifier.getName());
 			if (variableContext == null) {
 				throw new GameRuntimeException("Unknown method name: " + identifier.getName());
-			} else if (variableContext.getVariableType() != VariableType.METHOD) {
-				throw new GameRuntimeException("Invalid method name: " + identifier.getName());
 			}
 
-			mv.visitVarInsn(ALOAD, 0);
+			VariableType variableType = variableContext.getVariableType();
+			if (variableType == VariableType.METHOD) {
+				String className = gameContext.variableStore.getCurrentClass();
+				if (className == null) {
+					className = GameContext.GAME_CLASS_NAME;
+				}
+				mv.visitVarInsn(ALOAD, 0);
+				StringBuilder descriptor = new StringBuilder("(");
+				for (ExprNode parameter : parameters) {
+					parameter.generate(mv, gameContext);
+					descriptor.append(parameter.getVariableType(gameContext).getDescriptor());
+				}
+				descriptor.append(")I");
 
-			StringBuilder descriptor = new StringBuilder("(");
+				mv.visitMethodInsn(INVOKEVIRTUAL,
+						className,
+						identifier.getName(),
+						descriptor.toString(),
+						false);
+			} else if (variableType == VariableType.OBJECT || variableType == VariableType.PLACE || variableType == VariableType.REFERENCE) {
+				identifier.generate(mv, gameContext);
+				StringBuilder descriptor = new StringBuilder("(");
+				for (ExprNode parameter : parameters) {
+					parameter.generate(mv, gameContext);
+					descriptor.append(parameter.getVariableType(gameContext).getDescriptor());
+				}
+				descriptor.append(")V");
+				mv.visitMethodInsn(
+						INVOKEINTERFACE,
+						Type.getInternalName(GameAction.class),
+						"doAction",
+						descriptor.toString(),
+						true);
+				mv.visitInsn(ICONST_1);
+			} else {
+				throw new GameRuntimeException("Invalid method type: " + identifier.getName());
+			}
+		} else if (verbFunction != null) {
+			mv.visitVarInsn(ALOAD, 0);
+			if (gameContext.variableStore.getCurrentClass() != null) {
+				// Need to reference instance variable in outer class
+				mv.visitFieldInsn(
+						GETFIELD,
+						gameContext.variableStore.getCurrentClass(),
+						"this$0", // outer class "this"
+						GameContext.GAME_CLASS_DESCRIPTOR);
+			}
+			StringBuilder descriptor = new StringBuilder("(Ljava/lang/String;");
+			mv.visitLdcInsn(verbFunction);
 			for (ExprNode parameter : parameters) {
 				parameter.generate(mv, gameContext);
 				descriptor.append(parameter.getVariableType(gameContext).getDescriptor());
 			}
-			descriptor.append(")I");
-
-			mv.visitMethodInsn(INVOKEVIRTUAL,
+			descriptor.append(")V");
+			mv.visitMethodInsn(
+					INVOKEVIRTUAL,
 					GameContext.GAME_CLASS_NAME,
-					variableContext.getName(),
+					"doAction",
 					descriptor.toString(),
 					false);
+			mv.visitInsn(ICONST_1);
 		} else {
 			throw new GameRuntimeException("Unknown function invocation");
 		}

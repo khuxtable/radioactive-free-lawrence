@@ -25,23 +25,12 @@ public class ActionNode implements StatementNode {
 	private List<ActionCode> actionCodes = new ArrayList<>();
 	private SourceLocation sourceLocation;
 
-	public static String makeName(String arg1, String arg2) {
-		StringBuilder sb = new StringBuilder("action");
-		sb.append(arg1.substring(0, 1).toUpperCase());
-		sb.append(arg1.substring(1));
-		if (arg2 != null && !arg2.isEmpty()) {
-			sb.append(arg2.substring(0, 1).toUpperCase());
-			sb.append(arg2.substring(1));
-		}
-		return sb.toString();
-	}
-
 	public static void generateActions(MyClassVisitor cv, GameContext gameContext, Map<String, ActionNode> actions) {
 		gameContext.variableStore.addVariable("doAction", VariableType.METHOD);
 		gameContext.variableStore.newFunctionScope();
 		MethodVisitor mv2 = cv.visitMethod(ACC_PUBLIC, "doAction", "(Ljava/lang/String;Ljava/lang/String;)V", null, null);
-		mv2.visitParameter("arg1", 0);
-		mv2.visitParameter("arg2", 0);
+		mv2.visitParameter("arg1", 1);
+		mv2.visitParameter("arg2", 2);
 		mv2.visitCode();
 		LocalVariablesSorter mv = new LocalVariablesSorter(Opcodes.ACC_PUBLIC, "(Ljava/lang/String;Ljava/lang/String;)V", mv2);
 		Label startLabel = new Label();
@@ -50,7 +39,7 @@ public class ActionNode implements StatementNode {
 
 		if (actions != null && !actions.isEmpty()) {
 			Map<Integer, ActionNode> hashToAction = new TreeMap<>();
-			Map<Integer, Label> hashToLabel = new HashMap<>();
+			Map<Integer, Label> hashToLabel = new TreeMap<>();
 			for (Map.Entry<String, ActionNode> entry : actions.entrySet()) {
 				int hashCode = entry.getKey().hashCode();
 				hashToAction.put(hashCode, entry.getValue());
@@ -86,7 +75,7 @@ public class ActionNode implements StatementNode {
 	@Override
 	public void generate(MethodVisitor mv, GameContext gameContext) {
 		Map<Integer, ActionCode> hashToAction = new TreeMap<>();
-		Map<Integer, Label> hashToLabel = new HashMap<>();
+		Map<Integer, Label> hashToLabel = new TreeMap<>();
 		for (ActionCode actionCode : actionCodes) {
 			int hashCode = actionCode.arg2 == null ? 0 : actionCode.arg2.hashCode();
 			hashToAction.put(hashCode, actionCode);
@@ -124,7 +113,6 @@ public class ActionNode implements StatementNode {
 		private String arg2;
 		private BlockNode code;
 		private SourceLocation sourceLocation;
-		private String name;
 
 		@Override
 		public void generate(MethodVisitor mv, GameContext gameContext) {
