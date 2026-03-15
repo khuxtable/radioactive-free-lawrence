@@ -10,7 +10,9 @@ import lombok.Setter;
 
 import org.kathrynhuxtable.gdesc.parser.GameInfo;
 import org.kathrynhuxtable.gdesc.parser.InternalFunction;
+import org.kathrynhuxtable.radiofreelawrence.game.exception.BreakException;
 import org.kathrynhuxtable.radiofreelawrence.game.exception.GameRuntimeException;
+import org.kathrynhuxtable.radiofreelawrence.game.grammar.ControlType;
 
 public class InternalFunctions {
 
@@ -50,14 +52,17 @@ public class InternalFunctions {
 		}
 	}
 
-//	private Object getGameVariable(String name) {
-//		Object gameVariable = null;
-//		try {
-//			gameVariable = internalFunctions.get(name);
-//		}
-//	}
+	private Object getGameVariable(String name) {
+		Object gameVariable = null;
+		try {
+			gameVariable = internalFunctions.get(name);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		return gameVariable;
+	}
 
-	// Internal functions here.
+//	 Internal functions here.
 
 //	@InternalFunction(name = "input")
 //	public int input(ExprNode... parameters) {
@@ -65,47 +70,47 @@ public class InternalFunctions {
 //		gameContext.getInput().input();
 //		return 0;
 //	}
-//
-//	@InternalFunction(name = "in")
-//	public int inrange(ExprNode... parameters) {
-//		int value = parameters[0].evaluate(gameContext);
-//		return (value >= parameters[1].evaluate(gameContext) && value <= parameters[2].evaluate(gameContext)) ? 1 : 0;
-//	}
-//
-//	@InternalFunction(name = "chance")
-//	public int ischance(ExprNode... parameters) {
-//		return Math.random() * 100 < parameters[0].evaluate(gameContext) ? 1 : 0;
-//	}
-//
-//	@InternalFunction(name = "getrandom")
-//	public int random(ExprNode... parameters) {
-//		int min;
-//		int max;
-//		if (parameters.length == 0) {
-//			min = 0;
-//			max = 100;
-//		} else if (parameters.length == 1) {
-//			min = 0;
-//			max = parameters[0].evaluate(gameContext);
-//		} else {
-//			min = parameters[0].evaluate(gameContext);
-//			max = parameters[1].evaluate(gameContext);
-//		}
-//		return (int) (Math.random() * (max - min + 1)) + min;
-//	}
-//
+
+	@InternalFunction(name = "in")
+	public int inrange(Object... parameters) {
+		int value = (int) parameters[0];
+		return (value >= (int) parameters[1] && value <= (int) parameters[2]) ? 1 : 0;
+	}
+
+	@InternalFunction(name = "chance")
+	public int ischance(Object... parameters) {
+		return Math.random() * 100 < (int) parameters[0] ? 1 : 0;
+	}
+
+	@InternalFunction(name = "getrandom")
+	public int random(Object... parameters) {
+		int min;
+		int max;
+		if (parameters.length == 0) {
+			min = 0;
+			max = 100;
+		} else if (parameters.length == 1) {
+			min = 0;
+			max = (int) parameters[0];
+		} else {
+			min = (int) parameters[0];
+			max = (int) parameters[1];
+		}
+		return (int) (Math.random() * (max - min + 1)) + min;
+	}
+
 //	@InternalFunction(name = "have")
-//	public int ishave(ExprNode... parameters) {
-//		int refno = parameters[0].evaluate(gameContext);
+//	public int ishave(Object... parameters) {
+//		Object refno = parameters[0];
 //		// The inhand location (inventory) is always refno floc.
-//		if (refno >= gameContext.fobj && refno < gameContext.lobj) {
+//		if (refno instanceof GameObject) {
 //			if (gameContext.locations[refno - gameContext.fobj] == gameContext.floc) {
 //				return 1;
 //			}
 //		}
 //		return 0;
 //	}
-//
+
 //	@InternalFunction(name = "ishere")
 //	public int ishere(ExprNode... parameters) {
 //		int refno = parameters[0].evaluate(gameContext);
@@ -431,13 +436,13 @@ public class InternalFunctions {
 //		// Maybe need to generate it before. Not sure.
 //		return 0;
 //	}
-//
-//	@InternalFunction(name = "quip")
-//	public int quip(ExprNode... text) {
-//		say_(text);
-//		throw new BreakException(ControlType.REPEAT);
-//	}
-//
+
+	@InternalFunction(name = "quip")
+	public int quip(Object... parameters) {
+		say_(parameters);
+		throw new BreakException(ControlType.REPEAT);
+	}
+
 //	@InternalFunction(name = "respond")
 //	public int respond(ExprNode... parameters) {
 //		if (anyof(parameters) != 0) {

@@ -13,6 +13,7 @@ import org.kathrynhuxtable.radiofreelawrence.game.GameContext;
 import org.kathrynhuxtable.radiofreelawrence.game.GamePlace;
 import org.kathrynhuxtable.radiofreelawrence.game.MyClassVisitor;
 import org.kathrynhuxtable.radiofreelawrence.game.grammar.SourceLocation;
+import org.kathrynhuxtable.radiofreelawrence.game.grammar.VariableType;
 
 import static org.objectweb.asm.Opcodes.*;
 
@@ -46,6 +47,10 @@ public class PlaceNode implements DeclaratorNode, HasRefno, VocabularyNode {
 
 		for (VariableNode variableNode : variables) {
 			variableNode.generate(cv, gameContext);
+		}
+
+		for (ProcNode procNode : procs.values()) {
+			gameContext.variableStore.addVariable(procNode.getName(), VariableType.METHOD);
 		}
 
 		VerbCommandNode.generateActions(cv, gameContext, commands);

@@ -32,7 +32,6 @@ public class ProcNode implements DeclaratorNode {
 
 	@Override
 	public void generate(MyClassVisitor cv, GameContext gameContext) {
-		gameContext.variableStore.addVariable(name, VariableType.METHOD);
 		gameContext.variableStore.newFunctionScope();
 		StringBuilder descriptor = new StringBuilder("(");
 		for (int i = 0; i < args.size(); i++) {
@@ -43,7 +42,8 @@ public class ProcNode implements DeclaratorNode {
 				default -> Type.getDescriptor(Object.class);
 			});
 		}
-		descriptor.append(")" + Type.INT_TYPE.getDescriptor());
+		descriptor.append(")");
+		descriptor.append(Type.INT_TYPE.getDescriptor());
 		MethodVisitor mv2 = cv.visitMethod(ACC_PUBLIC, name, descriptor.toString(), null, null);
 		mv2.visitCode();
 		LocalVariablesSorter mv = new LocalVariablesSorter(ACC_PUBLIC, descriptor.toString(), mv2);

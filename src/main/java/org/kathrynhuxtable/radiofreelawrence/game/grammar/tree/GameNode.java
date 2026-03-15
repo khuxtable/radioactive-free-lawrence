@@ -9,6 +9,7 @@ import org.objectweb.asm.Type;
 
 import org.kathrynhuxtable.radiofreelawrence.game.*;
 import org.kathrynhuxtable.radiofreelawrence.game.grammar.SourceLocation;
+import org.kathrynhuxtable.radiofreelawrence.game.grammar.VariableType;
 
 import static org.objectweb.asm.Opcodes.*;
 
@@ -42,7 +43,7 @@ public class GameNode implements BaseNode {
 
 		cv.createField(ACC_PUBLIC, "internalFunctions", Type.getDescriptor(InternalFunctions.class));
 
-		Set<Integer> seenTextElement =  new HashSet<>();
+		Set<Integer> seenTextElement = new HashSet<>();
 		for (TextElementNode textElement : textElements) {
 			if (!seenTextElement.contains(textElement.getIndex())) {
 				textElement.generate(cv, gameContext);
@@ -66,8 +67,9 @@ public class GameNode implements BaseNode {
 			variableNode.generate(cv, gameContext);
 		}
 
-		for (ProcNode proc : procs.values()) {
-			proc.generate(cv, gameContext);
+		for (ProcNode procNode : procs.values()) {
+			gameContext.variableStore.addVariable(procNode.getName(), VariableType.METHOD);
+			procNode.generate(cv, gameContext);
 		}
 
 		ActionNode.generateActions(cv, gameContext, actions);
@@ -120,6 +122,14 @@ public class GameNode implements BaseNode {
 		mv.visitVarInsn(ALOAD, 0);
 		mv.visitVarInsn(ALOAD, 1);
 		mv.visitFieldInsn(PUTFIELD, GameContext.GAME_CLASS_NAME, "internalFunctions", Type.getDescriptor(InternalFunctions.class));
+		mv.visitVarInsn(ALOAD, 1);
+		mv.visitVarInsn(ALOAD, 0);
+		mv.visitMethodInsn(
+				INVOKEVIRTUAL,
+				Type.getInternalName(InternalFunctions.class),
+				"setGame",
+				"(" + Type.getDescriptor(Object.class) + ")V",
+				false);
 
 		generateTextElements(mv);
 		generateTexts(mv);
@@ -135,7 +145,7 @@ public class GameNode implements BaseNode {
 	}
 
 	private void generateTextElements(MethodVisitor mv) {
-		Set<Integer> seenTextElement =  new HashSet<>();
+		Set<Integer> seenTextElement = new HashSet<>();
 		for (TextElementNode textElementNode : textElements) {
 			if (!seenTextElement.contains(textElementNode.getIndex())) {
 				String name = "textElement" + textElementNode.getIndex();
@@ -161,7 +171,7 @@ public class GameNode implements BaseNode {
 
 			mv.visitIntInsn(SIPUSH, textNode.getTextNodes().size());
 			mv.visitTypeInsn(ANEWARRAY, Type.getInternalName(String.class));
-			for  (int index = 0; index < textNode.getTextNodes().size(); index++) {
+			for (int index = 0; index < textNode.getTextNodes().size(); index++) {
 				String name = "textElement" + textNode.getTextNodes().get(index).getIndex();
 				mv.visitInsn(DUP);
 				mv.visitIntInsn(SIPUSH, index);
@@ -186,7 +196,7 @@ public class GameNode implements BaseNode {
 			int bitValue = 0;
 			for (String flag : flagNode.getFlags()) {
 				mv.visitVarInsn(ALOAD, 0);
-				mv.visitLdcInsn(1<<bitValue++);
+				mv.visitLdcInsn(1 << bitValue++);
 				mv.visitFieldInsn(PUTFIELD, GameContext.GAME_CLASS_NAME, flag, "I");
 			}
 		}
@@ -203,7 +213,7 @@ public class GameNode implements BaseNode {
 					mv.visitFieldInsn(GETFIELD, GameContext.GAME_CLASS_NAME, previousState, "I");
 					mv.visitInsn(ICONST_1);
 					mv.visitInsn(IADD);
-				}else {
+				} else {
 					mv.visitLdcInsn(nextStateValue++);
 				}
 			} else {

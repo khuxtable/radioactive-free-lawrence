@@ -86,32 +86,32 @@ place ninth_mississippi
     action "north" { say("Foo"); break repeat; }
 }
 
-    //place emerald_city
-    //    "You are at the gates of the Emerald City."
-    //    """
-    //    You are at the gates of a large Emerald City.
-    //    There is a pair of ruby slippers here."""
-    //{
-    //    variable count;
-    //
-    //    action "tap" { countAndMove(); }
-    //    action "north" { quip("There is no way to go in that direction."); }
-    //    action "south" { quip("There is no way to go in that direction."); }
-    //    action "east" { quip("There is no way to go in that direction."); }
-    //    action "west" { quip("There is no way to go in that direction."); }
-    //
-    //    proc countAndMove() {
-    //        if (count <= 0) {
-    //            count = 3;
-    //        }
-    //        if (--count > 0) {
-    //            quip("There's no place like home.");
-    //        } else {
-    //            say(brightFlashAnd);
-    //            move(ninth_mississippi);
-    //        }
-    //    }
-    //}
+place emerald_city
+    "You are at the gates of the Emerald City."
+    """
+    You are at the gates of a large Emerald City.
+    There is a pair of ruby slippers here."""
+{
+    variable count;
+
+    action "tap" { countAndMove(); }
+    action "north" { quip("There is no way to go in that direction."); }
+    action "south" { quip("There is no way to go in that direction."); }
+    action "east" { quip("There is no way to go in that direction."); }
+    action "west" { quip("There is no way to go in that direction."); }
+
+    proc countAndMove() {
+        if (count <= 0) {
+            count = 3;
+        }
+        if (--count > 0) {
+            quip("There's no place like home.");
+        } else {
+            say(brightFlashAnd);
+//            move(ninth_mississippi);
+        }
+    }
+}
 
 initial {
     say("Something");
