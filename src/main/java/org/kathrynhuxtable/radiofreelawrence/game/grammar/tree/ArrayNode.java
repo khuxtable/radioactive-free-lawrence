@@ -4,9 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.objectweb.asm.ClassVisitor;
 
 import org.kathrynhuxtable.radiofreelawrence.game.GameContext;
-import org.kathrynhuxtable.radiofreelawrence.game.MyClassVisitor;
 import org.kathrynhuxtable.radiofreelawrence.game.grammar.SourceLocation;
 
 @Data
@@ -19,7 +19,7 @@ public class ArrayNode implements DeclaratorNode {
 	private SourceLocation sourceLocation;
 
 	@Override
-	public void generate(MyClassVisitor cw, GameContext gameContext) {
+	public void generate(ClassVisitor cw, GameContext gameContext) {
 
 	}
 }

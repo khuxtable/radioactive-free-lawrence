@@ -4,11 +4,12 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Type;
 
+import org.kathrynhuxtable.radiofreelawrence.game.AsmUtils;
 import org.kathrynhuxtable.radiofreelawrence.game.GameContext;
-import org.kathrynhuxtable.radiofreelawrence.game.MyClassVisitor;
 import org.kathrynhuxtable.radiofreelawrence.game.grammar.SourceLocation;
 import org.kathrynhuxtable.radiofreelawrence.game.grammar.VariableType;
 
@@ -26,9 +27,9 @@ public class TextElementNode implements DeclaratorNode, ExprNode, HasRefno {
 	private SourceLocation sourceLocation;
 
 	@Override
-	public void generate(MyClassVisitor cv, GameContext gameContext) {
+	public void generate(ClassVisitor cv, GameContext gameContext) {
 		String name = "textElement" + index;
-		cv.createField(ACC_PUBLIC | ACC_FINAL, name, Type.getDescriptor(String.class));
+		AsmUtils.createField(cv, ACC_PUBLIC | ACC_FINAL, name, Type.getDescriptor(String.class));
 	}
 
 	@Override

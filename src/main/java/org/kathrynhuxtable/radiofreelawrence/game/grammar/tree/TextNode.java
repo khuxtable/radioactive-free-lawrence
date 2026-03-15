@@ -6,10 +6,11 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.Type;
 
+import org.kathrynhuxtable.radiofreelawrence.game.AsmUtils;
 import org.kathrynhuxtable.radiofreelawrence.game.GameContext;
-import org.kathrynhuxtable.radiofreelawrence.game.MyClassVisitor;
 import org.kathrynhuxtable.radiofreelawrence.game.Text;
 import org.kathrynhuxtable.radiofreelawrence.game.TextMethod;
 import org.kathrynhuxtable.radiofreelawrence.game.grammar.SourceLocation;
@@ -32,8 +33,8 @@ public class TextNode implements DeclaratorNode {
 	private SourceLocation sourceLocation;
 
 	@Override
-	public void generate(MyClassVisitor cv, GameContext gameContext) {
+	public void generate(ClassVisitor cv, GameContext gameContext) {
 		gameContext.variableStore.addVariable(name, VariableType.TEXT_NODE);
-		cv.createField(ACC_PUBLIC | ACC_FINAL, name, Type.getDescriptor(Text.class));
+		AsmUtils.createField(cv, ACC_PUBLIC | ACC_FINAL, name, Type.getDescriptor(Text.class));
 	}
 }

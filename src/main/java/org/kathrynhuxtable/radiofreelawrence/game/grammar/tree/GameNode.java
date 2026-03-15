@@ -38,10 +38,10 @@ public class GameNode implements BaseNode {
 	List<RepeatNode> repeats = new ArrayList<>();
 	Map<String, StateClauseNode> states = new LinkedHashMap<>();
 
-	public void generate(MyClassVisitor cv, GameContext gameContext) {
+	public void generate(ClassVisitor cv, GameContext gameContext) {
 		cv.visit(V17, ACC_PUBLIC | ACC_SUPER, GameContext.GAME_CLASS_NAME, null, Type.getInternalName(Object.class), null);
 
-		cv.createField(ACC_PUBLIC, "internalFunctions", Type.getDescriptor(InternalFunctions.class));
+		AsmUtils.createField(cv, ACC_PUBLIC, "internalFunctions", Type.getDescriptor(InternalFunctions.class));
 
 		Set<Integer> seenTextElement = new HashSet<>();
 		for (TextElementNode textElement : textElements) {
@@ -83,11 +83,17 @@ public class GameNode implements BaseNode {
 					ACC_PUBLIC);
 		}
 
-		cv.createField(
+		AsmUtils.createField(cv,
 				ACC_PUBLIC,
 				"places",
 				"Ljava/util/Map;",
 				"Ljava/util/Map<" + Type.getDescriptor(String.class) + Type.getDescriptor(GamePlace.class) + ">;");
+
+		AsmUtils.createField(cv,
+				ACC_PUBLIC,
+				"objects",
+				"Ljava/util/Map;",
+				"Ljava/util/Map<" + Type.getDescriptor(String.class) + "Ljava/util/List<" + Type.getDescriptor(GameObject.class) + ">;>;");
 
 		for (PlaceNode placeNode : places) {
 			cv.visitNestMember(GameContext.GAME_CLASS_NAME + "$" + placeNode.getName());
@@ -122,6 +128,8 @@ public class GameNode implements BaseNode {
 		mv.visitVarInsn(ALOAD, 0);
 		mv.visitVarInsn(ALOAD, 1);
 		mv.visitFieldInsn(PUTFIELD, GameContext.GAME_CLASS_NAME, "internalFunctions", Type.getDescriptor(InternalFunctions.class));
+
+		// Inject game object into internalFunctions
 		mv.visitVarInsn(ALOAD, 1);
 		mv.visitVarInsn(ALOAD, 0);
 		mv.visitMethodInsn(
@@ -138,6 +146,33 @@ public class GameNode implements BaseNode {
 		generateVariables(mv);
 
 		generatePlaceAssignments(mv);
+
+		// Construct objects hashmap
+		mv.visitVarInsn(ALOAD, 0);
+		mv.visitTypeInsn(NEW, Type.getInternalName(HashMap.class));
+		mv.visitInsn(DUP);
+		mv.visitMethodInsn(INVOKESPECIAL, Type.getInternalName(HashMap.class), "<init>", "()V", false);
+		mv.visitFieldInsn(PUTFIELD, GameContext.GAME_CLASS_NAME, "objects", Type.getDescriptor(Map.class));
+		// Add something
+		mv.visitVarInsn(ALOAD, 0);
+		mv.visitFieldInsn(GETFIELD, GameContext.GAME_CLASS_NAME, "objects", Type.getDescriptor(Map.class));
+		mv.visitLdcInsn("axe");
+		mv.visitTypeInsn(NEW, GameContext.GAME_CLASS_NAME + "$" + "axe");
+		mv.visitInsn(DUP);
+		mv.visitVarInsn(ALOAD, 0);
+		mv.visitMethodInsn(
+				INVOKESPECIAL,
+				GameContext.GAME_CLASS_NAME + "$" + "axe",
+				"<init>",
+				"(" + GameContext.GAME_CLASS_DESCRIPTOR + ")V",
+				false);
+		mv.visitMethodInsn(
+				INVOKEINTERFACE,
+				Type.getInternalName(Map.class),
+				"put",
+				"(" + Type.getDescriptor(Object.class) + Type.getDescriptor(Object.class) + ")" + Type.getDescriptor(Object.class),
+				true);
+		mv.visitInsn(POP);
 
 		mv.visitInsn(RETURN);
 		mv.visitMaxs(1, 1);

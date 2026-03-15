@@ -52,7 +52,7 @@ public class RadioactiveFreeLawrenceApplication {
 			}
 
 			// Generate main Game class
-			MyClassVisitor cw = new MyClassVisitor(ClassWriter.COMPUTE_FRAMES | ClassWriter.COMPUTE_MAXS);
+			ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_FRAMES | ClassWriter.COMPUTE_MAXS);
 			gameContext.gameNode.generate(cw, gameContext);
 
 			byte[] bytes = cw.toByteArray();
@@ -62,7 +62,7 @@ public class RadioactiveFreeLawrenceApplication {
 
 			// Generate object inner classes
 			for (ObjectNode objectNode : gameContext.gameNode.getObjects()) {
-				MyClassVisitor innerCw = new MyClassVisitor(ClassWriter.COMPUTE_FRAMES);
+				ClassWriter innerCw = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
 				objectNode.generate(innerCw, gameContext);
 				byte[] innerBytes = innerCw.toByteArray();
 				FileOutputStream innerOut = new FileOutputStream(
@@ -73,7 +73,7 @@ public class RadioactiveFreeLawrenceApplication {
 
 			// Generate place inner classes
 			for (PlaceNode placeNode : gameContext.gameNode.getPlaces()) {
-				MyClassVisitor innerCw = new MyClassVisitor(ClassWriter.COMPUTE_FRAMES);
+				ClassWriter innerCw = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
 				placeNode.generate(innerCw, gameContext);
 				byte[] innerBytes = innerCw.toByteArray();
 				FileOutputStream innerOut = new FileOutputStream(

@@ -6,13 +6,13 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.commons.LocalVariablesSorter;
 
 import org.kathrynhuxtable.radiofreelawrence.game.GameContext;
-import org.kathrynhuxtable.radiofreelawrence.game.MyClassVisitor;
 import org.kathrynhuxtable.radiofreelawrence.game.grammar.SourceLocation;
 import org.kathrynhuxtable.radiofreelawrence.game.grammar.VariableType;
 
@@ -25,7 +25,7 @@ public class ActionNode implements StatementNode {
 	private List<ActionCode> actionCodes = new ArrayList<>();
 	private SourceLocation sourceLocation;
 
-	public static void generateActions(MyClassVisitor cv, GameContext gameContext, Map<String, ActionNode> actions) {
+	public static void generateActions(ClassVisitor cv, GameContext gameContext, Map<String, ActionNode> actions) {
 		gameContext.variableStore.addVariable("doAction", VariableType.METHOD);
 		gameContext.variableStore.newFunctionScope();
 		MethodVisitor mv2 = cv.visitMethod(ACC_PUBLIC, "doAction", "(Ljava/lang/String;Ljava/lang/String;)V", null, null);

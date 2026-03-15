@@ -13,14 +13,15 @@ state alabama,
     missouri;
 state kentucky,
     tennessee;
-state mytest = testMeNow(32);
+//state mytest = testMeNow(32, ylem);
 
 proc argSample(text foo, var bar) {
     say(foo, bar);
 }
 
-proc testMeNow(var myArg) {
+proc testMeNow(var myArg, ref myplace) {
     say(noDirection);
+    say(myplace);
     say("The arg is $", myArg);
     say("this is {you_do}, so there!", missouri);
     say("[There are no/There is one/There are $] thing[s//s] here", 15);
@@ -116,7 +117,7 @@ place emerald_city
 initial {
     say("Something");
     say(1066);
-    say("mytest is ", mytest);
+    say("mytest is ", testMeNow(32, ylem));
     "inventory"("");
     ninth_mississippi("east");
     "take"("inventory");

@@ -6,9 +6,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.objectweb.asm.ClassVisitor;
 
+import org.kathrynhuxtable.radiofreelawrence.game.AsmUtils;
 import org.kathrynhuxtable.radiofreelawrence.game.GameContext;
-import org.kathrynhuxtable.radiofreelawrence.game.MyClassVisitor;
 import org.kathrynhuxtable.radiofreelawrence.game.grammar.SourceLocation;
 import org.kathrynhuxtable.radiofreelawrence.game.grammar.VariableType;
 
@@ -28,11 +29,11 @@ public class FlagNode implements DeclaratorNode {
 	private SourceLocation sourceLocation;
 
 	@Override
-	public void generate(MyClassVisitor cv, GameContext gameContext) {
+	public void generate(ClassVisitor cv, GameContext gameContext) {
 		for (String flag : this.flags) {
 			gameContext.variableStore.addVariable(flag, VariableType.NUMBER);
 
-			cv.createField(ACC_PUBLIC | ACC_FINAL, flag, "I");
+			AsmUtils.createField(cv, ACC_PUBLIC | ACC_FINAL, flag, "I");
 		}
 	}
 }

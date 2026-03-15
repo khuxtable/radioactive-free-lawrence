@@ -2,9 +2,10 @@ package org.kathrynhuxtable.radiofreelawrence.game.grammar.tree;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import org.objectweb.asm.ClassVisitor;
 
+import org.kathrynhuxtable.radiofreelawrence.game.AsmUtils;
 import org.kathrynhuxtable.radiofreelawrence.game.GameContext;
-import org.kathrynhuxtable.radiofreelawrence.game.MyClassVisitor;
 import org.kathrynhuxtable.radiofreelawrence.game.grammar.SourceLocation;
 import org.kathrynhuxtable.radiofreelawrence.game.grammar.VariableType;
 
@@ -20,10 +21,10 @@ public class StateClauseNode implements DeclaratorNode {
 	private SourceLocation sourceLocation;
 
 	@Override
-	public void generate(MyClassVisitor cv, GameContext gameContext) {
+	public void generate(ClassVisitor cv, GameContext gameContext) {
 		gameContext.variableStore.addVariable(state, VariableType.NUMBER);
 
-		cv.createField(ACC_PUBLIC | ACC_FINAL, state, "I");
+		AsmUtils.createField(cv, ACC_PUBLIC | ACC_FINAL, state, "I");
 	}
 
 }

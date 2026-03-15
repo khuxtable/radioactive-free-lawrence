@@ -8,10 +8,10 @@ import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Type;
 
+import org.kathrynhuxtable.radiofreelawrence.game.AsmUtils;
 import org.kathrynhuxtable.radiofreelawrence.game.GameAction;
 import org.kathrynhuxtable.radiofreelawrence.game.GameContext;
 import org.kathrynhuxtable.radiofreelawrence.game.GamePlace;
-import org.kathrynhuxtable.radiofreelawrence.game.MyClassVisitor;
 import org.kathrynhuxtable.radiofreelawrence.game.grammar.SourceLocation;
 import org.kathrynhuxtable.radiofreelawrence.game.grammar.VariableType;
 
@@ -36,13 +36,13 @@ public class PlaceNode implements DeclaratorNode, HasRefno, VocabularyNode {
 	private SourceLocation sourceLocation;
 
 	@Override
-	public void generate(MyClassVisitor cv, GameContext gameContext) {
+	public void generate(ClassVisitor cv, GameContext gameContext) {
 		String innerClassInternalName = GameContext.GAME_CLASS_NAME + "$" + name;
 		cv.visit(V17, ACC_PUBLIC, innerClassInternalName, null, Type.getInternalName(Object.class),
 				new String[] { Type.getInternalName(GamePlace.class), Type.getInternalName(GameAction.class) });
 		cv.visitNestHost(GameContext.GAME_CLASS_NAME);
 		cv.visitInnerClass(innerClassInternalName, GameContext.GAME_CLASS_NAME, name, ACC_PUBLIC);
-		cv.createField(ACC_FINAL | ACC_SYNTHETIC, "this$0", GameContext.GAME_CLASS_DESCRIPTOR);
+		AsmUtils.createField(cv, ACC_FINAL | ACC_SYNTHETIC, "this$0", GameContext.GAME_CLASS_DESCRIPTOR);
 		gameContext.variableStore.newClassScope(innerClassInternalName);
 
 		for (VariableNode variableNode : variables) {

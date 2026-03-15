@@ -99,17 +99,17 @@ public class InternalFunctions {
 		return (int) (Math.random() * (max - min + 1)) + min;
 	}
 
-//	@InternalFunction(name = "have")
-//	public int ishave(Object... parameters) {
-//		Object refno = parameters[0];
-//		// The inhand location (inventory) is always refno floc.
-//		if (refno instanceof GameObject) {
+	@InternalFunction(name = "have")
+	public int ishave(Object... parameters) {
+		Object refno = parameters[0];
+		// The inhand location (inventory) is always refno floc.
+		if (refno instanceof GameObject) {
 //			if (gameContext.locations[refno - gameContext.fobj] == gameContext.floc) {
 //				return 1;
 //			}
-//		}
-//		return 0;
-//	}
+		}
+		return 0;
+	}
 
 //	@InternalFunction(name = "ishere")
 //	public int ishere(ExprNode... parameters) {

@@ -13,5 +13,7 @@ public interface GameObject {
 	boolean isCommand(String verb);
 	boolean isProc(String name);
 
+	GamePlace getLocation();
+
 	String getSourceLocationText();
 }
