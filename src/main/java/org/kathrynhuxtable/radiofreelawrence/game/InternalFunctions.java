@@ -638,9 +638,7 @@ public class InternalFunctions {
 				.iterator();
 	}
 
-	public static Iterator<Object> iterator(GameObject location) {
-		return location.getVerbs().stream()
-				.map(go -> (Object) go)
-				.iterator();
+	public static Iterator<String> iterator(GameObject object) {
+		return object.getActions().iterator();
 	}
 }

@@ -1,5 +1,6 @@
 package org.kathrynhuxtable.radiofreelawrence.game.grammar.tree;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -52,6 +53,8 @@ public class ObjectNode implements DeclaratorNode, HasRefno, VocabularyNode {
 		AsmUtils.createField(cv, ACC_PUBLIC, "briefdescription", Type.getDescriptor(String.class));
 		gameContext.variableStore.addVariable("longdescription", VariableType.TEXT);
 		AsmUtils.createField(cv, ACC_PUBLIC, "longdescription", Type.getDescriptor(String.class));
+		AsmUtils.createField(cv, ACC_PUBLIC, "actions", "Ljava/util/List;",
+				"Ljava/util/List<Ljava/lang/String;>;");
 		gameContext.variableStore.addVariable("location", VariableType.PLACE);
 		AsmUtils.createField(cv, ACC_PUBLIC, "location", Type.getDescriptor(GamePlace.class));
 
@@ -75,6 +78,20 @@ public class ObjectNode implements DeclaratorNode, HasRefno, VocabularyNode {
 			mv.visitLabel(beginLabel);
 			mv.visitVarInsn(ALOAD, 0);
 			mv.visitFieldInsn(GETFIELD, innerClassInternalName, "briefdescription", Type.getDescriptor(String.class));
+			mv.visitInsn(ARETURN);
+			Label endLabel = new Label();
+			mv.visitLabel(endLabel);
+			mv.visitLocalVariable("this", innerClassDescriptor, null, beginLabel, endLabel, 0);
+			mv.visitMaxs(1, 1);
+			mv.visitEnd();
+		}
+		{
+			MethodVisitor mv = cv.visitMethod(ACC_PUBLIC, "getActions", "()Ljava/util/List;", "()Ljava/util/List<Ljava/lang/String;>;", null);
+			mv.visitCode();
+			Label beginLabel = new Label();
+			mv.visitLabel(beginLabel);
+			mv.visitVarInsn(ALOAD, 0);
+			mv.visitFieldInsn(GETFIELD, innerClassInternalName, "actions", "Ljava/util/List;");
 			mv.visitInsn(ARETURN);
 			Label endLabel = new Label();
 			mv.visitLabel(endLabel);
@@ -159,6 +176,24 @@ public class ObjectNode implements DeclaratorNode, HasRefno, VocabularyNode {
 					longDescription == null ? briefDescription : longDescription);
 		}
 
+		mv.visitVarInsn(ALOAD, 0);
+		mv.visitTypeInsn(NEW, Type.getInternalName(ArrayList.class));
+		mv.visitInsn(DUP);
+		mv.visitMethodInsn(INVOKESPECIAL, Type.getInternalName(ArrayList.class), "<init>", "()V", false);
+		mv.visitFieldInsn(PUTFIELD, innerClassInternalName, "actions", Type.getDescriptor(List.class));
+		for (String action : commands.keySet()) {
+			mv.visitVarInsn(ALOAD, 0);
+			mv.visitFieldInsn(GETFIELD, innerClassInternalName, "actions", Type.getDescriptor(List.class));
+			mv.visitLdcInsn(action);
+			mv.visitMethodInsn(
+					INVOKEINTERFACE,
+					Type.getInternalName(List.class),
+					"add",
+					"(Ljava/lang/Object;)Z",
+					true
+			);
+		}
+
 		for (VariableNode variableNode : variables) {
 			mv.visitVarInsn(ALOAD, 0);
 			mv.visitInsn(ICONST_0);
@@ -178,9 +213,6 @@ public class ObjectNode implements DeclaratorNode, HasRefno, VocabularyNode {
 		Label label0 = new Label();
 		mv.visitLabel(label0);
 		mv.visitLineNumber(35, label0);
-		mv.visitVarInsn(ALOAD, 0);
-		mv.visitFieldInsn(GETFIELD, innerClassInternalName, "this$0", GameContext.GAME_CLASS_DESCRIPTOR);
-		mv.visitFieldInsn(GETFIELD, GameContext.GAME_CLASS_NAME, "objects", "Ljava/util/Map;");
 		mv.visitVarInsn(ALOAD, 0);
 		mv.visitMethodInsn(INVOKESTATIC, Type.getInternalName(InternalFunctions.class), "iterator", "(Lorg/kathrynhuxtable/radiofreelawrence/game/GameObject;)Ljava/util/Iterator;", false);
 		mv.visitInsn(ARETURN);

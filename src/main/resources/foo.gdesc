@@ -121,6 +121,9 @@ initial {
     say("mytest is $", testMeNow(32, ylem));
     for (var ptr : ninth_mississippi) {
         say(ptr, 0);
+        for (var vptr : ptr) {
+            say("   #", vptr);
+        }
     }
     "inventory"("");
     ninth_mississippi("east");

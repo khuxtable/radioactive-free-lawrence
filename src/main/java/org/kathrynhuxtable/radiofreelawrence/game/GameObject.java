@@ -4,7 +4,7 @@ import java.util.List;
 
 public interface GameObject {
 	String getName();
-	List<String> getVerbs();
+	List<String> getActions();
 	boolean isInVocabulary();
 
 	String getInventoryDescription();

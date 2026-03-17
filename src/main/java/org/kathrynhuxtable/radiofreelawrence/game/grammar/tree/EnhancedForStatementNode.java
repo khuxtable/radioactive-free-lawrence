@@ -44,10 +44,10 @@ public class EnhancedForStatementNode implements StatementNode {
 
 		expression.generate(mv, gameContext);
 
-		int iterIndex = 1;
-		variableContext.setIndex(((LocalVariablesSorter) mv).newLocal(Type.getType(GameAction.class)));
-		int varIndex = 2;
-		variableContext.setIndex(((LocalVariablesSorter) mv).newLocal(Type.getType(Object.class)));
+		int iterIndex = ((LocalVariablesSorter) mv).newLocal(Type.getType(GameAction.class));
+		variableContext.setIndex(iterIndex);
+		int varIndex = ((LocalVariablesSorter) mv).newLocal(Type.getType(Object.class));
+		variableContext.setIndex(varIndex);
 
 		mv.visitMethodInsn(
 				INVOKEINTERFACE,
