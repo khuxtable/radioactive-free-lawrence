@@ -153,26 +153,44 @@ public class GameNode implements BaseNode {
 		mv.visitInsn(DUP);
 		mv.visitMethodInsn(INVOKESPECIAL, Type.getInternalName(HashMap.class), "<init>", "()V", false);
 		mv.visitFieldInsn(PUTFIELD, GameContext.GAME_CLASS_NAME, "objects", Type.getDescriptor(Map.class));
-		// Add something
-		mv.visitVarInsn(ALOAD, 0);
-		mv.visitFieldInsn(GETFIELD, GameContext.GAME_CLASS_NAME, "objects", Type.getDescriptor(Map.class));
-		mv.visitLdcInsn("axe");
-		mv.visitTypeInsn(NEW, GameContext.GAME_CLASS_NAME + "$" + "axe");
-		mv.visitInsn(DUP);
-		mv.visitVarInsn(ALOAD, 0);
-		mv.visitMethodInsn(
-				INVOKESPECIAL,
-				GameContext.GAME_CLASS_NAME + "$" + "axe",
-				"<init>",
-				"(" + GameContext.GAME_CLASS_DESCRIPTOR + ")V",
-				false);
-		mv.visitMethodInsn(
-				INVOKEINTERFACE,
-				Type.getInternalName(Map.class),
-				"put",
-				"(" + Type.getDescriptor(Object.class) + Type.getDescriptor(Object.class) + ")" + Type.getDescriptor(Object.class),
-				true);
-		mv.visitInsn(POP);
+//		// Add something
+//		mv.visitVarInsn(ALOAD, 0);
+//		mv.visitFieldInsn(GETFIELD, GameContext.GAME_CLASS_NAME, "objects", Type.getDescriptor(Map.class));
+//
+//		mv.visitLdcInsn("axe");
+//
+//		mv.visitIntInsn(SIPUSH, 1);
+//		mv.visitTypeInsn(ANEWARRAY, Type.getInternalName(GameObject.class));
+//		mv.visitInsn(DUP);
+//		mv.visitIntInsn(SIPUSH, 0);
+//
+//		mv.visitTypeInsn(NEW, GameContext.GAME_CLASS_NAME + "$" + "axe");
+//		mv.visitInsn(DUP);
+//		mv.visitVarInsn(ALOAD, 0);
+//		mv.visitMethodInsn(
+//				INVOKESPECIAL,
+//				GameContext.GAME_CLASS_NAME + "$" + "axe",
+//				"<init>",
+//				"(" + GameContext.GAME_CLASS_DESCRIPTOR + ")V",
+//				false);
+//
+//		mv.visitInsn(AASTORE);
+//
+//		mv.visitMethodInsn(
+//				INVOKESTATIC,
+//				Type.getInternalName(Arrays.class),
+//				"asList",
+//				"([" + Type.getDescriptor(Object.class) + ")Ljava/util/List;",
+//				false
+//		);
+//
+//		mv.visitMethodInsn(
+//				INVOKEINTERFACE,
+//				Type.getInternalName(Map.class),
+//				"put",
+//				"(" + Type.getDescriptor(Object.class) + Type.getDescriptor(Object.class) + ")" + Type.getDescriptor(Object.class),
+//				true);
+//		mv.visitInsn(POP);
 
 		mv.visitInsn(RETURN);
 		mv.visitMaxs(1, 1);

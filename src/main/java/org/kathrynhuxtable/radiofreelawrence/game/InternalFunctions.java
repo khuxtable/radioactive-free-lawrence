@@ -1,12 +1,10 @@
 package org.kathrynhuxtable.radiofreelawrence.game;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
-import lombok.Setter;
+import java.util.*;
 
 import org.kathrynhuxtable.gdesc.parser.GameInfo;
 import org.kathrynhuxtable.gdesc.parser.InternalFunction;
@@ -16,8 +14,63 @@ import org.kathrynhuxtable.radiofreelawrence.game.grammar.ControlType;
 
 public class InternalFunctions {
 
-	@Setter
 	private Object game;
+	private Map<String, GamePlace> places;
+	private Map<String, List<GameObject>> objects;
+
+	public void setGame(Object game) {
+		this.game = game;
+	}
+
+	private int getIntVar(String name) {
+		Class<?> gameClass = game.getClass();
+
+		try {
+			Field field = gameClass.getDeclaredField(name);
+			return (int) field.get(game);
+		} catch (NoSuchFieldException | IllegalAccessException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	private Object getObjectVar(String name) {
+		Class<?> gameClass = game.getClass();
+
+		try {
+			Field field = gameClass.getDeclaredField(name);
+			return field.get(game);
+		} catch (NoSuchFieldException | IllegalAccessException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	private Map<String, GamePlace> getPlaces() {
+		Class<?> gameClass = game.getClass();
+
+		if (this.places == null) {
+			try {
+				Field placesField = gameClass.getDeclaredField("places");
+				this.places = (Map<String, GamePlace>) placesField.get(game);
+			} catch (NoSuchFieldException | IllegalAccessException e) {
+				throw new RuntimeException(e);
+			}
+		}
+		return this.places;
+	}
+
+	private Map<String, List<GameObject>> getObjects() {
+		Class<?> gameClass = game.getClass();
+
+		if (this.places == null) {
+			try {
+				Field objectsField = gameClass.getDeclaredField("objects");
+				this.objects = (Map<String, List<GameObject>>) objectsField.get(game);
+			} catch (NoSuchFieldException | IllegalAccessException e) {
+				throw new RuntimeException(e);
+			}
+		}
+		return this.objects;
+	}
 
 	private Map<String, String> internalFunctions;
 
@@ -238,68 +291,80 @@ public class InternalFunctions {
 //		}
 //		return 0;
 //	}
-//
-//	@InternalFunction(name = "query")
-//	public int getquery(ExprNode... parameters) {
-//		// FIXME Implement this
-//		return 0;
-//	}
-//
-//	@InternalFunction(name = "usertyped")
-//	public int usertyped(ExprNode... parameters) {
-//		// FIXME Implement this
-//		return 0;
-//	}
-//
-//	@InternalFunction(name = "needcmd")
-//	public int needcmd(ExprNode... parameters) {
-//		// FIXME Implement this
-//		return 0;
-//	}
-//
-//	/*
-//	 * Abort the do-all loop if one executing and flush the command line buffer.
-//	 */
-//	@InternalFunction(name = "flush")
-//	public int flushinput(ExprNode... parameters) {
-//		// FIXME Implement this
-//		return 0;
-//	}
-//
-//	@InternalFunction(name = "apport")
-//	public int apport(ExprNode... parameters) {
-//		int object = parameters[0] instanceof IdentifierNode identifierNode ?
-//				gameContext.getIntIdentifierValue(identifierNode.getName().toLowerCase()) :
-//				parameters[0].evaluate(gameContext);
-//		int place = parameters[1] instanceof IdentifierNode identifierNode ?
-//				gameContext.getIntIdentifierValue(identifierNode.getName().toLowerCase()) :
-//				parameters[1].evaluate(gameContext);
-//		gameContext.locations[object - gameContext.fobj] = place;
-//		return 0;
-//	}
-//
-//	@InternalFunction(name = "get")
-//	public int iget(ExprNode... parameters) {
-//		int object = parameters[0] instanceof TextElementNode ?
-//				gameContext.getIntIdentifierValue(((TextElementNode) parameters[0]).getText().toLowerCase()) :
-//				parameters[0].evaluate(gameContext);
-//		if (object > 0) {
-//			gameContext.locations[object - gameContext.fobj] = gameContext.floc;
-//		}
-//		return 0;
-//	}
-//
-//	@InternalFunction(name = "drop")
-//	public int idrop(ExprNode... parameters) {
-//		int object = parameters[0] instanceof TextElementNode ?
-//				gameContext.getIntIdentifierValue(((TextElementNode) parameters[0]).getText().toLowerCase()) :
-//				parameters[0].evaluate(gameContext);
-//		if (object > 0) {
-//			gameContext.locations[object - gameContext.fobj] = gameContext.getIntIdentifierValue("here");
-//		}
-//		return 0;
-//	}
-//
+
+	@InternalFunction(name = "query")
+	public int getquery(Object... parameters) {
+		// FIXME Implement this
+		return 0;
+	}
+
+	@InternalFunction(name = "usertyped")
+	public int usertyped(Object... parameters) {
+		// FIXME Implement this
+		return 0;
+	}
+
+	@InternalFunction(name = "needcmd")
+	public int needcmd(Object... parameters) {
+		// FIXME Implement this
+		return 0;
+	}
+
+	/*
+	 * Abort the do-all loop if one executing and flush the command line buffer.
+	 */
+	@InternalFunction(name = "flush")
+	public int flushinput(Object... parameters) {
+		// FIXME Implement this
+		return 0;
+	}
+
+	@InternalFunction(name = "apport")
+	public int apport(Object... parameters) {
+		GameObject object;
+		if (parameters.length < 3 || (int) parameters[2] == 0) {
+			object = (GameObject) parameters[0];
+		} else {
+			String name = (String) parameters[0];
+			try {
+				String className = GameContext.GAME_CLASS_NAME.replaceAll("/", ".") + "$" + name;
+				Class<?> myClass = Class.forName(className);
+				Constructor<?> constructor = myClass.getDeclaredConstructor(game.getClass());
+				object = (GameObject) constructor.newInstance(game);
+				Map<String, List<GameObject>> objects = getObjects();
+				if (!objects.containsKey(name)) {
+					objects.put(name, new ArrayList<>());
+				}
+				objects.get(name).add(object);
+			} catch (ClassNotFoundException | NoSuchMethodException | InstantiationException | IllegalAccessException |
+			         InvocationTargetException e) {
+				throw new RuntimeException(e);
+			}
+		}
+		GamePlace place = (GamePlace) parameters[1];
+		object.setLocation(place);
+		return 0;
+	}
+
+	@InternalFunction(name = "get")
+	public int iget(Object... parameters) {
+		GameObject object = (GameObject) parameters[0];
+		if (object != null) {
+			object.setLocation(getPlaces().get("inhand"));
+		}
+		return 0;
+	}
+
+	@InternalFunction(name = "drop")
+	public int idrop(Object... parameters) {
+		GameObject object = (GameObject) parameters[0];
+		if (object != null) {
+			GamePlace place = (GamePlace) getObjectVar("here");
+			object.setLocation(place);
+		}
+		return 0;
+	}
+
 //	// isverb("verb", proc, parameters...)
 //	@InternalFunction(name = "isverb")
 //	public int isverb(ExprNode... parameters) {
@@ -314,7 +379,8 @@ public class InternalFunctions {
 //		}
 //
 //		List<ExprNode> exprNodeList = new ArrayList<>();
-////		exprNodeList.add(objectNode);
+
+	/// /		exprNodeList.add(objectNode);
 //		exprNodeList.addAll(Arrays.asList(Arrays.copyOfRange(parameters, 2, parameters.length)));
 //
 //		gameContext.callFunction(identifierNode.getName(), exprNodeList);
@@ -332,17 +398,14 @@ public class InternalFunctions {
 //		gameContext.setFlag(gameContext.getIdentifierRefno("status"), gameContext.getIntIdentifierValue("moved"));
 //		return 0;
 //	}
-//
-//	@InternalFunction(name = "move")
-//	public int move_(ExprNode... parameters) {
-//		int place = parameters[0] instanceof TextElementNode ?
-//				gameContext.getIntIdentifierValue(((TextElementNode) parameters[0]).getText().toLowerCase()) :
-//				parameters[0].evaluate(gameContext);
-//
-//		if (parameters.length > 1) {
-//			say_(Arrays.copyOfRange(parameters, 1, parameters.length));
-//		}
-//
+	@InternalFunction(name = "move")
+	public int move_(Object... parameters) {
+		GamePlace place = (GamePlace) parameters[0];
+
+		if (parameters.length > 1) {
+			say_(Arrays.copyOfRange(parameters, 1, parameters.length));
+		}
+
 //		gameContext.setIntIdentifierValue("there", gameContext.getIntIdentifierValue("here"));
 //		gameContext.setIntIdentifierValue("here", place);
 //		gameContext.setFlag(gameContext.getIdentifierRefno("status"), gameContext.getIntIdentifierValue("moved"));
@@ -352,46 +415,46 @@ public class InternalFunctions {
 //				gameContext.setFlag(obj, gameContext.getIntIdentifierValue("seen"));
 //			}
 //		}
-//
-//		throw new BreakException(ControlType.REPEAT);
-//	}
-//
-//	@InternalFunction(name = "smove")
-//	public int smove(ExprNode... parameters) {
-//		// FIXME Implement this
-//		return 0;
-//	}
+
+		throw new BreakException(ControlType.REPEAT);
+	}
+
+	@InternalFunction(name = "smove")
+	public int smove(Object... parameters) {
+		// FIXME Implement this
+		return 0;
+	}
 
 	@InternalFunction(name = "say")
 	public int say_(Object... parameters) {
 		try {
 			if (parameters.length == 0) return 0;
-			for (int i = 0; i < parameters.length; i++) {
-				System.out.print(parameters[i]);
+			String text = "";
+			if (parameters[0] instanceof Text textElement) {
+				text = textElement.getText();
+			} else if (parameters[0] instanceof String stringElement) {
+				text = stringElement;
+			} else if (parameters[0] instanceof GamePlace place) {
+				text = place.getBriefDescription();
+			} else if (parameters[0] instanceof GameObject object) {
+				text = object.getBriefDescription();
 			}
-			System.out.println();
-//			String text = "";
-//			if (parameters[0] instanceof IdentifierNode) {
-//				text = gameContext.getTextIdentifierValue(((IdentifierNode) parameters[0]).getName(), 0);
-//			} else if (parameters[0] instanceof TextElementNode) {
-//				text = ((TextElementNode) parameters[0]).getText();
-//			}
-//
-//			Integer qualifier = null;
-//			if (parameters.length > 1) {
-//				qualifier = parameters[1].evaluate(gameContext);
-//			}
-//			int newline = 1;
-//			if (parameters.length > 2) {
-//				newline = parameters[2].evaluate(gameContext);
-//			}
-//
-//			String outputText = gameContext.expandText(text, qualifier);
-//			if (newline != 0) {
-//				System.out.println(outputText);
-//			} else {
-//				System.out.print(outputText);
-//			}
+
+			Object qualifier = null;
+			if (parameters.length > 1) {
+				qualifier = parameters[1];
+			}
+			int newline = 1;
+			if (parameters.length > 2) {
+				newline = (int) parameters[2];
+			}
+
+			String outputText = expandText(text, qualifier);
+			if (newline != 0) {
+				System.out.println(outputText);
+			} else {
+				System.out.print(outputText);
+			}
 		} catch (Exception e) {
 			throw new GameRuntimeException("exception in 'say'", e);
 		}
@@ -399,43 +462,37 @@ public class InternalFunctions {
 		return 0;
 	}
 
-//	@InternalFunction(name = "sayrandom")
-//	public int sayRandom(ExprNode... parameters) {
-//		try {
-//			if (parameters.length == 0) return 0;
-//
-//			int dice = (int) (Math.random() * 100) + 1;
-//			int prob = 0;
-//			for (int i = 0; i < parameters.length - 1; i += 2) {
-//				prob += parameters[i].evaluate(gameContext);
-//				if (dice < prob) {
-//					ExprNode parameter = parameters[i + 1];
-//					String text = null;
-//					if (parameter instanceof IdentifierNode) {
-//						text = gameContext.getTextIdentifierValue(((IdentifierNode) parameter).getName(), 0);
-//					} else if (parameter instanceof TextElementNode) {
-//						text = ((TextElementNode) parameter).getText();
-//					}
-//					if (text != null) {
-//						System.out.println(text);
-//						break;
-//					}
-//				}
-//			}
-//		} catch (Exception e) {
-//			throw new GameRuntimeException(parameters[0].getSourceLocation() + ": exception in 'sayrandom'", e);
-//		}
-//
-//		throw new BreakException(ControlType.REPEAT);
-//	}
-//
-//	@InternalFunction(name = "append")
-//	public int append(ExprNode... text) {
-//		// FIXME Implement this
-//		// Not sure how to implement this, since we typically generate the newline after the text.
-//		// Maybe need to generate it before. Not sure.
-//		return 0;
-//	}
+	@InternalFunction(name = "sayrandom")
+	public int sayRandom(Object... parameters) {
+		try {
+			if (parameters.length == 0) return 0;
+
+			int dice = (int) (Math.random() * 100) + 1;
+			int prob = 0;
+			for (int i = 0; i < parameters.length - 1; i += 2) {
+				prob += (int) parameters[i];
+				if (dice < prob) {
+					String text = (String) parameters[i + 1];
+					if (text != null) {
+						System.out.println(text);
+						break;
+					}
+				}
+			}
+		} catch (Exception e) {
+			throw new GameRuntimeException(/*parameters[0].getSourceLocation() + */": exception in 'sayrandom'", e);
+		}
+
+		throw new BreakException(ControlType.REPEAT);
+	}
+
+	@InternalFunction(name = "append")
+	public int append(Object... text) {
+		// FIXME Implement this
+		// Not sure how to implement this, since we typically generate the newline after the text.
+		// Maybe need to generate it before. Not sure.
+		return 0;
+	}
 
 	@InternalFunction(name = "quip")
 	public int quip(Object... parameters) {
@@ -484,16 +541,106 @@ public class InternalFunctions {
 //		}
 //		throw new BreakException(ControlType.REPEAT);
 //	}
-//
-//	@InternalFunction(name = "tie")
-//	public int tie(ExprNode... parameters) {
-//		// FIXME Implement this
-//		return 0;
-//	}
-//
-//	@InternalFunction(name = "stop")
-//	public int stop(ExprNode... parameters) {
-//		System.exit(0);
-//		return 0;
-//	}
+
+	@InternalFunction(name = "tie")
+	public int tie(Object... parameters) {
+		// FIXME Implement this
+		return 0;
+	}
+
+	@InternalFunction(name = "stop")
+	public int stop(Object... parameters) {
+		System.exit(0);
+		return 0;
+	}
+
+	public String expandText(String text, Object qualifier) {
+		StringBuilder result = new StringBuilder();
+		char[] charArray = text.toCharArray();
+		for (int i = 0; i < charArray.length; i++) {
+			char c = charArray[i];
+			if (c == '\\') {
+				result.append(charArray[++i]);
+			} else if (c == '$') {
+				result.append((int) qualifier);
+			} else if (c == '#') {
+				if (qualifier != null) {
+					result.append(qualifier);
+				} else {
+					result.append('#');
+				}
+			} else if (c == '{') {
+				StringBuilder ident = new StringBuilder();
+				while (++i < charArray.length) {
+					c = charArray[i];
+					if (c == '\\') {
+						ident.append(charArray[++i]);
+					} else if (c == '}') {
+						break;
+					} else {
+						ident.append(c);
+					}
+				}
+				String identName = ident.toString().toLowerCase();
+				Object identObj = getObjectVar(identName);
+				result.append(expandText(identObj instanceof Text ? ((Text) identObj).getText() : (String) identObj, qualifier));
+//				result.append(expandText(getTextIdentifierValue(identName, 0), qualifier));
+			} else if (c == '[') {
+				List<String> switches = new ArrayList<>();
+				i = parseSwitches(charArray, i, switches);
+				if (qualifier == null) {
+					result.append(expandText(switches.get(0), null));
+				} else if ((int) qualifier >= switches.size()) {
+					result.append(expandText(switches.get(switches.size() - 1), qualifier));
+				} else {
+					result.append(expandText(switches.get((int) qualifier), qualifier));
+				}
+			} else {
+				result.append(c);
+			}
+		}
+		return result.toString();
+	}
+
+	private static int parseSwitches(char[] charArray, int i, List<String> switches) {
+		StringBuilder switchText = new StringBuilder(100);
+		char c;
+		while (++i < charArray.length) {
+			c = charArray[i];
+			if (c == '\\') {
+				switchText.append(charArray[++i]);
+			} else if (c == '/') {
+				if ("=".contentEquals(switchText)) {
+					switches.add(switches.get(switches.size() - 1));
+				} else {
+					switches.add(switchText.toString());
+				}
+				switchText = new StringBuilder(100);
+			} else if (c == ']') {
+				if ("=".contentEquals(switchText)) {
+					switches.add(switches.get(switches.size() - 1));
+				} else {
+					switches.add(switchText.toString());
+				}
+				return i;
+			} else {
+				switchText.append(c);
+			}
+		}
+		throw new GameRuntimeException("Missing ']' in switch text in \"" + new String(charArray) + "\"");
+	}
+
+	public static Iterator<Object> iterator(Map<String, List<GameObject>> objects, GamePlace location) {
+		return objects.values().stream()
+				.flatMap(Collection::stream)
+				.filter(o -> o.getLocation() == location)
+				.map(go -> (Object) go)
+				.iterator();
+	}
+
+	public static Iterator<Object> iterator(GameObject location) {
+		return location.getVerbs().stream()
+				.map(go -> (Object) go)
+				.iterator();
+	}
 }

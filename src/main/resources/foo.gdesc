@@ -23,7 +23,7 @@ proc testMeNow(var myArg, ref myplace) {
     say(noDirection);
     say(myplace);
     say("The arg is $", myArg);
-    say("this is {you_do}, so there!", missouri);
+    say("this is {you_do}, so there!", "Missouri");
     say("[There are no/There is one/There are $] thing[s//s] here", 15);
     argSample("This is a test", 21);
     var beans = 1;
@@ -116,8 +116,12 @@ place emerald_city
 
 initial {
     say("Something");
-    say(1066);
-    say("mytest is ", testMeNow(32, ylem));
+    apport("axe", ninth_mississippi, 1);
+    say("$", 1066);
+    say("mytest is $", testMeNow(32, ylem));
+    for (var ptr : ninth_mississippi) {
+        say(ptr, 0);
+    }
     "inventory"("");
     ninth_mississippi("east");
     "take"("inventory");

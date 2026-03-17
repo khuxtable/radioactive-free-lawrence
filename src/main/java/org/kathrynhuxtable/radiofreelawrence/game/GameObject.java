@@ -14,6 +14,7 @@ public interface GameObject {
 	boolean isProc(String name);
 
 	GamePlace getLocation();
+	void  setLocation(GamePlace location);
 
 	String getSourceLocationText();
 }
