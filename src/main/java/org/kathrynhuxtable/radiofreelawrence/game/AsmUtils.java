@@ -2,6 +2,7 @@ package org.kathrynhuxtable.radiofreelawrence.game;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.objectweb.asm.*;
 
@@ -90,5 +91,25 @@ public class AsmUtils {
 				);
 			}
 		}
+	}
+
+	public static void addIntegerToMap(MethodVisitor mv, String classInternalName, String name, String key, int value) {
+		mv.visitVarInsn(ALOAD, 0);
+		mv.visitFieldInsn(GETFIELD, classInternalName, name, Type.getDescriptor(Map.class));
+		mv.visitLdcInsn(key);
+		mv.visitLdcInsn(value);
+		mv.visitMethodInsn(
+				INVOKESTATIC,
+				"java/lang/Integer",
+				"valueOf",
+				"(I)Ljava/lang/Integer;",
+				false);
+		mv.visitMethodInsn(
+				INVOKEINTERFACE,
+				Type.getInternalName(Map.class),
+				"put",
+				"(" + Type.getDescriptor(Object.class) + Type.getDescriptor(Object.class) + ")" + Type.getDescriptor(Object.class),
+				true);
+		mv.visitInsn(POP);
 	}
 }

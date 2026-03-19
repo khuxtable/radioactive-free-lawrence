@@ -71,6 +71,8 @@ public class GameNode implements BaseNode {
 			stateClauseNode.generate(cv, gameContext);
 		}
 
+		AsmUtils.createField(cv, ACC_PUBLIC, "variableFlags", "Ljava/util/Map;",
+				"Ljava/util/Map<Ljava/lang/String;Ljava/lang/Integer;>;");
 		for (VariableNode variableNode : variables) {
 			variableNode.generate(cv, gameContext);
 		}
@@ -161,44 +163,6 @@ public class GameNode implements BaseNode {
 		mv.visitInsn(DUP);
 		mv.visitMethodInsn(INVOKESPECIAL, Type.getInternalName(HashMap.class), "<init>", "()V", false);
 		mv.visitFieldInsn(PUTFIELD, GameContext.GAME_CLASS_NAME, "objects", Type.getDescriptor(Map.class));
-//		// Add something
-//		mv.visitVarInsn(ALOAD, 0);
-//		mv.visitFieldInsn(GETFIELD, GameContext.GAME_CLASS_NAME, "objects", Type.getDescriptor(Map.class));
-//
-//		mv.visitLdcInsn("axe");
-//
-//		mv.visitIntInsn(SIPUSH, 1);
-//		mv.visitTypeInsn(ANEWARRAY, Type.getInternalName(GameObject.class));
-//		mv.visitInsn(DUP);
-//		mv.visitIntInsn(SIPUSH, 0);
-//
-//		mv.visitTypeInsn(NEW, GameContext.GAME_CLASS_NAME + "$" + "axe");
-//		mv.visitInsn(DUP);
-//		mv.visitVarInsn(ALOAD, 0);
-//		mv.visitMethodInsn(
-//				INVOKESPECIAL,
-//				GameContext.GAME_CLASS_NAME + "$" + "axe",
-//				"<init>",
-//				"(" + GameContext.GAME_CLASS_DESCRIPTOR + ")V",
-//				false);
-//
-//		mv.visitInsn(AASTORE);
-//
-//		mv.visitMethodInsn(
-//				INVOKESTATIC,
-//				Type.getInternalName(Arrays.class),
-//				"asList",
-//				"([" + Type.getDescriptor(Object.class) + ")Ljava/util/List;",
-//				false
-//		);
-//
-//		mv.visitMethodInsn(
-//				INVOKEINTERFACE,
-//				Type.getInternalName(Map.class),
-//				"put",
-//				"(" + Type.getDescriptor(Object.class) + Type.getDescriptor(Object.class) + ")" + Type.getDescriptor(Object.class),
-//				true);
-//		mv.visitInsn(POP);
 
 		mv.visitInsn(RETURN);
 		mv.visitMaxs(1, 1);
@@ -253,6 +217,14 @@ public class GameNode implements BaseNode {
 	}
 
 	private void generateFlags(MethodVisitor mv) {
+		mv.visitVarInsn(ALOAD, 0);
+		mv.visitTypeInsn(NEW, Type.getInternalName(HashMap.class));
+		mv.visitInsn(DUP);
+		mv.visitMethodInsn(INVOKESPECIAL, Type.getInternalName(HashMap.class), "<init>", "()V", false);
+		mv.visitFieldInsn(PUTFIELD, GameContext.GAME_CLASS_NAME, "variableFlags", Type.getDescriptor(Map.class));
+		for (VariableNode variableNode : variables) {
+			AsmUtils.addIntegerToMap(mv, GameContext.GAME_CLASS_NAME, "variableFlags", variableNode.getVariable(), 0);
+		}
 		int bitValue = 0;
 		for (FlagNode flagNode : variableFlags) {
 			for (String flag : flagNode.getFlags()) {
