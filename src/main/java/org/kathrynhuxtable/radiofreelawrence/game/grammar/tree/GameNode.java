@@ -27,7 +27,9 @@ public class GameNode implements BaseNode {
 	Map<String, Integer> textElementIndexes = new LinkedHashMap<>();
 	List<String> noise = new ArrayList<>();
 	List<VariableNode> variables = new ArrayList<>();
-	List<FlagNode> flags = new ArrayList<>();
+	List<FlagNode> variableFlags = new ArrayList<>();
+	List<FlagNode> placeFlags = new ArrayList<>();
+	List<FlagNode> objectFlags = new ArrayList<>();
 	List<ArrayNode> arrays = new ArrayList<>();
 	List<ObjectNode> objects = new ArrayList<>();
 	List<PlaceNode> places = new ArrayList<>(); // TODO Generate these
@@ -55,7 +57,13 @@ public class GameNode implements BaseNode {
 			textNode.generate(cv, gameContext);
 		}
 
-		for (FlagNode flagNode : flags) {
+		for (FlagNode flagNode : variableFlags) {
+			flagNode.generate(cv, gameContext);
+		}
+		for (FlagNode flagNode : placeFlags) {
+			flagNode.generate(cv, gameContext);
+		}
+		for (FlagNode flagNode : objectFlags) {
 			flagNode.generate(cv, gameContext);
 		}
 
@@ -245,8 +253,24 @@ public class GameNode implements BaseNode {
 	}
 
 	private void generateFlags(MethodVisitor mv) {
-		for (FlagNode flagNode : flags) {
-			int bitValue = 0;
+		int bitValue = 0;
+		for (FlagNode flagNode : variableFlags) {
+			for (String flag : flagNode.getFlags()) {
+				mv.visitVarInsn(ALOAD, 0);
+				mv.visitLdcInsn(1 << bitValue++);
+				mv.visitFieldInsn(PUTFIELD, GameContext.GAME_CLASS_NAME, flag, "I");
+			}
+		}
+		bitValue = 0;
+		for (FlagNode flagNode : placeFlags) {
+			for (String flag : flagNode.getFlags()) {
+				mv.visitVarInsn(ALOAD, 0);
+				mv.visitLdcInsn(1 << bitValue++);
+				mv.visitFieldInsn(PUTFIELD, GameContext.GAME_CLASS_NAME, flag, "I");
+			}
+		}
+		bitValue = 0;
+		for (FlagNode flagNode : objectFlags) {
 			for (String flag : flagNode.getFlags()) {
 				mv.visitVarInsn(ALOAD, 0);
 				mv.visitLdcInsn(1 << bitValue++);

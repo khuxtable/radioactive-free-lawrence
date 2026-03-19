@@ -28,35 +28,37 @@ include "places.gdesc";
 include "actions.gdesc";
 
 initial {
-    apport(axe, in_spencer);
-    apport(bagel, krogers); // copy
-    apport(banana, twenty_third);
-    apport(book, stack_warned);
-    apport(box, mazel);
-    apport(chain, jayhawk_sunflower);
-    apport(chicken_sandwich, cave); // copy
-    apport(coke, In_Joes);
-    apport(dagger, lot);
-    apport(glove, slums);
-    apport(gun, dark); // copy
-    apport(hatchet, naismith); // copy
-    apport(hole, slums);
-    apport(newspaper, north_wescoe);
-    apport(opera_glove, naismith);
-    apport(pistol, o_zone); // copy
-    apport(revolver, pterodactyl);
-    apport(rifle, puddle);
-    apport(sandwich, In_Joes);
-    apport(sword, jayhawk_sunflower);
-    apport(token, sunnyside_naismith);
-    apport(udk, murphy); // copy
-    apport(guards, wescoe_cafeteria);
-    apport(zapgun, wescoe_cafeteria);
+    apport(axe, in_spencer, true);
+    apport(bagel, krogers, true); // copy
+    apport(banana, twenty_third, true);
+    apport(book, stack_warned, true);
+    apport(box, mazel, true);
+    apport(chain, jayhawk_sunflower, true);
+    apport(chicken_sandwich, cave, true); // copy
+    apport(coke, In_Joes, true);
+    apport(dagger, lot, true);
+    apport(glove, slums, true);
+    apport(gun, dark, true); // copy
+    apport(hatchet, naismith, true); // copy
+    apport(hole, slums, true);
+    apport(newspaper, north_wescoe, true);
+    apport(opera_glove, naismith, true);
+    apport(pistol, o_zone, true); // copy
+    apport(revolver, pterodactyl, true);
+    apport(rifle, puddle, true);
+    apport(sandwich, In_Joes, true);
+    apport(sword, jayhawk_sunflower, true);
+    apport(token, sunnyside_naismith, true);
+    apport(udk, murphy, true); // copy
+    apport(guards, wescoe_cafeteria, true);
+    apport(zapgun, wescoe_cafeteria, true);
 
-    apport(meter, inhand);
-    setflag(meter, cantDrop);
-    setflag(meter, cantTake);
-    setflag(guards, isNpc);
+    apport(meter, inhand, true);
+
+    setflag meter:cantDrop;
+    setflag meter:cantTake;
+
+    setflag guards:isNpc;
 
     playerPower = 1000;
 }
@@ -65,7 +67,7 @@ initial {
 }
 repeat {
     // Handle player location description
-    if (isflag(status, moved)) {
+    if (status:moved) {
         describe(here);
         var youSee = true;
         for (var optr : here) {

@@ -20,11 +20,10 @@ import static org.objectweb.asm.Opcodes.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ObjectNode implements DeclaratorNode, HasRefno, VocabularyNode {
+public class ObjectNode implements DeclaratorNode, VocabularyNode {
 	private String name;
 	@Singular
 	private List<String> verbs;
-	private boolean inVocabulary;
 
 	private String inventoryDescription;
 	private String briefDescription;
@@ -33,7 +32,6 @@ public class ObjectNode implements DeclaratorNode, HasRefno, VocabularyNode {
 	private Map<String, VerbCommandNode> commands;
 	private Map<String, ProcNode> procs;
 
-	private int refno;
 	private SourceLocation sourceLocation;
 
 	@Override
@@ -47,16 +45,21 @@ public class ObjectNode implements DeclaratorNode, HasRefno, VocabularyNode {
 		AsmUtils.createField(cv, ACC_FINAL | ACC_SYNTHETIC, "this$0", GameContext.GAME_CLASS_DESCRIPTOR);
 		gameContext.variableStore.newClassScope(innerClassInternalName);
 
+		gameContext.variableStore.addVariable("name", VariableType.TEXT);
+		AsmUtils.createField(cv, ACC_PUBLIC, "name", Type.getDescriptor(String.class));
 		gameContext.variableStore.addVariable("inventorydescription", VariableType.TEXT);
 		AsmUtils.createField(cv, ACC_PUBLIC, "inventorydescription", Type.getDescriptor(String.class));
 		gameContext.variableStore.addVariable("briefdescription", VariableType.TEXT);
 		AsmUtils.createField(cv, ACC_PUBLIC, "briefdescription", Type.getDescriptor(String.class));
 		gameContext.variableStore.addVariable("longdescription", VariableType.TEXT);
 		AsmUtils.createField(cv, ACC_PUBLIC, "longdescription", Type.getDescriptor(String.class));
-		AsmUtils.createField(cv, ACC_PUBLIC, "actions", "Ljava/util/List;",
-				"Ljava/util/List<Ljava/lang/String;>;");
 		gameContext.variableStore.addVariable("location", VariableType.PLACE);
 		AsmUtils.createField(cv, ACC_PUBLIC, "location", Type.getDescriptor(GamePlace.class));
+
+		AsmUtils.createField(cv, ACC_PUBLIC, "actions", "Ljava/util/List;",
+				"Ljava/util/List<Ljava/lang/String;>;");
+		AsmUtils.createField(cv, ACC_PUBLIC, "verbs", "Ljava/util/List;",
+				"Ljava/util/List<Ljava/lang/String;>;");
 
 		for (VariableNode variableNode : variables) {
 			variableNode.generate(cv, gameContext);
@@ -71,65 +74,15 @@ public class ObjectNode implements DeclaratorNode, HasRefno, VocabularyNode {
 		for (ProcNode proc : procs.values()) {
 			proc.generate(cv, gameContext);
 		}
-		{
-			MethodVisitor mv = cv.visitMethod(ACC_PUBLIC, "getBriefDescription", "()" + Type.getDescriptor(String.class), null, null);
-			mv.visitCode();
-			Label beginLabel = new Label();
-			mv.visitLabel(beginLabel);
-			mv.visitVarInsn(ALOAD, 0);
-			mv.visitFieldInsn(GETFIELD, innerClassInternalName, "briefdescription", Type.getDescriptor(String.class));
-			mv.visitInsn(ARETURN);
-			Label endLabel = new Label();
-			mv.visitLabel(endLabel);
-			mv.visitLocalVariable("this", innerClassDescriptor, null, beginLabel, endLabel, 0);
-			mv.visitMaxs(1, 1);
-			mv.visitEnd();
-		}
-		{
-			MethodVisitor mv = cv.visitMethod(ACC_PUBLIC, "getActions", "()Ljava/util/List;", "()Ljava/util/List<Ljava/lang/String;>;", null);
-			mv.visitCode();
-			Label beginLabel = new Label();
-			mv.visitLabel(beginLabel);
-			mv.visitVarInsn(ALOAD, 0);
-			mv.visitFieldInsn(GETFIELD, innerClassInternalName, "actions", "Ljava/util/List;");
-			mv.visitInsn(ARETURN);
-			Label endLabel = new Label();
-			mv.visitLabel(endLabel);
-			mv.visitLocalVariable("this", innerClassDescriptor, null, beginLabel, endLabel, 0);
-			mv.visitMaxs(1, 1);
-			mv.visitEnd();
-		}
-		{
-			MethodVisitor mv = cv.visitMethod(ACC_PUBLIC, "getLocation", "()" + Type.getDescriptor(GamePlace.class), null, null);
-			mv.visitCode();
-			Label beginLabel = new Label();
-			mv.visitLabel(beginLabel);
-			mv.visitVarInsn(ALOAD, 0);
-			mv.visitFieldInsn(GETFIELD, innerClassInternalName, "location", Type.getDescriptor(GamePlace.class));
-			mv.visitInsn(ARETURN);
-			Label endLabel = new Label();
-			mv.visitLabel(endLabel);
-			mv.visitLocalVariable("this", innerClassDescriptor, null, beginLabel, endLabel, 0);
-			mv.visitMaxs(1, 1);
-			mv.visitEnd();
-		}
-		{
-			MethodVisitor mv = cv.visitMethod(ACC_PUBLIC, "setLocation", "(" + Type.getDescriptor(GamePlace.class) + ")V", null, null);
-			mv.visitParameter("location", 0);
-			mv.visitCode();
-			Label beginLabel = new Label();
-			mv.visitLabel(beginLabel);
-			mv.visitVarInsn(ALOAD, 0);
-			mv.visitVarInsn(ALOAD, 1);
-			mv.visitFieldInsn(PUTFIELD, innerClassInternalName, "location", Type.getDescriptor(GamePlace.class));
-			mv.visitInsn(RETURN);
-			Label endLabel = new Label();
-			mv.visitLabel(endLabel);
-			mv.visitLocalVariable("this", innerClassDescriptor, null, beginLabel, endLabel, 0);
-			mv.visitLocalVariable("location", Type.getDescriptor(GamePlace.class), null, beginLabel, endLabel, 1);
-			mv.visitMaxs(2, 2);
-			mv.visitEnd();
-		}
+
+		AsmUtils.createGetter(cv, innerClassInternalName, ACC_PUBLIC, "getName", "name", Type.getDescriptor(String.class));
+		AsmUtils.createGetter(cv, innerClassInternalName, ACC_PUBLIC, "getBriefDescription", "briefdescription", Type.getDescriptor(String.class));
+		AsmUtils.createGetter(cv, innerClassInternalName, ACC_PUBLIC, "getLongDescription", "longdescription", Type.getDescriptor(String.class));
+		AsmUtils.createGetter(cv, innerClassInternalName, ACC_PUBLIC, "getInventoryDescription", "inventorydescription", Type.getDescriptor(String.class));
+		AsmUtils.createGetter(cv, innerClassInternalName, ACC_PUBLIC, "getActions", "actions", Type.getDescriptor(List.class), "Ljava/util/List<Ljava/lang/String;>;");
+		AsmUtils.createGetter(cv, innerClassInternalName, ACC_PUBLIC, "getVerbs", "verbs", Type.getDescriptor(List.class), "Ljava/util/List<Ljava/lang/String;>;");
+		AsmUtils.createGetter(cv, innerClassInternalName, ACC_PUBLIC, "getLocation", "location", Type.getDescriptor(GamePlace.class));
+		AsmUtils.createSetter(cv, innerClassInternalName, "setLocation", "location", Type.getDescriptor(GamePlace.class));
 
 		generateIterator(cv, gameContext);
 
@@ -154,6 +107,12 @@ public class ObjectNode implements DeclaratorNode, HasRefno, VocabularyNode {
 		mv.visitVarInsn(ALOAD, 0); //load the first local variable: this
 		mv.visitMethodInsn(INVOKESPECIAL, "java/lang/Object", "<init>", "()V", false);
 
+		AsmUtils.assignVariable(mv,
+				innerClassInternalName,
+				"name",
+				Type.getDescriptor(String.class),
+				name);
+
 		if (inventoryDescription != null) {
 			AsmUtils.assignVariable(mv,
 					innerClassInternalName,
@@ -176,23 +135,8 @@ public class ObjectNode implements DeclaratorNode, HasRefno, VocabularyNode {
 					longDescription == null ? briefDescription : longDescription);
 		}
 
-		mv.visitVarInsn(ALOAD, 0);
-		mv.visitTypeInsn(NEW, Type.getInternalName(ArrayList.class));
-		mv.visitInsn(DUP);
-		mv.visitMethodInsn(INVOKESPECIAL, Type.getInternalName(ArrayList.class), "<init>", "()V", false);
-		mv.visitFieldInsn(PUTFIELD, innerClassInternalName, "actions", Type.getDescriptor(List.class));
-		for (String action : commands.keySet()) {
-			mv.visitVarInsn(ALOAD, 0);
-			mv.visitFieldInsn(GETFIELD, innerClassInternalName, "actions", Type.getDescriptor(List.class));
-			mv.visitLdcInsn(action);
-			mv.visitMethodInsn(
-					INVOKEINTERFACE,
-					Type.getInternalName(List.class),
-					"add",
-					"(Ljava/lang/Object;)Z",
-					true
-			);
-		}
+		AsmUtils.createList(mv, innerClassInternalName, "actions", commands.keySet());
+		AsmUtils.createList(mv, innerClassInternalName, "verbs", verbs);
 
 		for (VariableNode variableNode : variables) {
 			mv.visitVarInsn(ALOAD, 0);
@@ -207,18 +151,17 @@ public class ObjectNode implements DeclaratorNode, HasRefno, VocabularyNode {
 
 	private void generateIterator(ClassVisitor cv, GameContext gameContext) {
 		String innerClassInternalName = GameContext.GAME_CLASS_NAME + "$" + name;
-		String innerClassDescriptor = "L" + GameContext.GAME_CLASS_NAME + "$" + name + ";";
+		String innerClassDescriptor = "L" + innerClassInternalName + ";";
 		MethodVisitor mv = cv.visitMethod(ACC_PUBLIC, "iterator", "()Ljava/util/Iterator;", "()Ljava/util/Iterator<Ljava/lang/Object;>;", null);
 		mv.visitCode();
-		Label label0 = new Label();
-		mv.visitLabel(label0);
-		mv.visitLineNumber(35, label0);
+		Label beginLabel = new Label();
+		mv.visitLabel(beginLabel);
 		mv.visitVarInsn(ALOAD, 0);
 		mv.visitMethodInsn(INVOKESTATIC, Type.getInternalName(InternalFunctions.class), "iterator", "(Lorg/kathrynhuxtable/radiofreelawrence/game/GameObject;)Ljava/util/Iterator;", false);
 		mv.visitInsn(ARETURN);
-		Label label1 = new Label();
-		mv.visitLabel(label1);
-		mv.visitLocalVariable("this", innerClassDescriptor, null, label0, label1, 0);
+		Label endLabel = new Label();
+		mv.visitLabel(endLabel);
+		mv.visitLocalVariable("this", innerClassDescriptor, null, beginLabel, endLabel, 0);
 		mv.visitMaxs(2, 1);
 		mv.visitEnd();
 	}

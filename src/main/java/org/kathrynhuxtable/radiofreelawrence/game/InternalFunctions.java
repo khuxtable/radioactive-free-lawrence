@@ -33,12 +33,12 @@ public class InternalFunctions {
 		}
 	}
 
-	private Object getObjectVar(String name) {
+	private <T> T getObjectVar(String name) {
 		Class<?> gameClass = game.getClass();
 
 		try {
 			Field field = gameClass.getDeclaredField(name);
-			return field.get(game);
+			return (T) field.get(game);
 		} catch (NoSuchFieldException | IllegalAccessException e) {
 			throw new RuntimeException(e);
 		}
@@ -105,24 +105,24 @@ public class InternalFunctions {
 		}
 	}
 
-	private Object getGameVariable(String name) {
+	private <T> T getGameVariable(String name) {
 		Object gameVariable = null;
 		try {
 			gameVariable = internalFunctions.get(name);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
-		return gameVariable;
+		return (T) gameVariable;
 	}
 
 //	 Internal functions here.
 
-//	@InternalFunction(name = "input")
-//	public int input(ExprNode... parameters) {
+	@InternalFunction(name = "input")
+	public int input(Object... parameters) {
 //		gameContext.clearFlag(gameContext.getIdentifierRefno("status"), gameContext.getIntIdentifierValue("moved"));
 //		gameContext.getInput().input();
-//		return 0;
-//	}
+		return 0;
+	}
 
 	@InternalFunction(name = "in")
 	public int inrange(Object... parameters) {
@@ -154,32 +154,31 @@ public class InternalFunctions {
 
 	@InternalFunction(name = "have")
 	public int ishave(Object... parameters) {
-		Object refno = parameters[0];
-		// The inhand location (inventory) is always refno floc.
-		if (refno instanceof GameObject) {
-//			if (gameContext.locations[refno - gameContext.fobj] == gameContext.floc) {
-//				return 1;
-//			}
+		Object obj = parameters[0];
+		if (obj instanceof GameObject gameObject) {
+			if (gameObject.getLocation() == getPlaces().get("inhand")) {
+				return 1;
+			}
 		}
 		return 0;
 	}
 
-//	@InternalFunction(name = "ishere")
-//	public int ishere(ExprNode... parameters) {
-//		int refno = parameters[0].evaluate(gameContext);
-//		if (refno >= gameContext.fobj && refno < gameContext.lobj) {
-//			if (gameContext.locations[refno - gameContext.fobj] == gameContext.getIntIdentifierValue("here")) {
-//				return 1;
-//			}
-//		}
-//		return 0;
-//	}
-//
-//	@InternalFunction(name = "isnear")
-//	public int isnear(ExprNode... parameters) {
-//		return ishave(parameters) != 0 || ishere(parameters) != 0 ? 1 : 0;
-//	}
-//
+	@InternalFunction(name = "ishere")
+	public int ishere(Object... parameters) {
+		Object obj = parameters[0];
+		if (obj instanceof GameObject gameObject) {
+			if (gameObject.getLocation() == getPlaces().get("here")) {
+				return 1;
+			}
+		}
+		return 0;
+	}
+
+	@InternalFunction(name = "isnear")
+	public int isnear(Object... parameters) {
+		return ishave(parameters) != 0 || ishere(parameters) != 0 ? 1 : 0;
+	}
+
 //	@InternalFunction(name = "isflag")
 //	public int isflag(ExprNode... parameters) {
 //		long flag = parameters[1].evaluate(gameContext);
@@ -201,34 +200,32 @@ public class InternalFunctions {
 //		gameContext.clearFlag(refno, flag);
 //		return 0;
 //	}
-//
-//	@InternalFunction(name = "isat")
-//	public int isat(ExprNode... parameters) {
-//		int here = gameContext.getIntIdentifierValue("here");
-//		for (ExprNode node : parameters) {
-//			int place = node.evaluate(gameContext);
-//			if (place == here) {
-//				return 1;
-//			}
-//		}
-//		return 0;
-//	}
-//
-//	@InternalFunction(name = "atplace")
-//	public int atplace(ExprNode... parameters) {
-//		int obj = gameContext.getIntIdentifierValue("here");
-//		int loc = gameContext.locations[obj - gameContext.fobj];
-//		for (int i = 1; i < parameters.length; i++) {
-//			int place = parameters[i].evaluate(gameContext);
-//			if (place == loc) {
-//				return 1;
-//			}
-//		}
-//		return 0;
-//	}
-//
-//	@InternalFunction(name = "varis")
-//	public int varis(ExprNode... parameters) {
+
+	@InternalFunction(name = "isat")
+	public int isat(Object... parameters) {
+		GamePlace here = getPlaces().get("here");
+		for (Object node : parameters) {
+			if (node instanceof GamePlace gamePlace && gamePlace == here) {
+				return 1;
+			}
+		}
+		return 0;
+	}
+
+	@InternalFunction(name = "atplace")
+	public int atplace(Object... parameters) {
+		GamePlace loc = getPlaces().get("here");
+		for (int i = 1; i < parameters.length; i++) {
+			GamePlace place = (GamePlace)  parameters[i];
+			if (place == loc) {
+				return 1;
+			}
+		}
+		return 0;
+	}
+
+	@InternalFunction(name = "varis")
+	public int varis(Object... parameters) {
 //		int refno = parameters[0].evaluate(gameContext);
 //		if (refno < gameContext.fvar || refno >= gameContext.lvar) {
 //			return 0;
@@ -240,9 +237,9 @@ public class InternalFunctions {
 //				return 1;
 //			}
 //		}
-//		return 0;
-//	}
-//
+		return 0;
+	}
+
 //	@InternalFunction(name = "key")
 //	public int iskey(ExprNode... parameters) {
 //		int refno = gameContext.getIntIdentifierValue("arg1");
@@ -279,18 +276,18 @@ public class InternalFunctions {
 //		}
 //		return 1;
 //	}
-//
-//	@InternalFunction(name = "anyof")
-//	public int anyof(ExprNode... parameters) {
-//		int verb = gameContext.getIntIdentifierValue("arg1");
-//		for (ExprNode parameter : parameters) {
+
+	@InternalFunction(name = "anyof")
+	public int anyof(Object... parameters) {
+//		Object verb = gameContext.getIntIdentifierValue("arg1");
+//		for (Object parameter : parameters) {
 //			int value = parameter.evaluate(gameContext);
 //			if (value == verb) {
 //				return 1;
 //			}
 //		}
-//		return 0;
-//	}
+		return 0;
+	}
 
 	@InternalFunction(name = "query")
 	public int getquery(Object... parameters) {
@@ -387,17 +384,16 @@ public class InternalFunctions {
 //
 //		throw new BreakException(ControlType.REPEAT);
 //	}
-//
-//	@InternalFunction(name = "goto")
-//	public int goto_(ExprNode... parameters) {
-//		int place = parameters[0] instanceof TextElementNode ?
-//				gameContext.getIntIdentifierValue(((TextElementNode) parameters[0]).getText().toLowerCase()) :
-//				parameters[0].evaluate(gameContext);
+
+	@InternalFunction(name = "goto")
+	public int goto_(Object... parameters) {
+		GamePlace place = (GamePlace) parameters[0];
 //		gameContext.setIntIdentifierValue("there", gameContext.getIntIdentifierValue("here"));
 //		gameContext.setIntIdentifierValue("here", place);
 //		gameContext.setFlag(gameContext.getIdentifierRefno("status"), gameContext.getIntIdentifierValue("moved"));
-//		return 0;
-//	}
+		return 0;
+	}
+
 	@InternalFunction(name = "move")
 	public int move_(Object... parameters) {
 		GamePlace place = (GamePlace) parameters[0];
@@ -629,6 +625,41 @@ public class InternalFunctions {
 		}
 		throw new GameRuntimeException("Missing ']' in switch text in \"" + new String(charArray) + "\"");
 	}
+
+//	private boolean testflag(int flag, long state) {
+//		long value;
+//		if (refno >= fvar && refno < lvar) {
+//			value = variableFlags[refno - fvar];
+//		} else if (refno >= floc && refno < lloc) {
+//			value = placeFlags[refno - floc];
+//		} else if (refno >= fobj && refno < lobj) {
+//			value = objectFlags[refno - fobj];
+//		} else {
+//			return false;
+//		}
+//
+//		return (value & (1L << state)) != 0;
+//	}
+//
+//	public void setFlag(int refno, long state) {
+//		if (refno >= fvar && refno < lvar) {
+//			variableFlags[refno - fvar] |= 1L << state;
+//		} else if (refno >= floc && refno < lloc) {
+//			placeFlags[refno - floc] |= 1L << state;
+//		} else if (refno >= fobj && refno < lobj) {
+//			objectFlags[refno - fobj] |= 1L << state;
+//		}
+//	}
+//
+//	public void clearFlag(int refno, long state) {
+//		if (refno >= fvar && refno < lvar) {
+//			variableFlags[refno - fvar] &= ~(1L << state);
+//		} else if (refno >= floc && refno < lloc) {
+//			placeFlags[refno - floc] &= ~(1L << state);
+//		} else if (refno >= fobj && refno < lobj) {
+//			objectFlags[refno - fobj] &= ~(1L << state);
+//		}
+//	}
 
 	public static Iterator<Object> iterator(Map<String, List<GameObject>> objects, GamePlace location) {
 		return objects.values().stream()

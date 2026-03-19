@@ -1,5 +1,5 @@
     // When eating or drinking something
-    proc consume(obj, disappears, count, minPower, maxPower, message, emptyDescription) {
+    proc consume(ref obj, var disappears, var count, var minPower, var maxPower, text message, text emptyDescription) {
         var power = getrandom(minPower, maxPower);
         playerPower += power;
         // I don't currently have a way to implement the count, so assume 1 and disappears = true.
@@ -7,10 +7,10 @@
         say(message);
         break repeat;
     }
-    proc useweapon(obj, dropped, affects, rchance, damage, drain) {
+    proc useweapon(ref obj, var dropped, var affects, var rchance, var damage, var drain) {
         var target = null;
-        for (var optr : here) {
-            if (isflag(*optr, isNpc)) {
+        for (ref optr : here) {
+            if (optr:isNpc) {
                 if (optr == arg2) {
                     target = optr;
                     break;
@@ -50,7 +50,7 @@
             quip(" misses #.", target);
         }
     }
-    proc beastCheck(beast, where, noCanDo) {
+    proc beastCheck(ref beast, ref where, text noCanDo) {
         for (var optr : where) {
             if (optr == beast) {
                 quip(noCanDo);
@@ -224,7 +224,7 @@
     }
     action "inventory" {
         var count;
-        for (var optr : inhand) {
+        for (ref optr : inhand) {
             say(optr);
             count++;    // Increment count of listed objects
         }
@@ -240,7 +240,7 @@
         if (status == 1) {
             describe(here, 1);        // The procedure does not QUIT...
             var youSee = true;
-            for (var optr : here) {
+            for (ref optr : here) {
                 if (youSee) {
                     say("");
                     youSee = false;
@@ -260,7 +260,7 @@
     }
     action "take" {
         if (ishere(arg2)) {
-            if (isflag(*arg2, cantTake)) {
+            if (arg2:cantTake) {
                 quip("You cannot take the #.", arg2);
             }
             get(arg2);
@@ -271,7 +271,7 @@
     }
     action "drop" {
         if (have(arg2)) {      // True only if the player has the thing
-            if (isflag(*arg2, cantDrop)) {
+            if (arg2:cantDrop) {
                 quip("You cannot drop the #.", arg2);
             }
             say("You drop the #.", arg2);

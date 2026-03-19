@@ -5,6 +5,7 @@ variable thingsHere[15];
 
 flags object one, two, xyzzy;
 flags place three, four;
+flags object five, six;
 
 state alabama,
     texas = 5,

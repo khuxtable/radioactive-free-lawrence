@@ -6,8 +6,6 @@ import java.util.Scanner;
 
 import lombok.RequiredArgsConstructor;
 
-import org.kathrynhuxtable.radiofreelawrence.game.grammar.tree.HasRefno;
-
 @RequiredArgsConstructor
 public class Input {
 

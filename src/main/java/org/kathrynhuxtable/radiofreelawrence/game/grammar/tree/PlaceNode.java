@@ -16,7 +16,7 @@ import static org.objectweb.asm.Opcodes.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class PlaceNode implements DeclaratorNode, HasRefno, VocabularyNode {
+public class PlaceNode implements DeclaratorNode, VocabularyNode {
 	private String name;
 	@Singular
 	private List<String> verbs;
@@ -27,7 +27,6 @@ public class PlaceNode implements DeclaratorNode, HasRefno, VocabularyNode {
 	private Map<String, VerbCommandNode> commands;
 	private Map<String, ProcNode> procs;
 
-	private int refno;
 	private SourceLocation sourceLocation;
 
 	@Override
@@ -41,12 +40,17 @@ public class PlaceNode implements DeclaratorNode, HasRefno, VocabularyNode {
 		AsmUtils.createField(cv, ACC_FINAL | ACC_SYNTHETIC, "this$0", GameContext.GAME_CLASS_DESCRIPTOR);
 		gameContext.variableStore.newClassScope(innerClassInternalName);
 
+		gameContext.variableStore.addVariable("name", VariableType.TEXT);
+		AsmUtils.createField(cv, ACC_PUBLIC, "name", Type.getDescriptor(String.class));
 		gameContext.variableStore.addVariable("briefdescription", VariableType.TEXT);
 		AsmUtils.createField(cv, ACC_PUBLIC, "briefdescription", Type.getDescriptor(String.class));
 		gameContext.variableStore.addVariable("longdescription", VariableType.TEXT);
 		AsmUtils.createField(cv, ACC_PUBLIC, "longdescription", Type.getDescriptor(String.class));
-		gameContext.variableStore.addVariable("location", VariableType.PLACE);
-		AsmUtils.createField(cv, ACC_PUBLIC, "location", Type.getDescriptor(GamePlace.class));
+
+		AsmUtils.createField(cv, ACC_PUBLIC, "actions", "Ljava/util/List;",
+				"Ljava/util/List<Ljava/lang/String;>;");
+		AsmUtils.createField(cv, ACC_PUBLIC, "verbs", "Ljava/util/List;",
+				"Ljava/util/List<Ljava/lang/String;>;");
 
 		for (VariableNode variableNode : variables) {
 			variableNode.generate(cv, gameContext);
@@ -55,20 +59,12 @@ public class PlaceNode implements DeclaratorNode, HasRefno, VocabularyNode {
 		for (ProcNode procNode : procs.values()) {
 			gameContext.variableStore.addVariable(procNode.getName(), VariableType.METHOD);
 		}
-		{
-			MethodVisitor mv = cv.visitMethod(ACC_PUBLIC, "getBriefDescription", "()" + Type.getDescriptor(String.class), null, null);
-			mv.visitCode();
-			Label beginLabel = new Label();
-			mv.visitLabel(beginLabel);
-			mv.visitVarInsn(ALOAD, 0);
-			mv.visitFieldInsn(GETFIELD, innerClassInternalName, "briefdescription", Type.getDescriptor(String.class));
-			mv.visitInsn(ARETURN);
-			Label endLabel = new Label();
-			mv.visitLabel(endLabel);
-			mv.visitLocalVariable("this", innerClassDescriptor, null, beginLabel, endLabel, 0);
-			mv.visitMaxs(1, 1);
-			mv.visitEnd();
-		}
+
+		AsmUtils.createGetter(cv, innerClassInternalName, ACC_PUBLIC, "getName", "name", Type.getDescriptor(String.class));
+		AsmUtils.createGetter(cv, innerClassInternalName, ACC_PUBLIC, "getBriefDescription", "briefdescription", Type.getDescriptor(String.class));
+		AsmUtils.createGetter(cv, innerClassInternalName, ACC_PUBLIC, "getLongDescription", "longdescription", Type.getDescriptor(String.class));
+		AsmUtils.createGetter(cv, innerClassInternalName, ACC_PUBLIC, "getActions", "actions", Type.getDescriptor(List.class), "Ljava/util/List<Ljava/lang/String;>;");
+		AsmUtils.createGetter(cv, innerClassInternalName, ACC_PUBLIC, "getVerbs", "verbs", Type.getDescriptor(List.class), "Ljava/util/List<Ljava/lang/String;>;");
 
 		VerbCommandNode.generateActions(cv, gameContext, commands);
 
@@ -99,6 +95,12 @@ public class PlaceNode implements DeclaratorNode, HasRefno, VocabularyNode {
 		mv.visitVarInsn(ALOAD, 0); //load the first local variable: this
 		mv.visitMethodInsn(INVOKESPECIAL, "java/lang/Object", "<init>", "()V", false);
 
+		AsmUtils.assignVariable(mv,
+				innerClassInternalName,
+				"name",
+				Type.getDescriptor(String.class),
+				name);
+
 		if (briefDescription != null) {
 			AsmUtils.assignVariable(mv,
 					innerClassInternalName,
@@ -113,6 +115,9 @@ public class PlaceNode implements DeclaratorNode, HasRefno, VocabularyNode {
 					Type.getDescriptor(String.class),
 					longDescription == null ? briefDescription : longDescription);
 		}
+
+		AsmUtils.createList(mv, innerClassInternalName, "actions", commands.keySet());
+		AsmUtils.createList(mv, innerClassInternalName, "verbs", verbs);
 
 		for (VariableNode variableNode : variables) {
 			mv.visitVarInsn(ALOAD, 0);

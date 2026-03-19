@@ -132,7 +132,11 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 			root.getIdentifiers().put(flag, node);
 		});
 
-		root.getFlags().add(node);
+		switch (type) {
+		case VARIABLE -> root.getVariableFlags().add(node);
+		case OBJECT -> root.getObjectFlags().add(node);
+		case PLACE -> root.getPlaceFlags().add(node);
+		}
 		return node;
 	}
 
@@ -389,17 +393,34 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 		}
 	}
 
+	@Override
+	public BaseNode visitReferenceDeclarator(ReferenceDeclaratorContext ctx) {
+		List<VariableNode> varList = root.getVariables();
+		TerminalNode idCtx = ctx.IDENTIFIER(0);
+		String varName = idCtx.getText().toLowerCase();
+		VariableNode node = VariableNode.builder()
+				.variable(varName)
+				.sourceLocation(new SourceLocation(ctx))
+				.build();
+		if (root.getIdentifiers().containsKey(varName)) {
+			errorReporter.reportError(ctx, "Duplicate identifier \"" + varName + "\"");
+		}
+		root.getIdentifiers().put(varName, node);
+		varList.add(node);
+		return node;
+	}
+
 	// PLACE IDENTIFIER (EQUAL verb)* textElement? textElement? optionalBlock
 	@Override
 	public PlaceNode visitPlaceDirective(PlaceDirectiveContext ctx) {
 		String briefDescription = ((TextElementNode) visit(ctx.textElement(0))).getText();
 		String longDescription = ctx.textElement(1) == null ? null : ((TextElementNode) visit(ctx.textElement(1))).getText();
 		Map<String, VerbCommandNode> commands = ctx.objectCommand().stream()
-				.filter (oc -> oc.actionDirective() != null)
+				.filter(oc -> oc.actionDirective() != null)
 				.map(vc -> (VerbCommandNode) visitObjectCommand(vc))
 				.collect(Collectors.toMap(VerbCommandNode::getVerb, t -> t));
 		Map<String, ProcNode> procs = ctx.objectCommand().stream()
-				.filter (oc -> oc.procDirective() != null)
+				.filter(oc -> oc.procDirective() != null)
 				.map(vc -> (ProcNode) visitObjectCommand(vc))
 				.collect(Collectors.toMap(ProcNode::getName, t -> t));
 		List<VariableNode> variables = ctx.objectCommand().stream()
@@ -440,27 +461,32 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 	// OBJECT SUB? IDENTIFIER (EQUAL verb)* textElement textElement? textElement? optionalBlock
 	@Override
 	public ObjectNode visitObjectDirective(ObjectDirectiveContext ctx) {
+		String name = ctx.IDENTIFIER().getText().toLowerCase();
 		String inventoryDescription = ((TextElementNode) visit(ctx.textElement(0))).getText();
 		String briefDescription = ctx.textElement(1) == null ? null : ((TextElementNode) visit(ctx.textElement(1))).getText();
 		String longDescription = ctx.textElement(2) == null ? null : ((TextElementNode) visit(ctx.textElement(2))).getText();
 		Map<String, VerbCommandNode> commands = ctx.objectCommand().stream()
-				.filter (oc -> oc.actionDirective() != null)
+				.filter(oc -> oc.actionDirective() != null)
 				.map(vc -> (VerbCommandNode) visitObjectCommand(vc))
 				.collect(Collectors.toMap(VerbCommandNode::getVerb, t -> t));
 		Map<String, ProcNode> procs = ctx.objectCommand().stream()
-				.filter (oc -> oc.procDirective() != null)
+				.filter(oc -> oc.procDirective() != null)
 				.map(vc -> (ProcNode) visitObjectCommand(vc))
 				.collect(Collectors.toMap(ProcNode::getName, t -> t));
 		List<VariableNode> variables = ctx.objectCommand().stream()
 				.filter(oc -> oc.variableDirective() != null)
 				.map(vc -> (VariableNode) visitObjectCommand(vc))
 				.collect(Collectors.toList());
+		List<String> verbs = ctx.verb().stream()
+				.map(i -> TextUtils.cleanStringLiteral(i.STRING_LITERAL().getText()).toLowerCase())
+				.collect(Collectors.toList());
+		boolean isInVocabulary = !"-".equals(ctx.getChild(1).toString());
+		if (isInVocabulary) {
+			verbs.add(0, name);
+		}
 		ObjectNode node = ObjectNode.builder()
-				.name(ctx.IDENTIFIER().getText().toLowerCase())
-				.verbs(ctx.verb().stream()
-						.map(i -> TextUtils.cleanStringLiteral(i.STRING_LITERAL().getText()).toLowerCase())
-						.collect(Collectors.toList()))
-				.inVocabulary(!"-".equals(ctx.getChild(1).toString()))
+				.name(name)
+				.verbs(verbs)
 				.inventoryDescription(inventoryDescription)
 				.briefDescription(briefDescription)
 				.longDescription(longDescription)
@@ -473,7 +499,7 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 			errorReporter.reportError(ctx, "Duplicate identifier \"" + node.getName() + "\"");
 		}
 		root.getIdentifiers().put(node.getName(), node);
-		if (node.isInVocabulary()) {
+		if (isInVocabulary) {
 			if (root.getVerbs().containsKey(node.getName())) {
 				errorReporter.reportError(ctx, "Duplicate verb \"" + node.getName() + "\"");
 			}
@@ -491,9 +517,9 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 	}
 
 	// variableDirective
-    // referenceDirective
-    // procDirective
-    // actionDirective
+	// referenceDirective
+	// procDirective
+	// actionDirective
 
 	@Override
 	public BaseNode visitObjectCommand(ObjectCommandContext ctx) {
@@ -549,6 +575,15 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 	public BaseNode visitExpressionStatement(ExpressionStatementContext ctx) {
 		return ExpressionStatementNode.builder()
 				.expression((ExprNode) visit(ctx.statementExpression()))
+				.sourceLocation(new SourceLocation(ctx))
+				.build();
+	}
+
+	@Override
+	public BaseNode visitFlagStatement(FlagStatementContext ctx) {
+		return FlagStatement.builder()
+				.set(ctx.SETFLAG() != null)
+				.flagExpression((FlagExpressionNode) visit(ctx.flagExpression()))
 				.sourceLocation(new SourceLocation(ctx))
 				.build();
 	}
@@ -1046,6 +1081,15 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 		return new RefNode(
 				getIdentifierNode(ctx.IDENTIFIER(), getSourceLocation(ctx.IDENTIFIER())),
 				new SourceLocation(ctx));
+	}
+
+	@Override
+	public BaseNode visitFlagExpression(FlagExpressionContext ctx) {
+		return FlagExpressionNode.builder()
+				.identifier(ctx.IDENTIFIER(0).getText().toLowerCase())
+				.flag(ctx.IDENTIFIER(1).getText().toLowerCase())
+				.sourceLocation(new SourceLocation(ctx))
+				.build();
 	}
 
 	// TEXT_BLOCK | STRING_LITERAL

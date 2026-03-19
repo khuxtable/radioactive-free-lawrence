@@ -10,12 +10,11 @@ import org.kathrynhuxtable.radiofreelawrence.game.grammar.SourceLocation;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class VerbNode implements BaseNode, HasRefno, VocabularyNode {
+public class VerbNode implements BaseNode, VocabularyNode {
 	private String name;
 	@Singular
 	private List<String> verbs;
 	private boolean noise;
 
-	private int refno;
 	private SourceLocation sourceLocation;
 }

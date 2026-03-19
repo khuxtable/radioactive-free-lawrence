@@ -19,11 +19,10 @@ import static org.objectweb.asm.Opcodes.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class TextElementNode implements DeclaratorNode, ExprNode, HasRefno {
+public class TextElementNode implements DeclaratorNode, ExprNode {
 	private String text;
 	private int index;
 
-	private int refno;
 	private SourceLocation sourceLocation;
 
 	@Override
