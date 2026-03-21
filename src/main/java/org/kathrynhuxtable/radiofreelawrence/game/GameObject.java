@@ -2,7 +2,7 @@ package org.kathrynhuxtable.radiofreelawrence.game;
 
 import java.util.List;
 
-public interface GameObject {
+public interface GameObject extends GameFlag {
 	String getName();
 	List<String> getVerbs();
 	List<String> getActions();

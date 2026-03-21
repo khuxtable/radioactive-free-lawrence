@@ -1086,8 +1086,8 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 	@Override
 	public BaseNode visitFlagExpression(FlagExpressionContext ctx) {
 		return FlagExpressionNode.builder()
-				.identifier(ctx.IDENTIFIER(0).getText().toLowerCase())
-				.flag(ctx.IDENTIFIER(1).getText().toLowerCase())
+				.identifierNode((IdentifierNode) visit(ctx.identifierReference()))
+				.flag((ExprNode)  visit(ctx.primary()))
 				.sourceLocation(new SourceLocation(ctx))
 				.build();
 	}

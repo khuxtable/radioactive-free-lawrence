@@ -6,6 +6,7 @@ variable thingsHere[15];
 flags object one, two, xyzzy;
 flags place three, four;
 flags object five, six;
+flags variable seven;
 
 state alabama,
     texas = 5,
@@ -116,11 +117,19 @@ place emerald_city
 }
 
 initial {
+    setflag third:seven;
+    setflag ylem:four;
     say("Something");
     apport("axe", ninth_mississippi, 1);
     say("$", 1066);
     say("mytest is $", testMeNow(32, ylem));
-    for (var ptr : ninth_mississippi) {
+    say("flag is $", third:seven);
+    say("ylem:four is $", ylem:four);
+    say("ylem:three is $", ylem:three);
+    clearflag ylem:four;
+    say("ylem:four is now $", ylem:four);
+    for (ref ptr : ninth_mississippi) {
+        say("flag is $", ptr:three);
         say(ptr, 0);
         for (var vptr : ptr) {
             say("   #", vptr);

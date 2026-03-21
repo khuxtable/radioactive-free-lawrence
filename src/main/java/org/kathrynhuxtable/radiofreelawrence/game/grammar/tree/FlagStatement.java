@@ -8,7 +8,6 @@ import org.objectweb.asm.MethodVisitor;
 
 import org.kathrynhuxtable.radiofreelawrence.game.GameContext;
 import org.kathrynhuxtable.radiofreelawrence.game.grammar.SourceLocation;
-import org.kathrynhuxtable.radiofreelawrence.game.grammar.VariableType;
 
 import static org.objectweb.asm.Opcodes.*;
 
@@ -16,7 +15,7 @@ import static org.objectweb.asm.Opcodes.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class FlagStatement implements ExprNode {
+public class FlagStatement implements StatementNode {
 
 	private boolean set;
 	private FlagExpressionNode flagExpression;
@@ -25,11 +24,17 @@ public class FlagStatement implements ExprNode {
 
 	@Override
 	public void generate(MethodVisitor mv, GameContext gameContext) {
-		// TODO Implement flag logic
-	}
+		flagExpression.getFlagValue(mv, gameContext);
+		flagExpression.getFlag().generate(mv, gameContext);
 
-	@Override
-	public VariableType getVariableType(GameContext gameContext) {
-		return VariableType.NUMBER;
+		if (set) {
+			mv.visitInsn(IOR);
+		} else {
+			mv.visitInsn(ICONST_M1);
+			mv.visitInsn(IXOR);
+			mv.visitInsn(IAND);
+		}
+
+		flagExpression.setFlagValue(mv, gameContext);
 	}
 }

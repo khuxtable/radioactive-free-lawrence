@@ -40,7 +40,7 @@ public class AsmUtils {
 		mv.visitLabel(beginLabel);
 		mv.visitVarInsn(ALOAD, 0);
 		mv.visitFieldInsn(GETFIELD, innerClassInternalName, name, descriptor);
-		mv.visitInsn(ARETURN);
+		mv.visitInsn(descriptor.equals(Type.INT_TYPE.getDescriptor()) ? IRETURN : ARETURN);
 		Label endLabel = new Label();
 		mv.visitLabel(endLabel);
 		mv.visitLocalVariable("this", innerClassDescriptor, null, beginLabel, endLabel, 0);
@@ -48,25 +48,25 @@ public class AsmUtils {
 		mv.visitEnd();
 	}
 
-	public static void createSetter(ClassVisitor cv, String innerClassInternalName, String setterName, String name, String descriptor) {
-		createSetter(cv, innerClassInternalName, setterName, name, descriptor, null);
+	public static void createSetter(ClassVisitor cv, String innerClassInternalName, int flags, String setterName, String name, String descriptor) {
+		createSetter(cv, innerClassInternalName, flags, setterName, name, descriptor, null);
 	}
 
-	public static void createSetter(ClassVisitor cv, String innerClassInternalName, String setterName, String name, String descriptor, String signature) {
+	public static void createSetter(ClassVisitor cv, String innerClassInternalName, int flags, String setterName, String name, String descriptor, String signature) {
 		String innerClassDescriptor = "L" + innerClassInternalName + ";";
-		MethodVisitor mv = cv.visitMethod(ACC_PUBLIC, setterName, "(" + descriptor + ")V", signature, null);
+		MethodVisitor mv = cv.visitMethod(flags, setterName, "(" + descriptor + ")V", signature, null);
 		mv.visitParameter(name, 0);
 		mv.visitCode();
 		Label beginLabel = new Label();
 		mv.visitLabel(beginLabel);
 		mv.visitVarInsn(ALOAD, 0);
-		mv.visitVarInsn(ALOAD, 1);
-		mv.visitFieldInsn(PUTFIELD, innerClassInternalName, name, Type.getDescriptor(GamePlace.class));
+		mv.visitVarInsn(descriptor.equals(Type.INT_TYPE.getDescriptor()) ? ILOAD : ALOAD, 1);
+		mv.visitFieldInsn(PUTFIELD, innerClassInternalName, name, descriptor);
 		mv.visitInsn(RETURN);
 		Label endLabel = new Label();
 		mv.visitLabel(endLabel);
 		mv.visitLocalVariable("this", innerClassDescriptor, null, beginLabel, endLabel, 0);
-		mv.visitLocalVariable("location", descriptor, null, beginLabel, endLabel, 1);
+		mv.visitLocalVariable(name, descriptor, null, beginLabel, endLabel, 1);
 		mv.visitMaxs(2, 2);
 		mv.visitEnd();
 	}

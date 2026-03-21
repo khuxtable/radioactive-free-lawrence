@@ -52,6 +52,9 @@ public class PlaceNode implements DeclaratorNode, VocabularyNode {
 		AsmUtils.createField(cv, ACC_PUBLIC, "verbs", "Ljava/util/List;",
 				"Ljava/util/List<Ljava/lang/String;>;");
 
+		gameContext.variableStore.addVariable("flags", VariableType.NUMBER);
+		AsmUtils.createField(cv, ACC_PUBLIC, "flags", Type.INT_TYPE.getDescriptor());
+
 		for (VariableNode variableNode : variables) {
 			variableNode.generate(cv, gameContext);
 		}
@@ -65,6 +68,8 @@ public class PlaceNode implements DeclaratorNode, VocabularyNode {
 		AsmUtils.createGetter(cv, innerClassInternalName, ACC_PUBLIC, "getLongDescription", "longdescription", Type.getDescriptor(String.class));
 		AsmUtils.createGetter(cv, innerClassInternalName, ACC_PUBLIC, "getActions", "actions", Type.getDescriptor(List.class), "Ljava/util/List<Ljava/lang/String;>;");
 		AsmUtils.createGetter(cv, innerClassInternalName, ACC_PUBLIC, "getVerbs", "verbs", Type.getDescriptor(List.class), "Ljava/util/List<Ljava/lang/String;>;");
+		AsmUtils.createGetter(cv, innerClassInternalName, ACC_PUBLIC, "getFlags", "flags", Type.INT_TYPE.getDescriptor());
+		AsmUtils.createSetter(cv, innerClassInternalName, ACC_PUBLIC, "setFlags", "flags", Type.INT_TYPE.getDescriptor());
 
 		VerbCommandNode.generateActions(cv, gameContext, commands);
 
