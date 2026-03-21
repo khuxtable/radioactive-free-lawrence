@@ -14,6 +14,7 @@ import org.kathrynhuxtable.radiofreelawrence.game.grammar.SourceLocation;
 @NoArgsConstructor
 @AllArgsConstructor
 public class LocalVariableDeclarationNode implements BaseNode {
+	private boolean reference;
 	private List<VariableDeclaratorNode> declarators;
 	private SourceLocation sourceLocation;
 }

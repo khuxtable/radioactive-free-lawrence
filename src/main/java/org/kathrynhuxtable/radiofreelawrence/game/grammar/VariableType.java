@@ -6,7 +6,24 @@ import org.springframework.lang.Nullable;
 import org.kathrynhuxtable.radiofreelawrence.game.Text;
 
 public enum VariableType {
-	FLAG, STATE, NUMBER, TEXT, TEXT_NODE, REFERENCE, METHOD, LABEL, OBJECT, PLACE;
+	FLAG        (false, false),
+	STATE       (false, false),
+	NUMBER      (true,  false),
+	TEXT        (true,  true),
+	TEXT_NODE   (false, true),
+	REFERENCE   (true,  true),
+	METHOD      (false, true),
+	LABEL       (false, false),
+	OBJECT      (false, true),
+	PLACE       (false, true);
+
+	public final boolean assignable;
+	public final boolean reference;
+
+	VariableType(boolean assignable, boolean reference) {
+		this.assignable = assignable;
+		this.reference = reference;
+	}
 
 	@Nullable
 	public String getDescriptor() {

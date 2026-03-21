@@ -1,7 +1,5 @@
 package org.kathrynhuxtable.radiofreelawrence.game.grammar.tree;
 
-import java.util.List;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,33 +13,33 @@ import org.kathrynhuxtable.radiofreelawrence.game.grammar.SourceLocation;
 import org.kathrynhuxtable.radiofreelawrence.game.grammar.VariableContext;
 import org.kathrynhuxtable.radiofreelawrence.game.grammar.VariableType;
 
-import static org.objectweb.asm.Opcodes.ICONST_0;
-import static org.objectweb.asm.Opcodes.ISTORE;
+import static org.objectweb.asm.Opcodes.*;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class LocalVariableDeclarationStatementNode implements StatementNode {
-	private List<VariableDeclaratorNode> declarators;
+	private LocalVariableDeclarationNode localVariableDeclarationNode;
 	private String label;
 	private SourceLocation sourceLocation;
 
 	@Override
 	public void generate(MethodVisitor mv, GameContext gameContext) {
-		for (VariableDeclaratorNode variableDeclaratorNode : declarators) {
+		boolean reference = localVariableDeclarationNode.isReference();
+		for (VariableDeclaratorNode variableDeclaratorNode : localVariableDeclarationNode.getDeclarators()) {
 			String identifier = variableDeclaratorNode.getIdentifier().getName();
 
-			VariableContext variableContext = gameContext.variableStore.addVariable(identifier, VariableType.NUMBER);
-			variableContext.setIndex(((LocalVariablesSorter) mv).newLocal(Type.INT_TYPE));
+			VariableContext variableContext = gameContext.variableStore.addVariable(identifier, reference ? VariableType.REFERENCE : VariableType.NUMBER);
+			variableContext.setIndex(((LocalVariablesSorter) mv).newLocal(reference ? Type.getType(Object.class) : Type.INT_TYPE));
 
 			if (variableDeclaratorNode.getExpression() != null) {
 				variableDeclaratorNode.getExpression().generate(mv, gameContext);
 			} else {
-				mv.visitInsn(ICONST_0);
+				mv.visitInsn(reference ? ACONST_NULL : ICONST_0);
 			}
 
-			mv.visitVarInsn(ISTORE, variableContext.getIndex());
+			mv.visitVarInsn(reference ? ASTORE : ISTORE, variableContext.getIndex());
 
 		}
 	}

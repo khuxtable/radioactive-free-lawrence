@@ -558,7 +558,7 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 	@Override
 	public StatementNode visitLocalVariableDeclarationStatement(LocalVariableDeclarationStatementContext ctx) {
 		return LocalVariableDeclarationStatementNode.builder()
-				.declarators(((LocalVariableDeclarationNode) visit(ctx.localVariableDeclaration())).getDeclarators())
+				.localVariableDeclarationNode((LocalVariableDeclarationNode) visit(ctx.localVariableDeclaration()))
 				.sourceLocation(new SourceLocation(ctx))
 				.build();
 	}
@@ -602,10 +602,11 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 				.build();
 	}
 
-	// VAR variableDeclarator (COMMA variableDeclarator)*
+	// (VAR|REF) variableDeclarator (COMMA variableDeclarator)*
 	@Override
 	public BaseNode visitLocalVariableDeclaration(LocalVariableDeclarationContext ctx) {
 		return LocalVariableDeclarationNode.builder()
+				.reference(ctx.getChild(0).getText().toLowerCase().equals("ref"))
 				.declarators(ctx.variableDeclarator().stream()
 						.map(d -> (VariableDeclaratorNode) visit(d))
 						.collect(Collectors.toList()))
@@ -654,8 +655,7 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 		List<StatementNode> init;
 		if (ctx.forInit() != null && ctx.forInit().localVariableDeclaration() != null) {
 			init = Collections.singletonList(LocalVariableDeclarationStatementNode.builder()
-					.declarators(
-							((LocalVariableDeclarationNode) visit(ctx.forInit().localVariableDeclaration())).getDeclarators())
+					.localVariableDeclarationNode(((LocalVariableDeclarationNode) visit(ctx.forInit().localVariableDeclaration())))
 					.sourceLocation(new SourceLocation(ctx))
 					.build());
 		} else if (ctx.forInit() != null) {

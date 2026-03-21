@@ -30,7 +30,7 @@ public class LValueNode implements ExprNode {
 			if (variableContext == null) {
 				throw new GameRuntimeException("Unknown variable: " + identifierNode.getName());
 			} else if (variableContext.getVariableScope() == VariableScope.LOCAL) {
-				mv.visitVarInsn(ISTORE, variableContext.getIndex());
+				mv.visitVarInsn(variableContext.getVariableType().reference ? ASTORE : ISTORE, variableContext.getIndex());
 			} else if (variableContext.getVariableScope() == VariableScope.GLOBAL) {
 				mv.visitVarInsn(ALOAD, 0); // inner class "this"
 				if (gameContext.variableStore.getCurrentClass() != null) {

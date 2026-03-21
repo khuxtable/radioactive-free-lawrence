@@ -117,10 +117,12 @@ place emerald_city
 }
 
 initial {
+    setflag ninth_mississippi:three;
+    ref myref = ninth_mississippi;
     setflag third:seven;
     setflag ylem:four;
     say("Something");
-    apport("axe", ninth_mississippi, 1);
+    apport("axe", ninth_mississippi, true);
     say("$", 1066);
     say("mytest is $", testMeNow(32, ylem));
     say("flag is $", third:seven);
@@ -135,6 +137,7 @@ initial {
             say("   #", vptr);
         }
     }
+    say("9th Miss flag is $", myref:three);
     "inventory"("");
     ninth_mississippi("east");
     "take"("inventory");
