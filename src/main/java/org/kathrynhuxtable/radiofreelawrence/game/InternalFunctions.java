@@ -12,8 +12,11 @@ import org.kathrynhuxtable.gdesc.parser.InternalFunction;
 import org.kathrynhuxtable.radiofreelawrence.game.exception.BreakException;
 import org.kathrynhuxtable.radiofreelawrence.game.exception.GameRuntimeException;
 import org.kathrynhuxtable.radiofreelawrence.game.grammar.ControlType;
+import org.kathrynhuxtable.radiofreelawrence.game.grammar.tree.VocabularyNode;
 
 public class InternalFunctions {
+
+	private final GameContext gameContext;
 
 	private Object game;
 	private Set<String> noise;
@@ -22,6 +25,10 @@ public class InternalFunctions {
 	private Map<String, Integer> variableFlags;
 
 	private final Scanner scanner = new Scanner(System.in, StandardCharsets.UTF_8);
+
+	public InternalFunctions(GameContext gameContext) {
+		this.gameContext = gameContext;
+	}
 
 	public void setGame(Object game) {
 		this.game = game;
@@ -701,30 +708,28 @@ public class InternalFunctions {
 			if (!getNoise().contains(word)) {
 				String arg;
 				arg = word;
-//				if (gameContext.gameNode.getVerbs().containsKey(word)) {
-//					HasRefno wordNode = (HasRefno) gameContext.gameNode.getVerbs().get(word);
-//					arg = wordNode.getRefno();
-//					if (status >= 0) {
-//						status = index;
-//					}
-//				} else {
-//					List<String> possibleKeys = gameContext.gameNode.getVerbs().keySet().stream()
-//							.filter(v -> v.startsWith(word))
-//							.toList();
-//					if (possibleKeys.isEmpty()) {
-//						arg = getIntVar("badword");
-//						status = getIntVar("badsyntax");
-//					} else if (possibleKeys.size() > 1) {
-//						arg = getIntVar("ambigword");
-//						status = getIntVar("badsyntax");
-//					} else {
-//						HasRefno wordNode = (HasRefno) gameContext.gameNode.getVerbs().get(possibleKeys.get(0));
-//						arg = wordNode.getRefno();
-//						if (status >= 0) {
-//							status = index;
-//						}
-//					}
-//				}
+				if (gameContext.gameNode.getVerbs().containsKey(word)) {
+					VocabularyNode wordNode = (VocabularyNode) gameContext.gameNode.getVerbs().get(word);
+					arg = wordNode.getName();
+					if (status >= 0) {
+						status = index;
+					}
+				} else {
+					List<String> possibleKeys = gameContext.gameNode.getVerbs().keySet().stream()
+							.filter(v -> v.startsWith(word))
+							.toList();
+					if (possibleKeys.isEmpty()) {
+						status = getIntVar("badword") | getIntVar("badsyntax");
+					} else if (possibleKeys.size() > 1) {
+						status = getIntVar("ambigword") | getIntVar("badsyntax");
+					} else {
+						VocabularyNode wordNode = (VocabularyNode) gameContext.gameNode.getVerbs().get(possibleKeys.get(0));
+						arg = wordNode.getName();
+						if (status >= 0) {
+							status = index;
+						}
+					}
+				}
 				if (index == 1) {
 					arg1 = arg;
 				} else {

@@ -18,5 +18,5 @@ public class GameContext {
 	public final GameNode gameNode = new GameNode();
 	public final ErrorReporter errorReporter = new ErrorReporter();
 
-	public final InternalFunctions internalFunctions = new InternalFunctions();
+	public final InternalFunctions internalFunctions = new InternalFunctions(this);
 }
