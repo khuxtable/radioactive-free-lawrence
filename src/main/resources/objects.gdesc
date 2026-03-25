@@ -103,12 +103,10 @@ object hole
     "There is a small hole here."
 {
     action "open" {
-        say("The hole opens and sucks you in.");
-        move(open, pu_soapfilm);
+        move(pu_soap_film, "The hole opens and sucks you in.");
     }
     action "take" {
-        say("The hole opens and sucks you in...Sucker!");
-        move(open, pu_soapfilm);
+        move(pu_soap_film, "The hole opens and sucks you in...Sucker!");
     }
 }
 object meter
@@ -121,7 +119,7 @@ object meteroid         // For wizard players
     "life-force meteroid"
     "There is a life-force meteroid here. Cannot be dropped."
 {
-    action "read" { readmeter(); }
+    action "read" { quip("You have $ life force.", playerPower); }
     //    action "xsbar" { extendedcommand("xsbar"); }
     //    action "xnusers" { extendedcommand("xnusers"); }
     //    action "xdie" { extendedcommand("xdie"); }
@@ -211,7 +209,7 @@ object zapgun
     "zapgun"
     "There is a toy zapgun here."
 {
-    action "terminate" { terminateWithPrejudice(); }
+    action "terminate" { stop(); }
     action "warp" { warp(true, 50, 0); }
     action "zap" { warp(false, 25, 0); }
 }

@@ -15,10 +15,7 @@ import static org.objectweb.asm.Opcodes.*;
 
 @Data
 public class GameNode implements BaseNode {
-	private String name;
-	private String version;
-	private String date;
-	private String author;
+	private Map<String, String> info = new LinkedHashMap<>();
 	private SourceLocation sourceLocation = new SourceLocation(null, 0, 0);
 
 	Map<String, VocabularyNode> verbs = new LinkedHashMap<>();
@@ -70,6 +67,11 @@ public class GameNode implements BaseNode {
 		for (StateClauseNode stateClauseNode : states.values()) {
 			stateClauseNode.generate(cv, gameContext);
 		}
+
+		AsmUtils.createField(cv, ACC_PUBLIC, "noise", "Ljava/util/Set;",
+				"Ljava/util/Set<Ljava/lang/String>;");
+		AsmUtils.createField(cv, ACC_PUBLIC, "verbs", "Ljava/util/Set;",
+				"Ljava/util/Set<Ljava/lang/String>;");
 
 		AsmUtils.createField(cv, ACC_PUBLIC, "variableFlags", "Ljava/util/Map;",
 				"Ljava/util/Map<Ljava/lang/String;Ljava/lang/Integer;>;");
@@ -154,6 +156,8 @@ public class GameNode implements BaseNode {
 		generateFlags(mv);
 		generateStates(gameContext, mv);
 		generateVariables(mv);
+		AsmUtils.createSet(mv, GameContext.GAME_CLASS_NAME, "noise", noise);
+//		AsmUtils.createSet(mv, GameContext.GAME_CLASS_NAME, "verbs", verbs);
 
 		generatePlaceAssignments(mv);
 
@@ -276,8 +280,8 @@ public class GameNode implements BaseNode {
 	private void generateVariables(MethodVisitor mv) {
 		for (VariableNode variableNode : variables) {
 			mv.visitVarInsn(ALOAD, 0);
-			mv.visitInsn(ICONST_0);
-			mv.visitFieldInsn(PUTFIELD, GameContext.GAME_CLASS_NAME, variableNode.getVariable(), "I");
+			mv.visitInsn(variableNode.getVariableType() == VariableType.NUMBER ? ICONST_0 : ACONST_NULL);
+			mv.visitFieldInsn(PUTFIELD, GameContext.GAME_CLASS_NAME, variableNode.getVariable(), variableNode.getType());
 		}
 	}
 
@@ -317,11 +321,11 @@ public class GameNode implements BaseNode {
 		createState("ambigword", -3);
 		createState("badsyntax", -1);
 
-		createVariable("arg1");
-		createVariable("arg2");
+		createTextElement("arg1");
+		createTextElement("arg2");
 		createVariable("status");
-		createVariable("here");
-		createVariable("there");
+		createReference("here");
+		createReference("there");
 
 		createPlace("inhand", "inventory", "Inventory");
 		createPlace("ylem", "ylem", "Ylem");
@@ -337,9 +341,30 @@ public class GameNode implements BaseNode {
 		getIdentifiers().put(name, node);
 	}
 
+	private void createTextElement(String name) {
+		VariableNode node = VariableNode.builder()
+				.variable(name)
+				.variableType(VariableType.TEXT)
+				.sourceLocation(new SourceLocation(null, 0, 0))
+				.build();
+		getVariables().add(node);
+		getIdentifiers().put(name, node);
+	}
+
 	private void createVariable(String name) {
 		VariableNode node = VariableNode.builder()
 				.variable(name)
+				.variableType(VariableType.NUMBER)
+				.sourceLocation(new SourceLocation(null, 0, 0))
+				.build();
+		getVariables().add(node);
+		getIdentifiers().put(name, node);
+	}
+
+	private void createReference(String name) {
+		VariableNode node = VariableNode.builder()
+				.variable(name)
+				.variableType(VariableType.REFERENCE)
 				.sourceLocation(new SourceLocation(null, 0, 0))
 				.build();
 		getVariables().add(node);

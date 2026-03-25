@@ -42,11 +42,19 @@ public class LValueNode implements ExprNode {
 							GameContext.GAME_CLASS_DESCRIPTOR);
 				}
 				mv.visitInsn(SWAP);
-				mv.visitFieldInsn(PUTFIELD, GameContext.GAME_CLASS_NAME, variableContext.getName(), "I");
+				mv.visitFieldInsn(
+						PUTFIELD,
+						GameContext.GAME_CLASS_NAME,
+						variableContext.getName(),
+						variableContext.getVariableType().getDescriptor());
 			} else if (variableContext.getVariableScope() == VariableScope.CLASS) {
 				mv.visitVarInsn(ALOAD, 0);
 				mv.visitInsn(SWAP);
-				mv.visitFieldInsn(PUTFIELD, variableContext.getParentClass(), variableContext.getName(), "I");
+				mv.visitFieldInsn(
+						PUTFIELD,
+						variableContext.getParentClass(),
+						variableContext.getName(),
+						variableContext.getVariableType().getDescriptor());
 			}
 		} else {
 			throw new GameRuntimeException("unsupported unary operand type: " + expr.getClass());

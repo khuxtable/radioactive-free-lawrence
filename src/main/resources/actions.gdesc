@@ -4,11 +4,10 @@
         playerPower += power;
         // I don't currently have a way to implement the count, so assume 1 and disappears = true.
         apport(obj, ylem);
-        say(message);
-        break repeat;
+        quip(message);
     }
     proc useweapon(ref obj, var dropped, var affects, var rchance, var damage, var drain) {
-        var target = null;
+        ref target = null;
         for (ref optr : here) {
             if (optr:isNpc) {
                 if (optr == arg2) {
@@ -27,7 +26,7 @@
         }
 
         if (dropped) {
-            drop(this);
+            drop(obj);
         }
 
         var hit = chance(rchance);
@@ -43,7 +42,7 @@
 //            quip("You just killed #.", target);
 //        } else
         if (hit) {
-            say("Your #", obj, fale);
+            say("Your #", obj, false);
             quip(" hits #.", target);
         } else {
             say("Your #", obj, false);
@@ -58,23 +57,12 @@
         }
         move(where);
     }
-    proc countAndMove(countvar, max, notDone, destination, destinationMessage) {
-        if (*countvar <= 0) {
-            *countvar = max;
-        }
-        if (--*countvar > 0) {
-            quip(notDone);
-        } else {
-            say(destinationMessage);
-            move(destination);
-        }
-    }
-    proc alterPower(flag, rchance, min, max, success, failure) {
+    proc alterPower(var flag, var rchance, var min, var max, text success, text failure) {
         if (!chance(rchance)) {
             quip(failure);
         }
 
-        var delta = getrandom(minPower, maxPower);
+        var delta = getrandom(min, max);
 
         if (flag) {
             playerPower = delta;
@@ -84,7 +72,7 @@
 
         quip(success);
     }
-    proc stealSomething(rchance, detectChance) {
+    proc stealSomething(var rchance, var detectChance) {
         quip("not implemented yet");
         //    Place place = (Place) actor.getPlace();
         //
@@ -132,7 +120,7 @@
         //}
         //}
     }
-    proc warp(self, rchance, dropChance) {
+    proc warp(ref self, var rchance, var dropChance) {
         quip("not implemented yet");
         //    int i = 1;
         //    Place place = (Place) actor.getPlace();

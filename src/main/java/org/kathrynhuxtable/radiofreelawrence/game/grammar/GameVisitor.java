@@ -98,18 +98,7 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 		for (GameDescriptorContext gdc : ctx.gameDescriptor()) {
 			String key = gdc.IDENTIFIER().getText();
 			String value = TextUtils.cleanStringLiteral(gdc.STRING_LITERAL().getText());
-			if ("name".equals(key)) {
-				root.setName(value);
-			}
-			if ("version".equals(key)) {
-				root.setVersion(value);
-			}
-			if ("author".equals(key)) {
-				root.setAuthor(value);
-			}
-			if ("date".equals(key)) {
-				root.setDate(value);
-			}
+			root.getInfo().put(key, value);
 		}
 		return root;
 	}
@@ -368,6 +357,7 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 			String varName = idCtx.getText().toLowerCase();
 			VariableNode node = VariableNode.builder()
 					.variable(varName)
+					.variableType(VariableType.NUMBER)
 					.sourceLocation(new SourceLocation(ctx))
 					.build();
 			if (root.getIdentifiers().containsKey(varName)) {
@@ -400,6 +390,7 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 		String varName = idCtx.getText().toLowerCase();
 		VariableNode node = VariableNode.builder()
 				.variable(varName)
+				.variableType(VariableType.REFERENCE)
 				.sourceLocation(new SourceLocation(ctx))
 				.build();
 		if (root.getIdentifiers().containsKey(varName)) {
@@ -520,12 +511,12 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 	// referenceDirective
 	// procDirective
 	// actionDirective
-
 	@Override
 	public BaseNode visitObjectCommand(ObjectCommandContext ctx) {
 		if (ctx.variableDirective() != null) {
 			return VariableNode.builder()
 					.variable(ctx.variableDirective().globalDeclarator().get(0).IDENTIFIER().getText().toLowerCase())
+					.variableType(VariableType.NUMBER)
 					.sourceLocation(new SourceLocation(ctx))
 					.build();
 		} else if (ctx.referenceDirective() != null) {
@@ -1122,8 +1113,7 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 					.sourceLocation(new SourceLocation(ctx))
 					.build();
 		} else if (ctx.NULL_LITERAL() != null) {
-			return NumberLiteralNode.builder()
-					.number(0)
+			return NullLiteralNode.builder()
 					.sourceLocation(new SourceLocation(ctx))
 					.build();
 		} else {

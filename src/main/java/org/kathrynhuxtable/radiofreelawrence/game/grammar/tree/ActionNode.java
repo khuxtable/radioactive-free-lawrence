@@ -14,6 +14,7 @@ import org.objectweb.asm.commons.LocalVariablesSorter;
 
 import org.kathrynhuxtable.radiofreelawrence.game.GameContext;
 import org.kathrynhuxtable.radiofreelawrence.game.grammar.SourceLocation;
+import org.kathrynhuxtable.radiofreelawrence.game.grammar.VariableContext;
 import org.kathrynhuxtable.radiofreelawrence.game.grammar.VariableType;
 
 import static org.objectweb.asm.Opcodes.*;
@@ -36,6 +37,8 @@ public class ActionNode implements StatementNode {
 		Label startLabel = new Label();
 		Label endLabel = new Label();
 		mv.visitLabel(startLabel);
+		VariableContext vc = gameContext.variableStore.addVariable("this", VariableType.REFERENCE);
+		vc.setIndex(0);
 
 		if (actions != null && !actions.isEmpty()) {
 			Map<Integer, ActionNode> hashToAction = new TreeMap<>();

@@ -1,8 +1,8 @@
 info
-    name: "Radio Free Lawrence",
-    version: "3.0",
-    author: "Kathryn Huxtable, Ron Burk, David Wiley",
-    date: "20 June 1982";
+    Name: "Radio Free Lawrence",
+    Version: "3.0",
+    Authors: "Kathryn Huxtable, Ron Burk, David Wiley",
+    Date: "20 June 1982";
 
 include "verbs.gdesc";
 
@@ -28,37 +28,37 @@ include "places.gdesc";
 include "actions.gdesc";
 
 initial {
-    apport(axe, in_spencer, true);
-    apport(bagel, krogers, true); // copy
-    apport(banana, twenty_third, true);
-    apport(book, stack_warned, true);
-    apport(box, mazel, true);
-    apport(chain, jayhawk_sunflower, true);
-    apport(chicken_sandwich, cave, true); // copy
-    apport(coke, In_Joes, true);
-    apport(dagger, lot, true);
-    apport(glove, slums, true);
-    apport(gun, dark, true); // copy
-    apport(hatchet, naismith, true); // copy
-    apport(hole, slums, true);
-    apport(newspaper, north_wescoe, true);
-    apport(opera_glove, naismith, true);
-    apport(pistol, o_zone, true); // copy
-    apport(revolver, pterodactyl, true);
-    apport(rifle, puddle, true);
-    apport(sandwich, In_Joes, true);
-    apport(sword, jayhawk_sunflower, true);
-    apport(token, sunnyside_naismith, true);
-    apport(udk, murphy, true); // copy
-    apport(guards, wescoe_cafeteria, true);
-    apport(zapgun, wescoe_cafeteria, true);
+    apport("axe", in_spencer, true);
+    apport("bagel", krogers, true); // copy
+    apport("banana", twenty_third, true);
+    apport("book", stack_warned, true);
+    apport("box", maze_l, true);
+    apport("chain", jayhawk_sunflower, true);
+    apport("chicken_sandwich", cave, true); // copy
+    apport("coke", In_Joes, true);
+    apport("dagger", lot, true);
+    apport("glove", slums, true);
+    apport("gun", dark, true); // copy
+    apport("hatchet", naismith, true); // copy
+    apport("hole", slums, true);
+    apport("newspaper", north_wescoe, true);
+    apport("opera_glove", naismith, true);
+    apport("pistol", o_zone, true); // copy
+    apport("revolver", pterodactyl, true);
+    apport("rifle", puddle, true);
+    apport("sandwich", In_Joes, true);
+    apport("sword", jayhawk_sunflower, true);
+    apport("token", sunnyside_naismith, true);
+    apport("udk", murphy, true); // copy
+    apport("guards", wescoe_cafeteria, true);
+    apport("zapgun", wescoe_cafeteria, true);
 
-    apport(meter, inhand, true);
+    apport("meter", inhand, true);
 
-    setflag meter:cantDrop;
-    setflag meter:cantTake;
-
-    setflag guards:isNpc;
+//    setflag meter:cantDrop;
+//    setflag meter:cantTake;
+//
+//    setflag guards:isNpc;
 
     playerPower = 1000;
 }
@@ -94,15 +94,15 @@ repeat {
     }
 
     playerPower--;
-    here();             // Execute code, if any, associated with this location
-    arg1();             // Execute action verb, if any
-    var objVerb = 0;
+    here(arg1);             // Execute code, if any, associated with this location
+    arg1(arg1);             // Execute action verb, if any
+    ref objVerb = null;
     for (var optr : inhand) {
         for (var vptr : optr) {
             if (vptr == arg1) {
-                if (optr == arg2) {
-                    optr();     // Found specific "verb object" match
-                } else if (objVerb > 0) {
+                if (strcmp(optr, arg2) == 0) {
+                    optr(arg1);     // Found specific "verb object" match
+                } else if (objVerb != null) {
                     bailOut();  // We have a duplicate
                 } else  {
                     objVerb = optr;
@@ -110,8 +110,8 @@ repeat {
             }
         }
     }
-    if (objVerb > 0) {
-        objVerb();
+    if (objVerb != null) {
+        objVerb(arg1);
     }
     playerPower++;
 
@@ -121,8 +121,8 @@ repeat {
     // Deliver invalid command message
 proc bailOut {
     if (status == 1) {
-        if (arg1 instanceof object) { // If first word is an object name
-            if (!isnear(arg1)) {
+        if (1/*arg1 instanceof object*/) { // If first word is an object name
+            if (1/*!isnear(arg1)*/) {
                 quip("There is no # here!", arg1);
             } else {
                 quip("You need to say what you want to do with the #.", arg1);

@@ -4,6 +4,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
+import java.util.Map;
 
 import org.kathrynhuxtable.radiofreelawrence.game.exception.BreakException;
 import org.kathrynhuxtable.radiofreelawrence.game.exception.ContinueException;
@@ -19,6 +20,8 @@ public class GameRunner {
 		Constructor<?> constructor = myClass.getConstructor(InternalFunctions.class);
 		Object instance = constructor.newInstance(gameContext.getInternalFunctions());
 
+		displayInfo(gameContext.gameNode.getInfo());
+
 		callInits(gameContext.gameNode.getInits(), myClass, instance);
 
 		if (!gameContext.gameNode.getRepeats().isEmpty()) {
@@ -32,6 +35,19 @@ public class GameRunner {
 		}
 	}
 
+	private void displayInfo(Map<String, String> info) {
+		int maxLabel = 0;
+		for (String key : info.keySet()) {
+			if (key.length() > maxLabel) {
+				maxLabel = key.length();
+			}
+		}
+		for (Map.Entry<String, String> entry : info.entrySet()) {
+			System.out.printf("%-" + maxLabel + "s : %s%n", entry.getKey(), entry.getValue());
+		}
+		System.out.println();
+	}
+
 	private void callInits(List<InitialNode> inits, Class<?> myClass, Object instance) {
 		for (InitialNode init : inits) {
 			String name = "initialProc" + init.getIndex();
@@ -43,6 +59,7 @@ public class GameRunner {
 					break;
 				} else if (e.getCause() instanceof ContinueException) {
 					// Implicit continue
+					;
 				} else {
 					throw new RuntimeException(e);
 				}

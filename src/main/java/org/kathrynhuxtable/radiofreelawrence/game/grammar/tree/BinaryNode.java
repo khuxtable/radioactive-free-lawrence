@@ -8,6 +8,7 @@ import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 
 import org.kathrynhuxtable.radiofreelawrence.game.GameContext;
+import org.kathrynhuxtable.radiofreelawrence.game.exception.GameRuntimeException;
 import org.kathrynhuxtable.radiofreelawrence.game.grammar.SourceLocation;
 import org.kathrynhuxtable.radiofreelawrence.game.grammar.VariableType;
 
@@ -104,7 +105,17 @@ public class BinaryNode implements ExprNode {
 		Label thenLabel = new Label();
 		Label endLabel = new Label();
 
-		mv.visitJumpInsn(operator.asmOpCode, thenLabel);
+		if (left.getVariableType(gameContext) != VariableType.NUMBER) {
+			if (operator == Operator.EQUALS) {
+				mv.visitJumpInsn(IF_ACMPEQ, thenLabel);
+			} else if (operator == Operator.NOTEQUALS) {
+				mv.visitJumpInsn(IF_ACMPNE, thenLabel);
+			} else {
+				throw new GameRuntimeException("Invalid operator");
+			}
+		} else {
+			mv.visitJumpInsn(operator.asmOpCode, thenLabel);
+		}
 
 		// False is the fall through condition
 		mv.visitInsn(ICONST_0);

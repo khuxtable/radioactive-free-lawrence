@@ -40,7 +40,7 @@ public class FlagExpressionNode implements ExprNode {
 	public void getFlagValue(MethodVisitor mv, GameContext gameContext) {
 		VariableContext variableContext = gameContext.getVariableStore().getVariable(identifierNode.getName());
 		if (variableContext == null) {
-			throw new GameRuntimeException("Unknown identifier: " + identifierNode.getName());
+			throw new GameRuntimeException(sourceLocation + ": Unknown identifier: " + identifierNode.getName());
 		}
 		VariableType variableType = variableContext.getVariableType();
 		if (variableType == VariableType.PLACE || variableType == VariableType.OBJECT || variableType == VariableType.REFERENCE) {

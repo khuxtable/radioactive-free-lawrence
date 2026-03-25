@@ -1,6 +1,5 @@
 package org.kathrynhuxtable.radiofreelawrence.game.grammar.tree;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -16,11 +15,10 @@ import org.objectweb.asm.commons.LocalVariablesSorter;
 
 import org.kathrynhuxtable.radiofreelawrence.game.GameContext;
 import org.kathrynhuxtable.radiofreelawrence.game.grammar.SourceLocation;
+import org.kathrynhuxtable.radiofreelawrence.game.grammar.VariableContext;
 import org.kathrynhuxtable.radiofreelawrence.game.grammar.VariableType;
 
 import static org.objectweb.asm.Opcodes.*;
-import static org.objectweb.asm.Opcodes.GOTO;
-import static org.objectweb.asm.Opcodes.INVOKEVIRTUAL;
 
 @Data
 @Builder
@@ -42,10 +40,12 @@ public class VerbCommandNode implements StatementNode {
 		Label startLabel = new Label();
 		Label endLabel = new Label();
 		mv.visitLabel(startLabel);
+		VariableContext vc = gameContext.variableStore.addVariable("this", VariableType.REFERENCE);
+		vc.setIndex(0);
 
 		if (actions != null && !actions.isEmpty()) {
 			Map<Integer, VerbCommandNode> hashToAction = new TreeMap<>();
-			Map<Integer, Label> hashToLabel = new HashMap<>();
+			Map<Integer, Label> hashToLabel = new TreeMap<>();
 			for (Map.Entry<String, VerbCommandNode> entry : actions.entrySet()) {
 				int hashCode = entry.getKey().hashCode();
 				hashToAction.put(hashCode, entry.getValue());

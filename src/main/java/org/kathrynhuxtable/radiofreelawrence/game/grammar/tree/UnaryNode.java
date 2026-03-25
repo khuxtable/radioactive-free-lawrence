@@ -93,6 +93,7 @@ public class UnaryNode implements ExprNode {
 							"this$0", // outer class "this"
 							GameContext.GAME_CLASS_DESCRIPTOR);
 				}
+				mv.visitInsn(SWAP);
 				mv.visitFieldInsn(PUTFIELD, GameContext.GAME_CLASS_NAME, variableContext.getName(), "I");
 			} else {
 				mv.visitVarInsn(ALOAD, 0); // inner class "this"

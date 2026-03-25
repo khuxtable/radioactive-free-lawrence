@@ -32,10 +32,12 @@ public class EnhancedForStatementNode implements StatementNode {
 
 	@Override
 	public void generate(MethodVisitor mv, GameContext gameContext) {
-		gameContext.variableStore.newBlockScope();
 		Label beginLabel = new Label();
 		Label loopLabel = new Label();
 		Label endLabel = new Label();
+
+		gameContext.variableStore.newLoopScope(label, loopLabel, endLabel);
+		gameContext.variableStore.newBlockScope();
 
 		mv.visitLabel(beginLabel);
 		VariableContext variableContext = gameContext.variableStore.addVariable(
@@ -70,5 +72,6 @@ public class EnhancedForStatementNode implements StatementNode {
 		mv.visitJumpInsn(GOTO, loopLabel);
 		mv.visitLabel(endLabel);
 		gameContext.variableStore.closeBlockScope(mv, beginLabel, endLabel);
+		gameContext.variableStore.closeLoopScope();
 	}
 }

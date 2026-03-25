@@ -9,6 +9,7 @@ import org.objectweb.asm.Type;
 
 import org.kathrynhuxtable.radiofreelawrence.game.GameContext;
 import org.kathrynhuxtable.radiofreelawrence.game.exception.BreakException;
+import org.kathrynhuxtable.radiofreelawrence.game.exception.GameRuntimeException;
 import org.kathrynhuxtable.radiofreelawrence.game.grammar.ControlType;
 import org.kathrynhuxtable.radiofreelawrence.game.grammar.SourceLocation;
 
@@ -26,10 +27,13 @@ public class BreakStatementNode implements StatementNode {
 	@Override
 	public void generate(MethodVisitor mv, GameContext gameContext) {
 		if (controlType != ControlType.CODE) {
-//			Generate: throw new BreakException(controlType);
 			throwException(mv, Type.getInternalName(BreakException.class));
 		} else {
-			mv.visitJumpInsn(GOTO, gameContext.getVariableStore().getBreakLabel(identifier));
+			try {
+				mv.visitJumpInsn(GOTO, gameContext.getVariableStore().getBreakLabel(identifier));
+			} catch (Exception e) {
+				throw new GameRuntimeException(sourceLocation + ": " + e.getMessage());
+			}
 		}
 	}
 

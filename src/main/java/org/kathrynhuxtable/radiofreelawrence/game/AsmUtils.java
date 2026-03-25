@@ -1,8 +1,6 @@
 package org.kathrynhuxtable.radiofreelawrence.game;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.objectweb.asm.*;
 
@@ -85,6 +83,28 @@ public class AsmUtils {
 				mv.visitMethodInsn(
 						INVOKEINTERFACE,
 						Type.getInternalName(List.class),
+						"add",
+						"(Ljava/lang/Object;)Z",
+						true
+				);
+			}
+		}
+	}
+
+	public static <T> void createSet(MethodVisitor mv, String innerClassInternalName, String name, Iterable<T> iterable) {
+		mv.visitVarInsn(ALOAD, 0);
+		mv.visitTypeInsn(NEW, Type.getInternalName(HashSet.class));
+		mv.visitInsn(DUP);
+		mv.visitMethodInsn(INVOKESPECIAL, Type.getInternalName(HashSet.class), "<init>", "()V", false);
+		mv.visitFieldInsn(PUTFIELD, innerClassInternalName, name, Type.getDescriptor(Set.class));
+		if (iterable != null) {
+			for (T action : iterable) {
+				mv.visitVarInsn(ALOAD, 0);
+				mv.visitFieldInsn(GETFIELD, innerClassInternalName, name, Type.getDescriptor(Set.class));
+				mv.visitLdcInsn(action);
+				mv.visitMethodInsn(
+						INVOKEINTERFACE,
+						Type.getInternalName(Set.class),
 						"add",
 						"(Ljava/lang/Object;)Z",
 						true

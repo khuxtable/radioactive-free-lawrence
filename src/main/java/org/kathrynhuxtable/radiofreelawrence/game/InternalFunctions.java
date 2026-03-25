@@ -4,6 +4,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 import org.kathrynhuxtable.gdesc.parser.GameInfo;
@@ -15,8 +16,12 @@ import org.kathrynhuxtable.radiofreelawrence.game.grammar.ControlType;
 public class InternalFunctions {
 
 	private Object game;
+	private Set<String> noise;
 	private Map<String, GamePlace> places;
 	private Map<String, List<GameObject>> objects;
+	private Map<String, Integer> variableFlags;
+
+	private final Scanner scanner = new Scanner(System.in, StandardCharsets.UTF_8);
 
 	public void setGame(Object game) {
 		this.game = game;
@@ -33,6 +38,17 @@ public class InternalFunctions {
 		}
 	}
 
+	private void setIntVar(String name, int value) {
+		Class<?> gameClass = game.getClass();
+
+		try {
+			Field field = gameClass.getDeclaredField(name);
+			field.set(game, value);
+		} catch (NoSuchFieldException | IllegalAccessException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
 	private <T> T getObjectVar(String name) {
 		Class<?> gameClass = game.getClass();
 
@@ -42,6 +58,42 @@ public class InternalFunctions {
 		} catch (NoSuchFieldException | IllegalAccessException e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	private <T> void setObjectVar(String name, T value) {
+		Class<?> gameClass = game.getClass();
+
+		try {
+			Field field = gameClass.getDeclaredField(name);
+			field.set(game, value);
+		} catch (NoSuchFieldException | IllegalAccessException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	private <T> void putObjectVar(String name, T value) {
+		Class<?> gameClass = game.getClass();
+
+		try {
+			Field field = gameClass.getDeclaredField(name);
+			field.set(game, value);
+		} catch (NoSuchFieldException | IllegalAccessException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	private Set<String> getNoise() {
+		Class<?> gameClass = game.getClass();
+
+		if (this.noise == null) {
+			try {
+				Field placesField = gameClass.getDeclaredField("noise");
+				this.noise = (Set<String>) placesField.get(game);
+			} catch (NoSuchFieldException | IllegalAccessException e) {
+				throw new RuntimeException(e);
+			}
+		}
+		return this.noise;
 	}
 
 	private Map<String, GamePlace> getPlaces() {
@@ -70,6 +122,19 @@ public class InternalFunctions {
 			}
 		}
 		return this.objects;
+	}
+
+	private Map<String, Integer> getVariableFlags() {
+		Class<?> gameClass = game.getClass();
+		if (this.variableFlags == null) {
+			try {
+				Field objectsField = gameClass.getDeclaredField("variableFlags");
+				this.variableFlags = (Map<String, Integer>) objectsField.get(game);
+			} catch (NoSuchFieldException | IllegalAccessException e) {
+				throw new RuntimeException(e);
+			}
+		}
+		return variableFlags;
 	}
 
 	private Map<String, String> internalFunctions;
@@ -119,8 +184,13 @@ public class InternalFunctions {
 
 	@InternalFunction(name = "input")
 	public int input(Object... parameters) {
-//		gameContext.clearFlag(gameContext.getIdentifierRefno("status"), gameContext.getIntIdentifierValue("moved"));
-//		gameContext.getInput().input();
+		setFlag("status", getIntVar("moved"));
+
+		System.out.print("? ");
+		String text = scanner.nextLine();
+
+		parseInput(text);
+
 		return 0;
 	}
 
@@ -152,11 +222,23 @@ public class InternalFunctions {
 		return (int) (Math.random() * (max - min + 1)) + min;
 	}
 
+	@InternalFunction(name = "strcmp")
+	public int strcmp(Object... parameters) {
+		Object obj1 = parameters[0];
+		Object obj2 = parameters[1];
+		if (obj1 instanceof String s1 && obj2 instanceof String s2) {
+			return s1.compareTo(s2);
+		} else {
+			throw new GameRuntimeException("Invalid string arguments for strcmp");
+		}
+	}
+
 	@InternalFunction(name = "have")
 	public int ishave(Object... parameters) {
+		GamePlace inhand = getPlaces().get("inhand");
 		Object obj = parameters[0];
 		if (obj instanceof GameObject gameObject) {
-			if (gameObject.getLocation() == getPlaces().get("inhand")) {
+			if (gameObject.getLocation() == inhand) {
 				return 1;
 			}
 		}
@@ -165,9 +247,10 @@ public class InternalFunctions {
 
 	@InternalFunction(name = "ishere")
 	public int ishere(Object... parameters) {
+		GamePlace here = getPlaces().get("here");
 		Object obj = parameters[0];
 		if (obj instanceof GameObject gameObject) {
-			if (gameObject.getLocation() == getPlaces().get("here")) {
+			if (gameObject.getLocation() == here) {
 				return 1;
 			}
 		}
@@ -178,28 +261,6 @@ public class InternalFunctions {
 	public int isnear(Object... parameters) {
 		return ishave(parameters) != 0 || ishere(parameters) != 0 ? 1 : 0;
 	}
-
-//	@InternalFunction(name = "isflag")
-//	public int isflag(ExprNode... parameters) {
-//		long flag = parameters[1].evaluate(gameContext);
-//		return gameContext.testFlag(parameters[0], flag) ? 1 : 0;
-//	}
-//
-//	@InternalFunction(name = "setflag")
-//	public int setflag(ExprNode... parameters) {
-//		int refno = parameters[0].evaluate(gameContext);
-//		long flag = parameters[1].evaluate(gameContext);
-//		gameContext.setFlag(refno, flag);
-//		return 0;
-//	}
-//
-//	@InternalFunction(name = "clearflag")
-//	public int clearflag(ExprNode... parameters) {
-//		int refno = parameters[0].evaluate(gameContext);
-//		long flag = parameters[1].evaluate(gameContext);
-//		gameContext.clearFlag(refno, flag);
-//		return 0;
-//	}
 
 	@InternalFunction(name = "isat")
 	public int isat(Object... parameters) {
@@ -216,7 +277,7 @@ public class InternalFunctions {
 	public int atplace(Object... parameters) {
 		GamePlace loc = getPlaces().get("here");
 		for (int i = 1; i < parameters.length; i++) {
-			GamePlace place = (GamePlace)  parameters[i];
+			GamePlace place = (GamePlace) parameters[i];
 			if (place == loc) {
 				return 1;
 			}
@@ -240,13 +301,16 @@ public class InternalFunctions {
 		return 0;
 	}
 
-//	@InternalFunction(name = "key")
-//	public int iskey(ExprNode... parameters) {
-//		int refno = gameContext.getIntIdentifierValue("arg1");
-//		if (refno == 0) {
-//			return 0;
-//		}
-//		for (ExprNode parameter : parameters) {
+	@InternalFunction(name = "key")
+	public int iskey(Object... parameters) {
+		String arg1 = getObjectVar("arg1");
+		if (arg1 == null) {
+			return 0;
+		}
+		for (Object parameter : parameters) {
+			if (!arg1.equals(parameter)) {
+				return 0;
+			}
 //			if (parameter instanceof TextElementNode textElementNode) {
 //				VocabularyNode node = (VocabularyNode) gameContext.getRefnoNode(refno);
 //				if (!textElementNode.getText().equals(node.getName())) {
@@ -273,9 +337,9 @@ public class InternalFunctions {
 //					return 0;
 //				}
 //			}
-//		}
-//		return 1;
-//	}
+		}
+		return 1;
+	}
 
 	@InternalFunction(name = "anyof")
 	public int anyof(Object... parameters) {
@@ -384,13 +448,12 @@ public class InternalFunctions {
 //
 //		throw new BreakException(ControlType.REPEAT);
 //	}
-
 	@InternalFunction(name = "goto")
 	public int goto_(Object... parameters) {
 		GamePlace place = (GamePlace) parameters[0];
-//		gameContext.setIntIdentifierValue("there", gameContext.getIntIdentifierValue("here"));
-//		gameContext.setIntIdentifierValue("here", place);
-//		gameContext.setFlag(gameContext.getIdentifierRefno("status"), gameContext.getIntIdentifierValue("moved"));
+		putObjectVar("there", getObjectVar("here"));
+		putObjectVar("here", place);
+		setFlag("status", getIntVar("moved"));
 		return 0;
 	}
 
@@ -402,15 +465,14 @@ public class InternalFunctions {
 			say_(Arrays.copyOfRange(parameters, 1, parameters.length));
 		}
 
-//		gameContext.setIntIdentifierValue("there", gameContext.getIntIdentifierValue("here"));
-//		gameContext.setIntIdentifierValue("here", place);
-//		gameContext.setFlag(gameContext.getIdentifierRefno("status"), gameContext.getIntIdentifierValue("moved"));
-//
-//		for (int obj = gameContext.fobj; obj < gameContext.lobj; obj++) {
-//			if (gameContext.locations[obj - gameContext.fobj] == place) {
-//				gameContext.setFlag(obj, gameContext.getIntIdentifierValue("seen"));
-//			}
-//		}
+		putObjectVar("there", getObjectVar("here"));
+		putObjectVar("here", place);
+		setFlag("status", getIntVar("moved"));
+
+		getObjects().values().stream()
+				.flatMap(Collection::stream)
+				.filter(obj -> obj.getLocation() == place)
+				.peek(obj -> setFlag(obj, getIntVar("seen")));
 
 		throw new BreakException(ControlType.REPEAT);
 	}
@@ -503,23 +565,25 @@ public class InternalFunctions {
 //		}
 //		return 0;
 //	}
-//
-//	@InternalFunction(name = "describe")
-//	public int describe_(ExprNode... parameters) {
-//		if (parameters.length == 0) return 0;
-//		int var = parameters[0] instanceof IdentifierNode ?
-//				gameContext.getIntIdentifierValue(((IdentifierNode) parameters[0]).getName()) :
-//				parameters[0].evaluate(gameContext);
-//		if (var >= gameContext.fvar && var < gameContext.lvar) {
-//			var = gameContext.variables[var - gameContext.fvar];
-//		}
-//		System.out.println(gameContext.getTextIdentifierValue(var, parameters.length > 1 ? 1 : 0));
-//		return 0;
-//	}
-//
-//	@InternalFunction(name = "vocab")
-//	public int vocab(ExprNode... text) {
-//		int here = gameContext.getIntIdentifierValue("here");
+
+	@InternalFunction(name = "describe")
+	public int describe_(Object... parameters) {
+		if (parameters.length == 0) return 0;
+		Object var = parameters[0];
+		if (var instanceof GamePlace place) {
+			System.out.println(place.getLongDescription());
+		} else if (var instanceof GameObject object) {
+			System.out.println(object.getLongDescription());
+		} else {
+			System.out.println("I don't have a description for " + var);
+		}
+		return 0;
+	}
+
+	@InternalFunction(name = "vocab")
+	public int vocab(Object... text) {
+		say_("vocab not yet implemented");
+//		GamePlace here = getPlaces().get("here");
 //		for (String verb : gameContext.places[here - gameContext.floc].getCommands().keySet()) {
 //			System.out.println(verb + " [here]");
 //		}
@@ -535,8 +599,8 @@ public class InternalFunctions {
 //				}
 //			}
 //		}
-//		throw new BreakException(ControlType.REPEAT);
-//	}
+		throw new BreakException(ControlType.REPEAT);
+	}
 
 	@InternalFunction(name = "tie")
 	public int tie(Object... parameters) {
@@ -626,40 +690,73 @@ public class InternalFunctions {
 		throw new GameRuntimeException("Missing ']' in switch text in \"" + new String(charArray) + "\"");
 	}
 
-//	private boolean testflag(int flag, long state) {
-//		long value;
-//		if (refno >= fvar && refno < lvar) {
-//			value = variableFlags[refno - fvar];
-//		} else if (refno >= floc && refno < lloc) {
-//			value = placeFlags[refno - floc];
-//		} else if (refno >= fobj && refno < lobj) {
-//			value = objectFlags[refno - fobj];
-//		} else {
-//			return false;
-//		}
-//
-//		return (value & (1L << state)) != 0;
-//	}
-//
-//	public void setFlag(int refno, long state) {
-//		if (refno >= fvar && refno < lvar) {
-//			variableFlags[refno - fvar] |= 1L << state;
-//		} else if (refno >= floc && refno < lloc) {
-//			placeFlags[refno - floc] |= 1L << state;
-//		} else if (refno >= fobj && refno < lobj) {
-//			objectFlags[refno - fobj] |= 1L << state;
-//		}
-//	}
-//
-//	public void clearFlag(int refno, long state) {
-//		if (refno >= fvar && refno < lvar) {
-//			variableFlags[refno - fvar] &= ~(1L << state);
-//		} else if (refno >= floc && refno < lloc) {
-//			placeFlags[refno - floc] &= ~(1L << state);
-//		} else if (refno >= fobj && refno < lobj) {
-//			objectFlags[refno - fobj] &= ~(1L << state);
-//		}
-//	}
+	private void parseInput(String input) {
+		String arg1 = null;
+		String arg2 = null;
+		int status = 0;
+
+		String[] words = input.split("\\s+");
+		int index = 1;
+		for (String word : words) {
+			if (!getNoise().contains(word)) {
+				String arg;
+				arg = word;
+//				if (gameContext.gameNode.getVerbs().containsKey(word)) {
+//					HasRefno wordNode = (HasRefno) gameContext.gameNode.getVerbs().get(word);
+//					arg = wordNode.getRefno();
+//					if (status >= 0) {
+//						status = index;
+//					}
+//				} else {
+//					List<String> possibleKeys = gameContext.gameNode.getVerbs().keySet().stream()
+//							.filter(v -> v.startsWith(word))
+//							.toList();
+//					if (possibleKeys.isEmpty()) {
+//						arg = getIntVar("badword");
+//						status = getIntVar("badsyntax");
+//					} else if (possibleKeys.size() > 1) {
+//						arg = getIntVar("ambigword");
+//						status = getIntVar("badsyntax");
+//					} else {
+//						HasRefno wordNode = (HasRefno) gameContext.gameNode.getVerbs().get(possibleKeys.get(0));
+//						arg = wordNode.getRefno();
+//						if (status >= 0) {
+//							status = index;
+//						}
+//					}
+//				}
+				if (index == 1) {
+					arg1 = arg;
+				} else {
+					arg2 = arg;
+				}
+				index++;
+			}
+			if (index > 2) {
+				break;
+			}
+		}
+
+		setObjectVar("arg1", arg1);
+		setObjectVar("arg2", arg2);
+		setIntVar("status", status);
+	}
+
+	private boolean testFlag(String flag, long state) {
+		return (getVariableFlags().get(flag) | state) != 0;
+	}
+
+	public void setFlag(String flag, int state) {
+		getVariableFlags().put(flag, getVariableFlags().get(flag) | state);
+	}
+
+	public void setFlag(GameFlag flagObj, int state) {
+		flagObj.setFlags(flagObj.getFlags() | state);
+	}
+
+	public void clearFlag(String flag, int state) {
+		getVariableFlags().put(flag, getVariableFlags().get(flag) & ~(1 << state));
+	}
 
 	public static Iterator<Object> iterator(Map<String, List<GameObject>> objects, GamePlace location) {
 		return objects.values().stream()

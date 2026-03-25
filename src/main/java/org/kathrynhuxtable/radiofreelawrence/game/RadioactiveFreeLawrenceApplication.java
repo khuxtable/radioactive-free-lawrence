@@ -44,7 +44,7 @@ public class RadioactiveFreeLawrenceApplication {
 			gameContext.gameNode.createDefaultElements();
 
 			GameVisitor visitor = new GameVisitor(gameContext.gameNode, gameContext.errorReporter);
-			visitor.readFile("foo.gdesc", false);
+			visitor.readFile("main.gdesc", false);
 
 //			gameContext.internalFunctions.validateGrammar();
 

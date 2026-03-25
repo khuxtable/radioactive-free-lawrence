@@ -1,9 +1,19 @@
+info
+    Name: "Radio Free Lawrence",
+    Version: "3.0",
+    Authors: "Kathryn Huxtable, Ron Burk, David Wiley",
+    Date: "20 June 1982";
+
+noise "the" "that" "velvet" "go";
+
 variable first, second;
 variable third;
+variable playerPower = 1000;
 
 variable thingsHere[15];
 
 flags object one, two, xyzzy;
+flags variable moved;
 flags place three, four;
 flags object five, six;
 flags variable seven;
@@ -85,7 +95,7 @@ place ninth_mississippi
     To the east are the remains of downtown Lawrence."""
 {
     //    action "south" { move(ninth_mississippi); }
-    action "east" { say(ninth_mississippi); }
+    action "east" { quip(ninth_mississippi); }
     action "north" { say("Foo"); break repeat; }
 }
 
@@ -117,32 +127,103 @@ place emerald_city
 }
 
 initial {
-    setflag ninth_mississippi:three;
-    ref myref = ninth_mississippi;
-    setflag third:seven;
-    setflag ylem:four;
-    say("Something");
-    apport("axe", ninth_mississippi, true);
-    say("$", 1066);
-    say("mytest is $", testMeNow(32, ylem));
-    say("flag is $", third:seven);
-    say("ylem:four is $", ylem:four);
-    say("ylem:three is $", ylem:three);
-    clearflag ylem:four;
-    say("ylem:four is now $", ylem:four);
-    for (ref ptr : ninth_mississippi) {
-        say("flag is $", ptr:three);
-        say(ptr, 0);
-        for (var vptr : ptr) {
-            say("   #", vptr);
+    goto(ninth_mississippi);
+//    setflag ninth_mississippi:three;
+//    ref myref = ninth_mississippi;
+//    setflag third:seven;
+//    setflag ylem:four;
+//    say("Something");
+//    apport("axe", ninth_mississippi, true);
+//    say("$", 1066);
+//    say("mytest is $", testMeNow(32, ylem));
+//    say("flag is $", third:seven);
+//    say("ylem:four is $", ylem:four);
+//    say("ylem:three is $", ylem:three);
+//    clearflag ylem:four;
+//    say("ylem:four is now $", ylem:four);
+//    for (ref ptr : ninth_mississippi) {
+//        say("flag is $", ptr:three);
+//        say(ptr, 0);
+//        for (var vptr : ptr) {
+//            say("   #", vptr);
+//        }
+//    }
+//    say("9th Miss flag is $", myref:three);
+//    "inventory"("");
+//    ninth_mississippi("east");
+//    "take"("inventory");
+//    say(ninth_mississippi);
+}
+repeat {
+    // Handle player location description
+    if (status:moved) {
+        describe(here);
+        var youSee = true;
+        for (var optr : here) {
+            if (youSee) {
+                say("");
+                youSee = false;
+            }
+            describe(optr);
         }
     }
-    say("9th Miss flag is $", myref:three);
-    "inventory"("");
-    ninth_mississippi("east");
-    "take"("inventory");
-    say(ninth_mississippi);
 }
+repeat {
+    // Handle player input
+    input();                    // Get and parse player's command
+    //say("arg1 is $", arg1);
+    //say("arg2 is $", arg2);
+    //say("status is $", status);
+    if (status < 0) {           // Can't find 2nd or 1st command word in the vocabulary
+        quip("Pardon?");        // Command parse failure -- abort the main loop
+    }
+    if (key("quit")) {    // If the word QUIT occurs in the command, exit the game
+        say("As you wish.");
+        stop();
+    }
+
+    playerPower--;
+    here(arg1);             // Execute code, if any, associated with this location
+    arg1(arg2);             // Execute action verb, if any
+    ref objVerb = null;
+    for (ref optr : inhand) {
+        for (ref vptr : optr) {
+            if (strcmp(vptr, arg1) == 0) {
+                if (optr == arg2) {
+                    optr(arg1);     // Found specific "verb object" match
+                } else if (objVerb != null) {
+                    quip("Quitting in else if");
+//                    bailOut();  // We have a duplicate
+                } else  {
+                    objVerb = optr;
+                }
+            }
+        }
+    }
+    if (objVerb != null) {
+        objVerb(arg1);
+    }
+    playerPower++;
+
+    quip("quitting now");
+//    bailOut();         // Command not handled - report an error
+}
+
+    // Deliver invalid command message
+//proc bailOut {
+//    if (status == 1) {
+//        if (arg1 instanceof object) { // If first word is an object name
+//            if (!isnear(arg1)) {
+//                quip("There is no # here!", arg1);
+//            } else {
+//                quip("You need to say what you want to do with the #.", arg1);
+//            }
+//        } else {                    // Must be a verb
+//            quip("You need to say what you want to #.", arg1);
+//        }
+//    }
+//    quip("You can't do that!");     // Generic no can do
+//}
 
 text noDirection
     """
