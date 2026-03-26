@@ -89,11 +89,16 @@ public class FunctionInvocationNode implements ExprNode {
 
 				VariableType variableType = variableContext.getVariableType();
 				if (variableType == VariableType.METHOD) {
-					String className = gameContext.variableStore.getCurrentClass();
-					if (className == null) {
-						className = GameContext.GAME_CLASS_NAME;
-					}
+					String className = variableContext.getParentClass();
 					mv.visitVarInsn(ALOAD, 0);
+					if (gameContext.variableStore.getCurrentClass() != null && className == null) {
+						// Need to reference instance variable in outer class
+						mv.visitFieldInsn(
+								GETFIELD,
+								gameContext.variableStore.getCurrentClass(),
+								"this$0", // outer class "this"
+								GameContext.GAME_CLASS_DESCRIPTOR);
+					}
 					StringBuilder descriptor = new StringBuilder("(");
 					for (ExprNode parameter : parameters) {
 						parameter.generate(mv, gameContext);
@@ -101,12 +106,41 @@ public class FunctionInvocationNode implements ExprNode {
 					}
 					descriptor.append(")I");
 
+					if (className == null) {
+						className = GameContext.GAME_CLASS_NAME;
+					}
 					mv.visitMethodInsn(INVOKEVIRTUAL,
 							className,
 							identifier.getName(),
 							descriptor.toString(),
 							false);
-				} else if (variableType == VariableType.OBJECT || variableType == VariableType.PLACE || variableType == VariableType.REFERENCE || variableType == VariableType.TEXT) {
+				} else if (variableType == VariableType.TEXT) {
+					mv.visitVarInsn(ALOAD, 0);
+					if (gameContext.variableStore.getCurrentClass() != null) {
+						// Need to reference instance variable in outer class
+						mv.visitFieldInsn(
+								GETFIELD,
+								gameContext.variableStore.getCurrentClass(),
+								"this$0", // outer class "this"
+								GameContext.GAME_CLASS_DESCRIPTOR);
+					}
+
+					StringBuilder descriptor = new StringBuilder("(");
+					identifier.generate(mv, gameContext);
+					descriptor.append("Ljava/lang/String;");
+					for (ExprNode parameter : parameters) {
+						parameter.generate(mv, gameContext);
+						descriptor.append(parameter.getVariableType(gameContext).getDescriptor());
+					}
+					descriptor.append(")V");
+					mv.visitMethodInsn(
+							INVOKEVIRTUAL,
+							GameContext.GAME_CLASS_NAME,
+							"doAction",
+							descriptor.toString(),
+							false);
+					mv.visitInsn(ICONST_1);
+				} else if (variableType == VariableType.OBJECT || variableType == VariableType.PLACE || variableType == VariableType.REFERENCE) {
 					identifier.generate(mv, gameContext);
 					StringBuilder descriptor = new StringBuilder("(");
 					for (ExprNode parameter : parameters) {

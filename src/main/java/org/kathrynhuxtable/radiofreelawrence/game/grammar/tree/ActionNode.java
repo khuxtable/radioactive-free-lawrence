@@ -49,6 +49,20 @@ public class ActionNode implements StatementNode {
 				hashToLabel.put(hashCode, new Label());
 			}
 
+			Label arg1NonNull = new Label();
+			mv.visitVarInsn(ALOAD, 1);
+			mv.visitJumpInsn(IFNONNULL, arg1NonNull);
+			mv.visitLdcInsn("");
+			mv.visitVarInsn(ASTORE, 1);
+			mv.visitLabel(arg1NonNull);
+
+			Label arg2NonNull = new Label();
+			mv.visitVarInsn(ALOAD, 2);
+			mv.visitJumpInsn(IFNONNULL, arg2NonNull);
+			mv.visitLdcInsn("");
+			mv.visitVarInsn(ASTORE, 2);
+			mv.visitLabel(arg2NonNull);
+
 			mv.visitVarInsn(ALOAD, 1);
 			mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/String", "hashCode", "()I", false);
 			mv.visitLookupSwitchInsn(

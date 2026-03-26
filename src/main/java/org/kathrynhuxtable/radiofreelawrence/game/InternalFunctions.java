@@ -233,11 +233,7 @@ public class InternalFunctions {
 	public int strcmp(Object... parameters) {
 		Object obj1 = parameters[0];
 		Object obj2 = parameters[1];
-		if (obj1 instanceof String s1 && obj2 instanceof String s2) {
-			return s1.compareTo(s2);
-		} else {
-			throw new GameRuntimeException("Invalid string arguments for strcmp");
-		}
+		return obj1.toString().compareTo(obj2.toString());
 	}
 
 	@InternalFunction(name = "have")
@@ -254,11 +250,17 @@ public class InternalFunctions {
 
 	@InternalFunction(name = "ishere")
 	public int ishere(Object... parameters) {
-		GamePlace here = getPlaces().get("here");
+		GamePlace here = getObjectVar("here");
 		Object obj = parameters[0];
 		if (obj instanceof GameObject gameObject) {
 			if (gameObject.getLocation() == here) {
 				return 1;
+			}
+		} else if (obj instanceof String name) {
+			for (GameObject gameObject : getObjects().get(name)) {
+				if (gameObject.getLocation() == here && gameObject.getName().equals(name)) {
+					return 1;
+				}
 			}
 		}
 		return 0;
@@ -416,9 +418,17 @@ public class InternalFunctions {
 
 	@InternalFunction(name = "get")
 	public int iget(Object... parameters) {
-		GameObject object = (GameObject) parameters[0];
-		if (object != null) {
-			object.setLocation(getPlaces().get("inhand"));
+		Object object = parameters[0];
+		if (object instanceof GameObject gameObject) {
+			gameObject.setLocation(getPlaces().get("inhand"));
+		} else if (object instanceof String name) {
+			GamePlace here = getObjectVar("here");
+			for (GameObject gameObject : getObjects().get(name)) {
+				if (gameObject.getLocation() == here) {
+					gameObject.setLocation(getPlaces().get("inhand"));
+					break;
+				}
+			}
 		}
 		return 0;
 	}

@@ -19,7 +19,6 @@ flags object
     isNpc;
 
 variable playerPower;
-variable emeraldCityCount;
 
 include "objects.gdesc";
 
@@ -95,11 +94,12 @@ repeat {
 
     playerPower--;
     here(arg1);             // Execute code, if any, associated with this location
-    arg1(arg1);             // Execute action verb, if any
+    arg1(arg2);             // Execute action verb, if any
+    arg1("");
     ref objVerb = null;
     for (var optr : inhand) {
         for (var vptr : optr) {
-            if (vptr == arg1) {
+            if (strcmp(vptr, arg1) == 0) {
                 if (strcmp(optr, arg2) == 0) {
                     optr(arg1);     // Found specific "verb object" match
                 } else if (objVerb != null) {
