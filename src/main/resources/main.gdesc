@@ -26,6 +26,31 @@ include "places.gdesc";
 
 include "actions.gdesc";
 
+// Common text
+text noDirection
+    """
+    You can't tell directions here.
+    Try Up, Down, Left, Right, Forward, Backward""";
+text whatIsNorth "What is \"North?\"";
+text whatIsSouth "What is \"South?\"";
+text whatIsEast "What is \"East?\"";
+text whatIsWest "What is \"West?\"";
+text whatIsUp "What is \"Up?\"";
+text whatIsDown "What is \"Down?\"";
+text whatIsLeft "What is \"Left?\"";
+text whatIsRight "What is \"Right?\"";
+text whatIsForward "What is \"Forward?\"";
+text whatIsBackward "What is \"Backward?\"";
+text tryBoot
+    """
+    You open the file to reveal the message:
+            To get out of the computer, try 'Boot'.""";
+text brightFlashAnd
+    """
+    There's no place like home.
+
+    There is a bright flash and ...""";
+
 initial {
     apport("axe", in_spencer, true);
     apport("bagel", krogers, true); // copy
@@ -37,18 +62,18 @@ initial {
     apport("coke", In_Joes, true);
     apport("dagger", lot, true);
     apport("glove", slums, true);
-    apport("gun", dark, true); // copy
+    apport("gun", dark, true);
     apport("hatchet", naismith, true); // copy
     apport("hole", slums, true);
-    apport("newspaper", north_wescoe, true);
-    apport("opera_glove", naismith, true);
-    apport("pistol", o_zone, true); // copy
-    apport("revolver", pterodactyl, true);
+    apport("udk", north_wescoe, true);
+    apport("glove", naismith, true);
+    apport("gun", o_zone, true);
+    apport("gun", pterodactyl, true);
     apport("rifle", puddle, true);
     apport("sandwich", In_Joes, true);
     apport("sword", jayhawk_sunflower, true);
     apport("token", sunnyside_naismith, true);
-    apport("udk", murphy, true); // copy
+    apport("udk", murphy, true);
     apport("guards", wescoe_cafeteria, true);
     apport("zapgun", wescoe_cafeteria, true);
 
@@ -102,6 +127,7 @@ repeat {
             if (strcmp(vptr, arg1) == 0) {
                 if (strcmp(optr, arg2) == 0) {
                     optr(arg1);     // Found specific "verb object" match
+                    return;
                 } else if (objVerb != null) {
                     bailOut();  // We have a duplicate
                 } else  {
@@ -133,27 +159,3 @@ proc bailOut {
     }
     quip("You can't do that!");     // Generic no can do
 }
-
-text noDirection
-    """
-    You can't tell directions here.
-    Try Up, Down, Left, Right, Forward, Backward""";
-text whatIsNorth "What is \"North?\"";
-text whatIsSouth "What is \"South?\"";
-text whatIsEast "What is \"East?\"";
-text whatIsWest "What is \"West?\"";
-text whatIsUp "What is \"Up?\"";
-text whatIsDown "What is \"Down?\"";
-text whatIsLeft "What is \"Left?\"";
-text whatIsRight "What is \"Right?\"";
-text whatIsForward "What is \"Forward?\"";
-text whatIsBackward "What is \"Backward?\"";
-text tryBoot
-    """
-    You open the file to reveal the message:
-            To get out of the computer, try 'Boot'.""";
-text brightFlashAnd
-    """
-    There's no place like home.
-
-    There is a bright flash and ...""";

@@ -1,6 +1,7 @@
 package org.kathrynhuxtable.radiofreelawrence.game;
 
 import java.io.FileOutputStream;
+import java.io.IOException;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +24,8 @@ import org.kathrynhuxtable.radiofreelawrence.game.grammar.tree.PlaceNode;
 @Slf4j
 public class RadioactiveFreeLawrenceApplication {
 
+	private static final String MAIN_GDESC_FILE = "main.gdesc";
+
 	private final GameContext gameContext = new GameContext();
 
 	public static void main(String[] args) {
@@ -36,7 +39,7 @@ public class RadioactiveFreeLawrenceApplication {
 			gameContext.gameNode.createDefaultElements();
 
 			GameVisitor visitor = new GameVisitor(gameContext.gameNode, gameContext.errorReporter);
-			visitor.readFile("main.gdesc", false);
+			visitor.readFile(MAIN_GDESC_FILE, false);
 
 			gameContext.internalFunctions.validateGrammar();
 
@@ -48,37 +51,41 @@ public class RadioactiveFreeLawrenceApplication {
 			// Generate main Game class
 			ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_FRAMES | ClassWriter.COMPUTE_MAXS);
 			gameContext.gameNode.generate(cw, gameContext);
-
-			byte[] bytes = cw.toByteArray();
-			FileOutputStream out = new FileOutputStream("target/classes/" + GameContext.GAME_CLASS_NAME + ".class");
-			out.write(bytes);
-			out.close();
+			generateClassFile(cw, null);
 
 			// Generate object inner classes
 			for (ObjectNode objectNode : gameContext.gameNode.getObjects()) {
 				ClassWriter innerCw = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
 				objectNode.generate(innerCw, gameContext);
-				byte[] innerBytes = innerCw.toByteArray();
-				FileOutputStream innerOut = new FileOutputStream(
-						"target/classes/" + GameContext.GAME_CLASS_NAME + "$" + objectNode.getName() + ".class");
-				innerOut.write(innerBytes);
-				innerOut.close();
+				generateClassFile(innerCw, objectNode.getName());
 			}
 
 			// Generate place inner classes
 			for (PlaceNode placeNode : gameContext.gameNode.getPlaces()) {
 				ClassWriter innerCw = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
 				placeNode.generate(innerCw, gameContext);
-				byte[] innerBytes = innerCw.toByteArray();
-				FileOutputStream innerOut = new FileOutputStream(
-						"target/classes/" + GameContext.GAME_CLASS_NAME + "$" + placeNode.getName() + ".class");
-				innerOut.write(innerBytes);
-				innerOut.close();
+				generateClassFile(innerCw, placeNode.getName());
 			}
 
 			new GameRunner().run(gameContext);
 
 			System.exit(0);
 		};
+	}
+
+	private void generateClassFile(ClassWriter classWriter, String innerClassName) throws IOException {
+		StringBuilder filename = new StringBuilder("target/classes/");
+		filename.append(GameContext.GAME_CLASS_NAME);
+		if (innerClassName != null) {
+			filename.append("$");
+			filename.append(innerClassName);
+		}
+		filename.append(".class");
+
+		byte[] bytes = classWriter.toByteArray();
+
+		FileOutputStream innerOut = new FileOutputStream(filename.toString());
+		innerOut.write(bytes);
+		innerOut.close();
 	}
 }

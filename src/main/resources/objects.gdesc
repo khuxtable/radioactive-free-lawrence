@@ -63,12 +63,6 @@ object glove
 {
     action "pickpocket" { stealSomething(50, 40); }
 }
-object opera_glove
-    "silk opera glove"
-    "There is a silk opera glove here."
-{
-    action "pickpocket" { stealSomething(50, 40); }
-}
 object grenade
     "grenade"
     "There is a grenade here."
@@ -80,20 +74,6 @@ object grenade
 object gun
     "gun"
     "There is a gun here."
-{
-    action "shoot" { useweapon(this, false, 1, 30, 200, 0); }
-    action "fire" { useweapon(this, false, 1, 30, 200, 0); }
-}
-object pistol
-    "pistol"
-    "There is a pistol here."
-{
-    action "shoot" { useweapon(this, false, 1, 30, 200, 0); }
-    action "fire" { useweapon(this, false, 1, 30, 200, 0); }
-}
-object revolver
-    "revolver"
-    "There is a revolver here."
 {
     action "shoot" { useweapon(this, false, 1, 30, 200, 0); }
     action "fire" { useweapon(this, false, 1, 30, 200, 0); }
@@ -174,23 +154,6 @@ object token
 object udk
     "UDK"
     "There is a faded UDK here."
-    "a faded copy of the university newspaper, the \"University Daily Kansan\""
-{
-    action "read" {
-        sayrandom(
-        10, "The UDK says, 'US declares war on Rusia'.",
-        5, "The UDK says, 'Radiation victims should go to the Reactor Center'.",
-        20, "The UDK says, 'KSU 50; KU 36'.",
-        10, "Too faded to read, but your hands are now covered with printer's ink.",
-        5, "'Rusia drops bomb; Chancellor says grounds WILL be watered.'",
-        15, "'Lawrence destroyed; Homecoming ruined.'",
-        100, "The hot wind blurs your eyes, preventing you from reading it."
-        );
-    }
-}
-object newspaper
-    "newspaper"
-    "There is a faded newspaper here."
     "a faded copy of the university newspaper, the \"University Daily Kansan\""
 {
     action "read" {

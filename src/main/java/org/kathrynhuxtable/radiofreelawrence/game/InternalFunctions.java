@@ -235,7 +235,25 @@ public class InternalFunctions {
 	public int strcmp(Object... parameters) {
 		Object obj1 = parameters[0];
 		Object obj2 = parameters[1];
-		return obj1.toString().compareTo(obj2.toString());
+		if (obj1 == null && obj2 == null) {
+			return 0;
+		} else if (obj1 == null) {
+			return -1;
+		} else if (obj2 == null) {
+			return 1;
+		} else {
+			if (obj1 instanceof GamePlace gamePlace) {
+				obj1 = gamePlace.getName();
+			} else if (obj1 instanceof GameObject gameObject) {
+				obj1 = gameObject.getName();
+			}
+			if (obj2 instanceof GamePlace gamePlace) {
+				obj2 = gamePlace.getName();
+			} else if (obj2 instanceof GameObject gameObject) {
+				obj2 = gameObject.getName();
+			}
+			return obj1.toString().compareTo(obj2.toString());
+		}
 	}
 
 	@InternalFunction(name = "have")
