@@ -46,7 +46,7 @@ public class RadioactiveFreeLawrenceApplication {
 			GameVisitor visitor = new GameVisitor(gameContext.gameNode, gameContext.errorReporter);
 			visitor.readFile("main.gdesc", false);
 
-//			gameContext.internalFunctions.validateGrammar();
+			gameContext.internalFunctions.validateGrammar();
 
 			// Since places exist once, create variables for them.
 			for (PlaceNode placeNode : gameContext.gameNode.getPlaces()) {

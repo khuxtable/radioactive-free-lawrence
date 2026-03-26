@@ -26,6 +26,8 @@ public class InternalFunctions {
 
 	private final Scanner scanner = new Scanner(System.in, StandardCharsets.UTF_8);
 
+	private String[] words;
+
 	public InternalFunctions(GameContext gameContext) {
 		this.gameContext = gameContext;
 	}
@@ -244,6 +246,12 @@ public class InternalFunctions {
 			if (gameObject.getLocation() == inhand) {
 				return 1;
 			}
+		} else if (obj instanceof String name) {
+			for (GameObject gameObject : getObjects().get(name)) {
+				if (gameObject.getLocation() == inhand && gameObject.getName().equals(name)) {
+					return 1;
+				}
+			}
 		}
 		return 0;
 	}
@@ -273,10 +281,18 @@ public class InternalFunctions {
 
 	@InternalFunction(name = "isat")
 	public int isat(Object... parameters) {
-		GamePlace here = getPlaces().get("here");
+		GamePlace here = getObjectVar("here");
 		for (Object node : parameters) {
-			if (node instanceof GamePlace gamePlace && gamePlace == here) {
-				return 1;
+			if (node instanceof GamePlace gamePlace) {
+				if (gamePlace == here) {
+					return 1;
+				}
+			} else if (node instanceof String name) {
+				for (GameObject gameObject : getObjects().get(name)) {
+					if (gameObject.getLocation() == here && gameObject.getName().equals(name)) {
+						return 1;
+					}
+				}
 			}
 		}
 		return 0;
@@ -284,7 +300,7 @@ public class InternalFunctions {
 
 	@InternalFunction(name = "atplace")
 	public int atplace(Object... parameters) {
-		GamePlace loc = getPlaces().get("here");
+		GamePlace loc = getObjectVar("here");
 		for (int i = 1; i < parameters.length; i++) {
 			GamePlace place = (GamePlace) parameters[i];
 			if (place == loc) {
@@ -296,69 +312,37 @@ public class InternalFunctions {
 
 	@InternalFunction(name = "varis")
 	public int varis(Object... parameters) {
-//		int refno = parameters[0].evaluate(gameContext);
-//		if (refno < gameContext.fvar || refno >= gameContext.lvar) {
-//			return 0;
-//		}
-//		int value = gameContext.variables[refno - gameContext.fvar];
-//		for (int i = 1; i < parameters.length; i++) {
-//			int other = parameters[i].evaluate(gameContext);
-//			if (other == refno) {
-//				return 1;
-//			}
-//		}
+		int value = (Integer) parameters[0];
+		for (int i = 1; i < parameters.length; i++) {
+			if (parameters[i] instanceof Integer && value == (Integer) parameters[i]) {
+				return 1;
+			}
+		}
 		return 0;
 	}
 
 	@InternalFunction(name = "key")
 	public int iskey(Object... parameters) {
-		String arg1 = getObjectVar("arg1");
-		if (arg1 == null) {
-			return 0;
+		if (words == null) {
+			return parameters.length == 0 ? 1 : 0;
 		}
+		Set<String> wordSet = new HashSet<>(Arrays.asList(words));
 		for (Object parameter : parameters) {
-			if (!arg1.equals(parameter)) {
+			if (!wordSet.contains(parameter.toString())) {
 				return 0;
 			}
-//			if (parameter instanceof TextElementNode textElementNode) {
-//				VocabularyNode node = (VocabularyNode) gameContext.getRefnoNode(refno);
-//				if (!textElementNode.getText().equals(node.getName())) {
-//					return 0;
-//				}
-//			} else if (parameter instanceof IdentifierNode identifierNode) {
-//				int idVal = gameContext.getIntIdentifierValue(identifierNode.getName());
-//				if (idVal == 0) {
-//					// Unrecognized value -- ignore
-//					continue;
-//				}
-//				BaseNode node = gameContext.getRefnoNode(idVal);
-//				if (node instanceof TextNode textNode) {
-//					VocabularyNode vnode = (VocabularyNode) gameContext.getRefnoNode(refno);
-//					if (!textNode.getTexts().get(0).equals(vnode.getName())) {
-//						return 0;
-//					}
-//				} else if (idVal != refno) {
-//					return 0;
-//				}
-//			} else {
-//				int value = parameter.evaluate(gameContext);
-//				if (value != refno) {
-//					return 0;
-//				}
-//			}
 		}
 		return 1;
 	}
 
 	@InternalFunction(name = "anyof")
 	public int anyof(Object... parameters) {
-//		Object verb = gameContext.getIntIdentifierValue("arg1");
-//		for (Object parameter : parameters) {
-//			int value = parameter.evaluate(gameContext);
-//			if (value == verb) {
-//				return 1;
-//			}
-//		}
+		String verb = getObjectVar("arg1");
+		for (Object parameter : parameters) {
+			if (strcmp(verb, parameter) == 0) {
+				return 1;
+			}
+		}
 		return 0;
 	}
 
@@ -419,14 +403,16 @@ public class InternalFunctions {
 	@InternalFunction(name = "get")
 	public int iget(Object... parameters) {
 		Object object = parameters[0];
-		if (object instanceof GameObject gameObject) {
-			gameObject.setLocation(getPlaces().get("inhand"));
-		} else if (object instanceof String name) {
-			GamePlace here = getObjectVar("here");
-			for (GameObject gameObject : getObjects().get(name)) {
-				if (gameObject.getLocation() == here) {
-					gameObject.setLocation(getPlaces().get("inhand"));
-					break;
+		if (object != null) {
+			if (object instanceof GameObject gameObject) {
+				gameObject.setLocation(getPlaces().get("inhand"));
+			} else if (object instanceof String name) {
+				GamePlace here = getObjectVar("here");
+				for (GameObject gameObject : getObjects().get(name)) {
+					if (gameObject.getLocation() == here) {
+						gameObject.setLocation(getPlaces().get("inhand"));
+						break;
+					}
 				}
 			}
 		}
@@ -435,36 +421,26 @@ public class InternalFunctions {
 
 	@InternalFunction(name = "drop")
 	public int idrop(Object... parameters) {
-		GameObject object = (GameObject) parameters[0];
+		Object object = parameters[0];
 		if (object != null) {
-			GamePlace place = (GamePlace) getObjectVar("here");
-			object.setLocation(place);
+			GamePlace inhand = getPlaces().get("inhand");
+			GamePlace here = getObjectVar("here");
+			if (object instanceof GameObject gameObject) {
+				if (gameObject.getLocation() == inhand) {
+					gameObject.setLocation(here);
+				}
+			} else if (object instanceof String name) {
+				for (GameObject gameObject : getObjects().get(name)) {
+					if (gameObject.getLocation() == inhand) {
+						gameObject.setLocation(here);
+						break;
+					}
+				}
+			}
 		}
 		return 0;
 	}
 
-//	// isverb("verb", proc, parameters...)
-//	@InternalFunction(name = "isverb")
-//	public int isverb(ExprNode... parameters) {
-//		if (parameters.length > 1) {
-//			if (iskey(parameters[0]) == 0) {
-//				return 0;
-//			}
-//		}
-//
-//		if (!(parameters[1] instanceof IdentifierNode identifierNode)) {
-//			throw new GameRuntimeException("second parameter to isverb must be proc identifier");
-//		}
-//
-//		List<ExprNode> exprNodeList = new ArrayList<>();
-
-	/// /		exprNodeList.add(objectNode);
-//		exprNodeList.addAll(Arrays.asList(Arrays.copyOfRange(parameters, 2, parameters.length)));
-//
-//		gameContext.callFunction(identifierNode.getName(), exprNodeList);
-//
-//		throw new BreakException(ControlType.REPEAT);
-//	}
 	@InternalFunction(name = "goto")
 	public int goto_(Object... parameters) {
 		GamePlace place = (GamePlace) parameters[0];
@@ -575,13 +551,13 @@ public class InternalFunctions {
 		throw new BreakException(ControlType.REPEAT);
 	}
 
-//	@InternalFunction(name = "respond")
-//	public int respond(ExprNode... parameters) {
-//		if (anyof(parameters) != 0) {
-//			quip(Arrays.copyOfRange(parameters, parameters.length - 1, parameters.length));
-//		}
-//		return 0;
-//	}
+	@InternalFunction(name = "respond")
+	public int respond(Object... parameters) {
+		if (anyof(parameters) != 0) {
+			quip(Arrays.copyOfRange(parameters, parameters.length - 1, parameters.length));
+		}
+		return 0;
+	}
 
 	@InternalFunction(name = "describe")
 	public int describe_(Object... parameters) {
@@ -599,30 +575,24 @@ public class InternalFunctions {
 
 	@InternalFunction(name = "vocab")
 	public int vocab(Object... text) {
-		say_("vocab not yet implemented");
-//		GamePlace here = getPlaces().get("here");
-//		for (String verb : gameContext.places[here - gameContext.floc].getCommands().keySet()) {
-//			System.out.println(verb + " [here]");
-//		}
-//		for (String verb : gameContext.gameNode.getActions().keySet()) {
-//			System.out.println(verb + " [action]");
-//		}
-//		int inhand = gameContext.getIntIdentifierValue("inhand");
-//		for (int objRefno = gameContext.fobj; objRefno < gameContext.lobj; objRefno++) {
-//			if (gameContext.locations[objRefno - gameContext.fobj] == inhand) {
-//				ObjectNode objectNode = gameContext.objects[objRefno - gameContext.fobj];
-//				for (String verb : objectNode.getCommands().keySet()) {
-//					System.out.println(verb + " [" + objectNode.getName() + "]");
-//				}
-//			}
-//		}
+		GamePlace here = getObjectVar("here");
+		for (String verb : here.getActions()) {
+			System.out.println(verb + " [here]");
+		}
+		for (String verb : gameContext.gameNode.getActions().keySet()) {
+			System.out.println(verb + " [action]");
+		}
+		GamePlace inhand = getPlaces().get("inhand");
+		for (List<GameObject> objects : getObjects().values()) {
+			for (GameObject object : objects) {
+				if (object.getLocation() == inhand) {
+					for (String verb : object.getActions()) {
+						System.out.println(verb + " [" + object.getName() + "]");
+					}
+				}
+			}
+		}
 		throw new BreakException(ControlType.REPEAT);
-	}
-
-	@InternalFunction(name = "tie")
-	public int tie(Object... parameters) {
-		// FIXME Implement this
-		return 0;
 	}
 
 	@InternalFunction(name = "stop")
@@ -712,7 +682,7 @@ public class InternalFunctions {
 		String arg2 = null;
 		int status = 0;
 
-		String[] words = input.split("\\s+");
+		words = input.split("\\s+");
 		int index = 1;
 		for (String word : words) {
 			if (!getNoise().contains(word)) {
