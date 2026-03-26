@@ -219,6 +219,7 @@
         if (count == 0) {                             // If nothing listed, ...
             say("You are not carrying anything.");   // ... say_ empty-handed
         }
+        say("");
         break repeat;              // Command fully handled, so terminate the REPEAT loop
     }
     action "take" "inventory" {
