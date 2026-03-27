@@ -1058,22 +1058,6 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 				.build();
 	}
 
-	// MUL IDENTIFIER
-	@Override
-	public BaseNode visitDerefExpression(DerefExpressionContext ctx) {
-		return new DerefNode(
-				getIdentifierNode(ctx.IDENTIFIER(), getSourceLocation(ctx.IDENTIFIER())),
-				new SourceLocation(ctx));
-	}
-
-	// BITAND IDENTIFIER
-	@Override
-	public BaseNode visitRefExpression(RefExpressionContext ctx) {
-		return new RefNode(
-				getIdentifierNode(ctx.IDENTIFIER(), getSourceLocation(ctx.IDENTIFIER())),
-				new SourceLocation(ctx));
-	}
-
 	@Override
 	public BaseNode visitFlagExpression(FlagExpressionContext ctx) {
 		return FlagExpressionNode.builder()

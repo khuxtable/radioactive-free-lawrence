@@ -104,8 +104,12 @@ repeat {
                 say("");
                 youSee = false;
             }
-            describe(optr);
-            setflag optr:seen;
+            if (optr:seen) {
+                say(optr);
+            } else {
+                describe(optr);
+                setflag optr:seen;
+            }
         }
     }
 }

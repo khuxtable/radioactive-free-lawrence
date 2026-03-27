@@ -576,6 +576,24 @@ public class InternalFunctions {
 	public int describe_(Object... parameters) {
 		if (parameters.length == 0) return 0;
 		Object var = parameters[0];
+		if (var instanceof String stringElement) {
+			GamePlace place = getPlaces().get(stringElement);
+			if (place != null) {
+				var = place;
+			} else {
+				GamePlace here = getObjectVar("here");
+				GamePlace inHand = getPlaces().get("inhand");
+				List<GameObject> gameObjects = getObjects().get(var);
+				if (gameObjects != null) {
+					for (GameObject gameObject : gameObjects) {
+						if (gameObject.getLocation() == inHand || gameObject.getLocation() == here) {
+							var = gameObject;
+							break;
+						}
+					}
+				}
+			}
+		}
 		if (var instanceof GamePlace place) {
 			System.out.println(place.getLongDescription());
 		} else if (var instanceof GameObject object) {

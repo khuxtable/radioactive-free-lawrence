@@ -154,7 +154,7 @@ object token
 object udk
     "UDK"
     "There is a faded UDK here."
-    "a faded copy of the university newspaper, the \"University Daily Kansan\""
+    "A faded copy of the university newspaper, the \"University Daily Kansan\""
 {
     action "read" {
         sayrandom(
