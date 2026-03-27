@@ -33,6 +33,7 @@ public class IfStatementNode implements StatementNode {
 			expressions.get(i).generate(mv, gameContext);
 			mv.visitJumpInsn(IFEQ, ifNotLabel);
 			thenStatements.get(i).generate(mv, gameContext);
+			mv.visitJumpInsn(GOTO, endLabel);
 			mv.visitLabel(ifNotLabel);
 		}
 
