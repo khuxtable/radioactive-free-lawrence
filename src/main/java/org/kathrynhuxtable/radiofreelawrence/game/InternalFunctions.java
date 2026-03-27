@@ -480,11 +480,6 @@ public class InternalFunctions {
 		putObjectVar("here", place);
 		setFlag("status", getIntVar("moved"));
 
-		getObjects().values().stream()
-				.flatMap(Collection::stream)
-				.filter(obj -> obj.getLocation() == place)
-				.peek(obj -> setFlag(obj, getIntVar("seen")));
-
 		throw new BreakException(ControlType.REPEAT);
 	}
 
