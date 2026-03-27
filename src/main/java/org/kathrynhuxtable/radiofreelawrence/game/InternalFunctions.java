@@ -193,7 +193,7 @@ public class InternalFunctions {
 
 	@InternalFunction(name = "input")
 	public int input(Object... parameters) {
-		setFlag("status", getIntVar("moved"));
+		clearFlag("status", getIntVar("moved"));
 
 		System.out.print("? ");
 		String text = scanner.nextLine();
@@ -758,7 +758,7 @@ public class InternalFunctions {
 	}
 
 	public void clearFlag(String flag, int state) {
-		getVariableFlags().put(flag, getVariableFlags().get(flag) & ~(1 << state));
+		getVariableFlags().put(flag, getVariableFlags().get(flag) & ~state);
 	}
 
 	public static Iterator<Object> iterator(Map<String, List<GameObject>> objects, GamePlace location) {
