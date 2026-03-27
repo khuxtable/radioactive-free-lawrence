@@ -49,9 +49,9 @@
             quip(" misses #.", target);
         }
     }
-    proc beastCheck(ref beast, ref where, text noCanDo) {
+    proc beastCheck(text beast, ref where, text noCanDo) {
         for (var optr : where) {
-            if (optr == beast) {
+            if (strcmp(optr, beast) == 0) {
                 quip(noCanDo);
             }
         }
@@ -223,7 +223,7 @@
         break repeat;              // Command fully handled, so terminate the REPEAT loop
     }
     action "take" "inventory" {
-        "inventory"();     // Execute code associated with the INVENTORY command
+        "inventory"("");     // Execute code associated with the INVENTORY command
     }
     action "look" {
         if (status == 1) {

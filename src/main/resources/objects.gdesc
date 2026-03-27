@@ -93,7 +93,7 @@ object meter
     "life-force meter"
     "There is a life-force meter here. Cannot be dropped."
 {
-    action "read" { quip("You have $ life force.", playerPower); }
+    action "read" { quip("You have $ life force.", playerPower++); }
 }
 object meteroid         // For wizard players
     "life-force meteroid"

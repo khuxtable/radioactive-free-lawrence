@@ -10,7 +10,7 @@ flags variable
     moved;          // Optional STATUS variable flag, maintained by the kernel
 
 flags place
-    beenHere;       // place flag, maintained by the kernel
+    beenHere;
 
 flags object
     seen,           // object flag, maintained by the kernel
@@ -92,7 +92,12 @@ initial {
 repeat {
     // Handle player location description
     if (status:moved) {
-        describe(here);
+        if (here:beenHere) {
+            say(here);
+        } else {
+            describe(here);
+        }
+        setflag here:beenHere;
         var youSee = true;
         for (var optr : here) {
             if (youSee) {
@@ -100,6 +105,7 @@ repeat {
                 youSee = false;
             }
             describe(optr);
+            setflag optr:seen;
         }
     }
 }

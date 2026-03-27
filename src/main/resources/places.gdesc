@@ -167,7 +167,7 @@ place south_wescoe
     action "west" { move(visual_arts); }
     action "up" { move(north_wescoe); }
     action "down" { move(acc); }
-    action "enter" { beastCheck(null/*guards*/, wescoe_cafeteria, "The guards prevent you from entering."); }
+    action "enter" { beastCheck("guards", wescoe_cafeteria, "The guards prevent you from entering."); }
 }
 place wescoe_cafeteria
     "You are in the Wescoe Cafeteria."
