@@ -180,4 +180,36 @@ object zapgun
 object guards
     "guards"
     "A group of armed guards."
-{}
+{
+    variable power = 1000;
+
+    initial {
+        setflag this:isNpc;
+    }
+
+    message alterPower {
+        power += arg;
+    }
+
+    message getPower {
+        return power;
+    }
+}
+object dummy
+    "dummy"
+    "A dummy"
+{
+    variable power = 50;
+
+    initial {
+        setflag this:isNpc;
+    }
+
+    message alterPower {
+        power += arg;
+    }
+
+    message getPower {
+        return power;
+    }
+}

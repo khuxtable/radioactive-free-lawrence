@@ -1,10 +1,10 @@
     // When eating or drinking something
-    proc consume(ref obj, var disappears, var count, var minPower, var maxPower, text message, text emptyDescription) {
+    proc consume(ref obj, var disappears, var count, var minPower, var maxPower, text msg, text emptyDescription) {
         var power = getrandom(minPower, maxPower);
         playerPower += power;
         // I don't currently have a way to implement the count, so assume 1 and disappears = true.
         apport(obj, ylem);
-        quip(message);
+        quip(msg);
     }
     proc useweapon(ref obj, var dropped, var affects, var rchance, var damage, var drain) {
         ref target = null;
@@ -33,14 +33,14 @@
         var dam = getrandom(1, damage);
 
         if (hit) {
-            // Figure out where to store the target's power
-            // target.setPower(target.getPower() - dam);
+            target.alterPower(-dam);
         }
 
-//        if (hit && target.getPower() < 0) {
-//            apport(target, ylem);
-//            quip("You just killed #.", target);
-//        } else
+        if (hit && target.getPower(0) < 0) {
+            apport(target, ylem);
+            quip("You just killed #.", target);
+        }
+
         if (hit) {
             say("Your #", obj, false);
             quip(" hits #.", target);

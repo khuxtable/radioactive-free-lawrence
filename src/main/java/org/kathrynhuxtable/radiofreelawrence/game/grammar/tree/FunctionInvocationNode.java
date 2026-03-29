@@ -24,6 +24,7 @@ import static org.objectweb.asm.Opcodes.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class FunctionInvocationNode implements ExprNode {
+	private IdentifierNode objectReference;
 	private IdentifierNode identifier;
 	private String internalFunction;
 	private String verbFunction;
@@ -33,7 +34,19 @@ public class FunctionInvocationNode implements ExprNode {
 	@Override
 	public void generate(MethodVisitor mv, GameContext gameContext) {
 		try {
-			if (internalFunction != null) {
+			if (objectReference != null) {
+				objectReference.generate(mv, gameContext);
+				mv.visitLdcInsn(identifier.getName());
+				for (ExprNode parameter : parameters) {
+					parameter.generate(mv, gameContext);
+				}
+				mv.visitMethodInsn(
+						INVOKEINTERFACE,
+						Type.getInternalName(GameAction.class),
+						"doMessage",
+						"(Ljava/lang/String;I)I",
+						true);
+			} else if (internalFunction != null) {
 				mv.visitVarInsn(ALOAD, 0);
 				if (gameContext.variableStore.getCurrentClass() != null) {
 					mv.visitFieldInsn(

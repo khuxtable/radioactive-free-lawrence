@@ -230,6 +230,16 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 		return node;
 	}
 
+	// MESSAGE name=IDENTIFIER (arg=IDENTIFIER)? block
+	@Override
+	public BaseNode visitMessageDirective(MessageDirectiveContext ctx) {
+		return MessageNode.builder()
+				.name(ctx.name.getText().toLowerCase())
+				.block((BlockNode) visit(ctx.block()))
+				.sourceLocation(new SourceLocation(ctx))
+				.build();
+	}
+
 	// PROC name=IDENTIFIER (IDENTIFIER)* block
 	@Override
 	public ProcNode visitProcDirective(ProcDirectiveContext ctx) {
@@ -464,10 +474,22 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 				.filter(oc -> oc.procDirective() != null)
 				.map(vc -> (ProcNode) visitObjectCommand(vc))
 				.collect(Collectors.toMap(ProcNode::getName, t -> t));
+		Map<String, MessageNode> messages = ctx.objectCommand().stream()
+				.filter(oc -> oc.messageDirective() != null)
+				.map(vc -> (MessageNode) visitObjectCommand(vc))
+				.collect(Collectors.toMap(MessageNode::getName, t -> t));
 		List<VariableNode> variables = ctx.objectCommand().stream()
 				.filter(oc -> oc.variableDirective() != null)
 				.map(vc -> (VariableNode) visitObjectCommand(vc))
-				.collect(Collectors.toList());
+				.toList();
+		List<InitialNode> inits = ctx.objectCommand().stream()
+				.filter(oc -> oc.initialDirective() != null)
+				.map(vc -> (InitialNode) visitObjectCommand(vc))
+				.toList();
+		int initIndex = 0;
+		for (InitialNode init : inits) {
+			init.setIndex(initIndex++);
+		}
 		List<String> verbs = ctx.verb().stream()
 				.map(i -> TextUtils.cleanStringLiteral(i.STRING_LITERAL().getText()).toLowerCase())
 				.collect(Collectors.toList());
@@ -482,8 +504,10 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 				.briefDescription(briefDescription)
 				.longDescription(longDescription)
 				.variables(variables)
+				.inits(inits)
 				.commands(commands)
 				.procs(procs)
+				.messages(messages)
 				.sourceLocation(new SourceLocation(ctx))
 				.build();
 		if (root.getIdentifiers().containsKey(node.getName())) {
@@ -509,8 +533,10 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 
 	// variableDirective
 	// referenceDirective
+	// initialDirective
 	// procDirective
 	// actionDirective
+	// messageDirective
 	@Override
 	public BaseNode visitObjectCommand(ObjectCommandContext ctx) {
 		if (ctx.variableDirective() != null) {
@@ -521,6 +547,11 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 					.build();
 		} else if (ctx.referenceDirective() != null) {
 			return null;
+		} else if (ctx.initialDirective() != null) {
+			return InitialNode.builder()
+					.code((BlockNode) visit(ctx.initialDirective().block()))
+					.sourceLocation(new SourceLocation(ctx))
+					.build();
 		} else if (ctx.actionDirective() != null) {
 			return VerbCommandNode.builder()
 					.verb(TextUtils.cleanStringLiteral(ctx.actionDirective().arg1.getText()).toLowerCase())
@@ -529,6 +560,8 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 					.build();
 		} else if (ctx.procDirective() != null) {
 			return buildProcNode(ctx.procDirective());
+		} else if (ctx.messageDirective() != null) {
+			return visitMessageDirective(ctx.messageDirective());
 		} else {
 			return null;
 		}
@@ -711,9 +744,9 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 				.expression(
 						ctx.expression() == null ?
 								NumberLiteralNode.builder()
-										.number(0)
-										.sourceLocation(getSourceLocation(ctx.SEMI()))
-										.build() :
+								.number(0)
+								.sourceLocation(getSourceLocation(ctx.SEMI()))
+								.build() :
 								(ExprNode) visit(ctx.expression()))
 				.sourceLocation(new SourceLocation(ctx))
 				.build();
@@ -763,6 +796,7 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 	// IDENTIFIER LPAREN optionalExpressionList RPAREN
 	// | STRING_LITERAL LPAREN optionalExpressionList RPAREN
 	// | internalFunction LPAREN optionalExpressionList RPAREN
+	// | identifierReference PERIOD IDENTIFIER LPAREN optionalExpressionList RPAREN
 	@Override
 	public BaseNode visitFunctionInvocation(FunctionInvocationContext ctx) {
 		if (ctx.IDENTIFIER() != null && ctx.STRING_LITERAL() != null) {
@@ -774,6 +808,7 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 					.build();
 		} else if (ctx.IDENTIFIER() != null) {
 			return FunctionInvocationNode.builder()
+					.objectReference(ctx.identifierReference() == null ? null : (IdentifierNode) visit(ctx.identifierReference()))
 					.identifier(getIdentifierNode(ctx.IDENTIFIER(), getSourceLocation(ctx.IDENTIFIER())))
 					.parameters(((ExprListNode) visit(ctx.optionalExpressionList())).getExprNodes())
 					.sourceLocation(new SourceLocation(ctx))
@@ -1062,7 +1097,7 @@ public class GameVisitor extends GameParserBaseVisitor<BaseNode> {
 	public BaseNode visitFlagExpression(FlagExpressionContext ctx) {
 		return FlagExpressionNode.builder()
 				.identifierNode((IdentifierNode) visit(ctx.identifierReference()))
-				.flag((ExprNode)  visit(ctx.primary()))
+				.flag((ExprNode) visit(ctx.primary()))
 				.sourceLocation(new SourceLocation(ctx))
 				.build();
 	}

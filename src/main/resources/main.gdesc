@@ -69,6 +69,7 @@ initial {
     apport("glove", naismith, true);
     apport("gun", o_zone, true);
     apport("gun", pterodactyl, true);
+    apport("dummy", pterodactyl, true);
     apport("rifle", puddle, true);
     apport("sandwich", In_Joes, true);
     apport("sword", jayhawk_sunflower, true);

@@ -70,6 +70,7 @@ public class PlaceNode implements DeclaratorNode, VocabularyNode {
 		AsmUtils.createGetter(cv, innerClassInternalName, ACC_PUBLIC, "getVerbs", "verbs", Type.getDescriptor(List.class), "Ljava/util/List<Ljava/lang/String;>;");
 		AsmUtils.createGetter(cv, innerClassInternalName, ACC_PUBLIC, "getFlags", "flags", Type.INT_TYPE.getDescriptor());
 		AsmUtils.createSetter(cv, innerClassInternalName, ACC_PUBLIC, "setFlags", "flags", Type.INT_TYPE.getDescriptor());
+		AsmUtils.createGetter(cv, innerClassInternalName, ACC_PUBLIC, "toString", "name", Type.getDescriptor(String.class));
 
 		VerbCommandNode.generateActions(cv, gameContext, commands);
 

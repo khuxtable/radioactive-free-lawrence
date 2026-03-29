@@ -6,4 +6,6 @@ public interface GameAction {
 
 	void doAction(String verb);
 	Iterator<Object> iterator();
+
+	int doMessage(String verb, int arg);
 }

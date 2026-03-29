@@ -1,5 +1,6 @@
 package org.kathrynhuxtable.radiofreelawrence.game.grammar.tree;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -28,8 +29,10 @@ public class ObjectNode implements DeclaratorNode, VocabularyNode {
 	private String briefDescription;
 	private String longDescription;
 	private List<VariableNode> variables;
+	private List<InitialNode> inits = new ArrayList<>();
 	private Map<String, VerbCommandNode> commands;
 	private Map<String, ProcNode> procs;
+	private Map<String, MessageNode> messages;
 
 	private SourceLocation sourceLocation;
 
@@ -72,9 +75,14 @@ public class ObjectNode implements DeclaratorNode, VocabularyNode {
 		}
 
 		VerbCommandNode.generateActions(cv, gameContext, commands);
+		VerbCommandNode.generateMessages(cv, gameContext, messages);
 
 		for (ProcNode proc : procs.values()) {
 			proc.generate(cv, gameContext);
+		}
+
+		for (InitialNode init : inits) {
+			init.generate(cv, gameContext);
 		}
 
 		AsmUtils.createGetter(cv, innerClassInternalName, ACC_PUBLIC, "getName", "name", Type.getDescriptor(String.class));
@@ -87,6 +95,7 @@ public class ObjectNode implements DeclaratorNode, VocabularyNode {
 		AsmUtils.createSetter(cv, innerClassInternalName, ACC_PUBLIC, "setLocation", "location", Type.getDescriptor(GamePlace.class));
 		AsmUtils.createGetter(cv, innerClassInternalName, ACC_PUBLIC, "getFlags", "flags", Type.INT_TYPE.getDescriptor());
 		AsmUtils.createSetter(cv, innerClassInternalName, ACC_PUBLIC, "setFlags", "flags", Type.INT_TYPE.getDescriptor());
+		AsmUtils.createGetter(cv, innerClassInternalName, ACC_PUBLIC, "toString", "name", Type.getDescriptor(String.class));
 
 		generateIterator(cv, gameContext);
 
@@ -146,6 +155,16 @@ public class ObjectNode implements DeclaratorNode, VocabularyNode {
 			mv.visitVarInsn(ALOAD, 0);
 			mv.visitInsn(ICONST_0);
 			mv.visitFieldInsn(PUTFIELD, innerClassInternalName, variableNode.getVariable(), "I");
+		}
+
+		for (InitialNode init : inits) {
+			mv.visitVarInsn(ALOAD, 0);
+			mv.visitMethodInsn(INVOKEVIRTUAL,
+					innerClassInternalName,
+					"initialProc" + init.index,
+					"()I",
+					false);
+			mv.visitInsn(POP);
 		}
 
 		mv.visitInsn(RETURN);
