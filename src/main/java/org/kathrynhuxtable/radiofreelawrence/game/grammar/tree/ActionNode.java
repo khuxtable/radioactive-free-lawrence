@@ -27,6 +27,9 @@ public class ActionNode implements StatementNode {
 	private SourceLocation sourceLocation;
 
 	public static void generateActions(ClassVisitor cv, GameContext gameContext, Map<String, ActionNode> actions) {
+		if (actions != null && !actions.isEmpty()) {
+			gameContext.gameNode.setSourceFile(cv, actions.values().iterator().next().getSourceLocation());
+		}
 		gameContext.variableStore.addVariable("doAction", VariableType.METHOD);
 		gameContext.variableStore.newFunctionScope();
 		MethodVisitor mv2 = cv.visitMethod(ACC_PUBLIC, "doAction", "(Ljava/lang/String;Ljava/lang/String;)V", null, null);

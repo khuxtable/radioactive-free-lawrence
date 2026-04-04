@@ -26,6 +26,7 @@ public class BreakStatementNode implements StatementNode {
 
 	@Override
 	public void generate(MethodVisitor mv, GameContext gameContext) {
+		gameContext.gameNode.setLineNumber(mv, sourceLocation);
 		if (controlType != ControlType.CODE) {
 			throwException(mv, Type.getInternalName(BreakException.class));
 		} else {

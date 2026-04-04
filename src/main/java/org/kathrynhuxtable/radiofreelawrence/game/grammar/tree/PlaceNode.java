@@ -89,6 +89,8 @@ public class PlaceNode implements DeclaratorNode, VocabularyNode {
 	private void generateConstructor(ClassVisitor cv, GameContext gameContext) {
 		String innerClassInternalName = GameContext.GAME_CLASS_NAME + "$" + name;
 
+		gameContext.gameNode.setSourceFile(cv, sourceLocation);
+
 		// standard constructor, accepting InternalFunctions parameter
 		MethodVisitor mv = cv.visitMethod(ACC_PUBLIC, "<init>", "(" + GameContext.GAME_CLASS_DESCRIPTOR + ")V", null, null);
 		mv.visitParameter("this$0", ACC_FINAL | ACC_MANDATED);

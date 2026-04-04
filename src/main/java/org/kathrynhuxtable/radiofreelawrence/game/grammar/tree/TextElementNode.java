@@ -33,6 +33,7 @@ public class TextElementNode implements DeclaratorNode, ExprNode {
 
 	@Override
 	public void generate(MethodVisitor mv, GameContext gameContext) {
+		gameContext.gameNode.setLineNumber(mv, sourceLocation);
 		String name = "textElement" + index;
 		mv.visitVarInsn(ALOAD, 0); // inner class "this"
 		if (gameContext.variableStore.getCurrentClass() != null) {

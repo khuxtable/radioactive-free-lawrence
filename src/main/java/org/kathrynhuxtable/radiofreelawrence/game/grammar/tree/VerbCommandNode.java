@@ -31,6 +31,9 @@ public class VerbCommandNode implements StatementNode {
 	private SourceLocation sourceLocation;
 
 	public static void generateActions(ClassVisitor cv, GameContext gameContext, Map<String, VerbCommandNode> actions) {
+		if (actions != null && !actions.isEmpty()) {
+			gameContext.gameNode.setSourceFile(cv, actions.values().iterator().next().getSourceLocation());
+		}
 		gameContext.variableStore.addVariable("doAction", VariableType.METHOD);
 		gameContext.variableStore.newFunctionScope();
 		MethodVisitor mv2 = cv.visitMethod(ACC_PUBLIC, "doAction", "(Ljava/lang/String;)V", null, null);
@@ -79,6 +82,9 @@ public class VerbCommandNode implements StatementNode {
 	}
 
 	public static void generateMessages(ClassVisitor cv, GameContext gameContext, Map<String, MessageNode> messages) {
+		if (messages != null && !messages.isEmpty()) {
+			gameContext.gameNode.setSourceFile(cv, messages.values().iterator().next().getSourceLocation());
+		}
 		gameContext.variableStore.addVariable("doMessage", VariableType.METHOD);
 		gameContext.variableStore.newFunctionScope();
 		MethodVisitor mv2 = cv.visitMethod(ACC_PUBLIC, "doMessage", "(Ljava/lang/String;I)I", null, null);

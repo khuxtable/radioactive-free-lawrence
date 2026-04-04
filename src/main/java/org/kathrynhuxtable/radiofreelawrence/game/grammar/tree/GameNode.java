@@ -4,6 +4,7 @@ import java.util.*;
 
 import lombok.Data;
 import org.objectweb.asm.ClassVisitor;
+import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Type;
 
@@ -36,6 +37,8 @@ public class GameNode implements BaseNode {
 	List<InitialNode> inits = new ArrayList<>();
 	List<RepeatNode> repeats = new ArrayList<>();
 	Map<String, StateClauseNode> states = new LinkedHashMap<>();
+
+	int lineNumber = 0;
 
 	public void generate(ClassVisitor cv, GameContext gameContext) {
 		cv.visit(V17, ACC_PUBLIC | ACC_SUPER, GameContext.GAME_CLASS_NAME, null, Type.getInternalName(Object.class), null);
@@ -397,5 +400,26 @@ public class GameNode implements BaseNode {
 			textElementIndexes.put(text, index);
 		}
 		return index;
+	}
+
+	public void setSourceFile(ClassVisitor cv, SourceLocation sourceLocation) {
+		cv.visitSource(sourceLocation.getFilePath(), null);
+		lineNumber = 0;
+	}
+
+	public void setLineNumber(MethodVisitor mv, SourceLocation sourceLocation) {
+		if (sourceLocation.getLine() != lineNumber) {
+			lineNumber = sourceLocation.getLine();
+			Label label = new Label();
+			mv.visitLabel(label);
+			mv.visitLineNumber(lineNumber, label);
+		}
+	}
+
+	public void setLineNumber(MethodVisitor mv, SourceLocation sourceLocation, Label label) {
+		if (sourceLocation.getLine() != lineNumber) {
+			lineNumber = sourceLocation.getLine();
+			mv.visitLineNumber(lineNumber, label);
+		}
 	}
 }

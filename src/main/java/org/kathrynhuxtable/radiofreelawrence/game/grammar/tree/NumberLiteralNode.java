@@ -20,6 +20,7 @@ public class NumberLiteralNode implements ExprNode {
 
 	@Override
 	public void generate(MethodVisitor mv, GameContext gameContext) {
+		gameContext.gameNode.setLineNumber(mv, sourceLocation);
 		mv.visitLdcInsn(number);
 	}
 

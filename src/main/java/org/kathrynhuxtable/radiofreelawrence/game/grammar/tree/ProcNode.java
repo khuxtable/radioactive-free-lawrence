@@ -34,6 +34,7 @@ public class ProcNode implements DeclaratorNode {
 	@Override
 	public void generate(ClassVisitor cv, GameContext gameContext) {
 		try {
+			gameContext.gameNode.setSourceFile(cv, sourceLocation);
 			gameContext.variableStore.newFunctionScope();
 			StringBuilder descriptor = new StringBuilder("(");
 			for (int i = 0; i < args.size(); i++) {

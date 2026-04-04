@@ -58,6 +58,7 @@ public class AssignmentNode implements ExprNode {
 
 	@Override
 	public void generate(MethodVisitor mv, GameContext gameContext) {
+		gameContext.gameNode.setLineNumber(mv, sourceLocation);
 		if (assignmentOperator == AssignmentOperator.EQUAL) {
 			right.generate(mv, gameContext);
 		} else {

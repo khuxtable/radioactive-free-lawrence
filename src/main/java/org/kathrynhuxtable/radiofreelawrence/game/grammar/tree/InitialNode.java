@@ -28,6 +28,7 @@ public class InitialNode implements DeclaratorNode {
 
 	@Override
 	public void generate(ClassVisitor cv, GameContext gameContext) {
+		gameContext.gameNode.setSourceFile(cv, sourceLocation);
 		String name = "initialProc" + index;
 		gameContext.variableStore.addVariable(name, VariableType.METHOD);
 		gameContext.variableStore.newFunctionScope();

@@ -33,6 +33,7 @@ public class FunctionInvocationNode implements ExprNode {
 
 	@Override
 	public void generate(MethodVisitor mv, GameContext gameContext) {
+		gameContext.gameNode.setLineNumber(mv, sourceLocation);
 		try {
 			if (objectReference != null) {
 				objectReference.generate(mv, gameContext);

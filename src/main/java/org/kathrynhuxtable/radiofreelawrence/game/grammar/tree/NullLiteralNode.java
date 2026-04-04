@@ -21,6 +21,7 @@ public class NullLiteralNode implements ExprNode {
 
 	@Override
 	public void generate(MethodVisitor mv, GameContext gameContext) {
+		gameContext.gameNode.setLineNumber(mv, sourceLocation);
 		mv.visitInsn(ACONST_NULL);
 	}
 

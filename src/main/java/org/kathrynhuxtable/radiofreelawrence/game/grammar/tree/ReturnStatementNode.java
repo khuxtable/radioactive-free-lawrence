@@ -23,6 +23,7 @@ public class ReturnStatementNode implements StatementNode {
 
 	@Override
 	public void generate(MethodVisitor mv, GameContext gameContext) {
+		gameContext.gameNode.setLineNumber(mv, sourceLocation);
 		if (expression == null) {
 			mv.visitInsn(RETURN);
 		} else {

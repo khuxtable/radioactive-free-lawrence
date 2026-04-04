@@ -25,8 +25,8 @@ public class ContinueStatementNode implements StatementNode {
 
 	@Override
 	public void generate(MethodVisitor mv, GameContext gameContext) {
+		gameContext.gameNode.setLineNumber(mv, sourceLocation);
 		if (controlType != ControlType.CODE) {
-//			Generate: throw new ContinueException(controlType);
 			throwException(mv, Type.getInternalName(ContinueException.class));
 		} else {
 			mv.visitJumpInsn(GOTO, gameContext.getVariableStore().getBreakLabel(identifier));

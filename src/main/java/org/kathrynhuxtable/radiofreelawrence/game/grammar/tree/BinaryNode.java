@@ -69,6 +69,8 @@ public class BinaryNode implements ExprNode {
 
 	@Override
 	public void generate(MethodVisitor mv, GameContext gameContext) {
+		gameContext.gameNode.setLineNumber(mv, sourceLocation);
+
 		switch (operator) {
 		case BITOR, XOR, BITAND, LSHIFT, RSHIFT, URSHIFT, ADD, SUB, MUL, DIV, MOD -> simpleOperation(mv, gameContext);
 		case OR, AND -> shortCircuitOperation(mv, gameContext);

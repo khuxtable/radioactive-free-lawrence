@@ -26,6 +26,7 @@ public class IdentifierNode implements ExprNode {
 
 	@Override
 	public void generate(MethodVisitor mv, GameContext gameContext) {
+		gameContext.gameNode.setLineNumber(mv, sourceLocation);
 		VariableContext variableContext = gameContext.variableStore.getVariable(name);
 		if (variableContext == null) {
 			throw new GameRuntimeException("undefined variable: " + name);

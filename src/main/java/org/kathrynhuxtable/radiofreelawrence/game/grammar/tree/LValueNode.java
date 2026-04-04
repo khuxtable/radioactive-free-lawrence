@@ -25,6 +25,7 @@ public class LValueNode implements ExprNode {
 	private SourceLocation sourceLocation;
 
 	public void generate(MethodVisitor mv, GameContext gameContext) {
+		gameContext.gameNode.setLineNumber(mv, sourceLocation);
 		if (expr instanceof IdentifierNode identifierNode) {
 			VariableContext variableContext = gameContext.variableStore.getVariable(identifierNode.getName());
 			if (variableContext == null) {

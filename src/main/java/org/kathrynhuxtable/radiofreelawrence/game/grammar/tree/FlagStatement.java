@@ -24,6 +24,7 @@ public class FlagStatement implements StatementNode {
 
 	@Override
 	public void generate(MethodVisitor mv, GameContext gameContext) {
+		gameContext.gameNode.setLineNumber(mv, sourceLocation);
 		flagExpression.getFlagValue(mv, gameContext);
 		flagExpression.getFlag().generate(mv, gameContext);
 
